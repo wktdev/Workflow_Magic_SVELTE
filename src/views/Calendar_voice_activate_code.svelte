@@ -21,34 +21,19 @@
 		margin: 1rem;
 		cursor: pointer;
 	}
-
-button {
-	color: #333;
-	background-color:red;
-
-}
-
-/*button:disabled {
-	color: #999;
-}
-
-button:not(:disabled):active {
-	background-color: #ddd;
-}
-
-button:focus {
-	border-color: #666;
-}*/
-
 </style>
 
 
 <script>
+	import {junk} from '../voice_service';
+	import {speechInput} from '../voice_service';
+	import {speechOutput} from '../voice_service';
 	import FullCalendar, { Draggable } from 'svelte-fullcalendar';
 	import dayGridPlugin from '@fullcalendar/daygrid';
 	import timeGridPlugin from '@fullcalendar/timegrid';
 	import interactionPlugin from '@fullcalendar/interaction'; // needed for dateClick
-	import {createCalendarEvent }from "../storageAPI/indexedDB";
+	
+
 
 	let options = {
 		dateClick: handleDateClick,
@@ -68,10 +53,12 @@ button:focus {
 		height: 'auto',
 		weekends: true,
 	};
-
-
 	let calendarComponentRef;
 	let eventData = { title: 'my event', duration: '02:00' };
+	// function toggleWeekends() {
+	// 	options.weekends = !options.weekends;
+	// 	options = { ...options };
+	// }
 
 
 	function gotoPast() {
@@ -79,22 +66,12 @@ button:focus {
 		calendarApi.gotoDate('2000-01-01'); // call a method on the Calendar object
 	}
 
-/*
-
-allDay: true
-start: Thu Nov 18 2021 00:00:00 GMT-0600 (Central Standard Time) {}
-title: "New Event"
-
-
-*/
 
 	function handleDateClick(event) {
-
 		if (
 			confirm('Would you like to add an event to ' + event.dateStr + ' ?')
 		) {
 			const { events } = options;
-		console.log(event.date)
 			const calendarEvents = [
 				...events,
 				{
@@ -108,13 +85,45 @@ title: "New Event"
 				events: calendarEvents,
 			};
 
-             console.log(calendarEvents)
-			 createCalendarEvent({title:"weeee"})
-		}
-          
 
-		console.log(options)
+			console.log(events)
+		}
 	}
+
+
+let obj = {
+    name: undefined,
+    time: undefined,
+    date: undefined
+}
+
+
+
+	async function createNewStudentEvent(callback) {
+	    let questionOne = await speechOutput("what is the students name");
+	    let answerOne = await speechInput();
+	    obj["name"] = answerOne;
+	    let questionTwo = await speechOutput("What date is the session");
+	    let answerTwo = await speechInput();
+	    obj["date"] = answerTwo;
+	    let questionThree = await speechOutput("what time is the session");
+	    let answerThree = await speechInput();
+	    obj["time"] = answerThree;
+	    callback()
+
+	    console.log(obj)
+	}
+
+
+
+	function handePleasureVoiceClick(event){
+       console.log("VOICE RUN");
+       createNewStudentEvent(function(){
+       	console.log("MAKE THINGGGY")
+       }) 
+
+	}
+
 
 
 
@@ -125,13 +134,13 @@ title: "New Event"
 <!-- 	<div class="demo-app-top">
 		<button on:click={toggleWeekends}>toggle weekends</button> &nbsp; <button
 			on:click={gotoPast}>go to a date in the past</button> &nbsp; (also, click
-		a date/time to add an event)
+		a date/time to add an esurevent)
 	</div> -->
 
 	<div>
-		<Draggable {eventData} class="draggable">
-			Record Date with Pleasure Voice Service
-		</Draggable>
+		<button on:click={handePleasureVoiceClick}>
+			Create event with Pleasure Voice servic
+		</button>
 	</div>
 
 	<div class="demo-app-calendar">

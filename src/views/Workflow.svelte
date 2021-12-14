@@ -1,3 +1,7 @@
+
+
+
+
 <style>
 
     h1{
@@ -18,13 +22,10 @@
         width: 100%;
         display: flex;
         align-items:flex-start;
-/*        background-color: green;*/
         justify-content: space-evenly;
     }
 
-
-
-    .markdown-editor__right-panel {
+    .markdown-editor__left-panel, .markdown-editor__right-panel {
         width: 85%;
         border: solid 1px black;
         height: 85vh;
@@ -38,7 +39,6 @@
         border: none;
         width: 100%;
         height: 100%;
-        font-size: 2em;
     }
 
     .markdown-editor__source:focus {
@@ -48,8 +48,6 @@
     .markdown-editor__output {
         width: 100%;
         padding: 0 2em;
-        font-size: 2em;
-
     }
 
     .footer {
@@ -71,7 +69,8 @@
     button:hover {
         outline-color: #666;
         background-color: #f4ee40;
-   }
+    }
+
 
 
 </style>
@@ -94,32 +93,18 @@ onMount(async ()=>{
 })
 
 
-function saveWorkflow(item){
-
-    console.log(item)
-    debugger;
-
-
-    // indexDB save
-    // forward Route to items view page
-
-}
-
-
 
 </script>
 
 <header class="header">
-    <button on:click={saveWorkflow}>Save This Workflow</button>
+    <button>Edit This Workflow</button>
     
 </header>
 
 <div class="markdown-editor">
     <div class="markdown-editor__right-panel">
-        <textarea bind:value={source} class="markdown-editor__source"></textarea>
+        <div class="markdown-editor__output">{@html markdown}</div>
     </div>
-
-
 </div>
 
 

@@ -106,7 +106,7 @@
 
 .logo-title{
     font-family:logoFont;
-    font-size:3em;
+    font-size:2.5em;
     color:#be3ebc91;
     font-weight: bold;
     display: flex;
@@ -114,8 +114,25 @@
     justify-content: center;
 }
 
+.background-image{
+  background-image: url(/background_image/background.png);
+   background-repeat: no-repeat;
+  background-size: auto;
+  background-size: cover;
+background-size: 43% 60%;
+  bottom:  60px;
+  top: -20px;
+ width: 150%;
+ left: 8px;
+ height: 1000px;
+ position: absolute;
+opacity: 0.2;
+
+
+}
 
 .logo-form-container{
+    
     position:relative;
     top:100px;
 }
@@ -130,12 +147,13 @@
 </style>
 
 
-
-
+  
 {#if $showNav || $animateNav}
+<div class="background-image"></div>
 
 
   <div class="logo-form-container">
+
       <div class="container">
         <div class="row">
           <div class="col-0">
@@ -143,6 +161,7 @@
 
           {#if $animateNav && !$showNav}
             <div class="col-12">
+            
                <h2 class="logo-title">Workflow Magic</h2>
                <h3 class="app-is-ready-text">Your app is ready!</h3>
                <p class="get-started-text" in:fly="{{ y: -50, duration: 900 }}">
@@ -156,6 +175,8 @@
           {/if}
 
           {#if !$animateNav && $showNav}
+
+
             <div class="col-12">
                <h2 class="logo-title">Workflow Magic</h2>
                <h3 class="app-is-ready-text">Your app is ready!</h3>
@@ -196,6 +217,7 @@
 
   {:else}
     <div class="logo-form-container">
+
       <div class="container">
         <div class="row">
           <div class="col-0">

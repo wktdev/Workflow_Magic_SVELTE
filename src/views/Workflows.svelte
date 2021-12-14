@@ -72,7 +72,7 @@ import {getClientWorkflows,getClientById,deleteWorkflow} from "../storageAPI/ind
 import {onMount} from 'svelte';  
 export let params = {};
 
-let workflows = [{title:"oink"},{title:"oink"}];
+let workflows = [];
 let clientID;
 let clientName;
 
@@ -86,7 +86,6 @@ onMount(async ()=>{
       clientName = client.name
     });
 });
-
 
 
 
