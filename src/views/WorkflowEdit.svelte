@@ -79,6 +79,7 @@
 }
     
     .markdown-input {
+        font-size: 2rem;
         width: 100%;
         height: 150%;
         border: unset;
@@ -90,15 +91,17 @@
     }
     
     .markdown-input::placeholder {
-        font-size: 1.2rem;
+        font-size: 2rem;
         font-weight: 100;
         font-family: sans-serif;
         letter-spacing: 1px;
+
 
     }
     
     .markdown-input:focus {
         outline: unset;
+         font-size: 2rem;
      
     }
     
@@ -197,27 +200,33 @@ button{
     import {updateWorkflow} from "../storageAPI/indexedDB";
     import {getWorkflowById} from "../storageAPI/indexedDB";
     export let params = {};
-    // $: workflowContent = marked(source);
+    $: workflowContent = marked(rawData);
 
 
 let currentWorkflow;
 let workflowId = parseInt(params["workflow-id"]);
 
-
 onMount(async ()=>{
+
+ 
 
    await getWorkflowById(workflowId).then((workflow)=>{
         currentWorkflow = workflow
     
-   })
+   });
+
+
 
 });
 
     let rawData = '';
     let preview = false;
+    let previewText = "Preview" ;
+
     
     function togglePreview() {
         preview = !preview;
+        previewText = preview ? "Edit" : "Preview";
     }
 
 
@@ -258,7 +267,7 @@ async function saveWorkflow(){
                      
 <div class="button-container">
                       <button class='show-btn' on:click={togglePreview}>
-             Show Preview
+             {previewText }
             </button>
             </div>
             {@html marked(rawData)}
@@ -268,11 +277,11 @@ async function saveWorkflow(){
     {:else}
         <form class='form'>
             <div class="button-container">
-                  <button class='show-btn' on:click={togglePreview}>
-             Show Preview
+                  <button class='show-btn' on:click={togglePreview} >
+             {previewText }
             </button>
         </div>
-            <textarea type='text' bind:value={rawData} class='markdown-input' placeholder='Enter your markdown content here...'/>
+            <textarea focused type='text' autofocus bind:value={rawData} class='markdown-input' placeholder='Enter your markdown content here...'/>
       
     </form>
     {/if}
