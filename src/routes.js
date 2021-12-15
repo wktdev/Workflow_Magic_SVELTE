@@ -10,6 +10,7 @@ import WorkflowEdit from './views/WorkflowEdit.svelte';
 import Workflow from './views/Workflow.svelte';
 import NotFound from './views/NotFound.svelte';
 import Calendar from './views/Calendar.svelte'
+import sandbox from './views/sandbox.svelte'
 
 export default {
     '/': Landing,
@@ -18,6 +19,7 @@ export default {
     '/client/:clientId/dashboard/workflows/:workflow-id/' : Workflow,
     '/client/:clientId/dashboard/workflows/:workflow-id/edit' : WorkflowEdit,
     '/client/:clientId/dashboard/calendar/' : Calendar,
+    '/sandbox/' : sandbox,
     '*': NotFound
 };
 

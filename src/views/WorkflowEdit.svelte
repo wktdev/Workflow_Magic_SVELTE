@@ -14,17 +14,16 @@
         margin: 0;
     }
 
-    .markdown-editor {
+/*    .markdown-editor {
         width: 100%;
         display: flex;
         align-items:flex-start;
-/*        background-color: green;*/
         justify-content: space-evenly;
     }
+*/
 
 
-
-    .markdown-editor__right-panel {
+/*    .markdown-editor__right-panel {
         width: 85%;
         border: solid 1px black;
         height: 85vh;
@@ -51,7 +50,69 @@
         font-size: 2em;
 
     }
+*/
 
+
+    .button-container {
+        height: 10vh;
+           flex-direction: column;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        bottom: 100px;
+    }
+
+
+
+        .main-container {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 0.6rem;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+    }
+    
+.form {
+        height: 100%;
+        width: 100%;
+}
+    
+    .markdown-input {
+        width: 100%;
+        height: 150%;
+        border: unset;
+        border: 1px solid #9c9a9a;
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        background: transparent;
+  
+    }
+    
+    .markdown-input::placeholder {
+        font-size: 1.2rem;
+        font-weight: 100;
+        font-family: sans-serif;
+        letter-spacing: 1px;
+
+    }
+    
+    .markdown-input:focus {
+        outline: unset;
+     
+    }
+    
+    .show-btn {
+        width: 100%;
+        padding: 0.6rem 1.5rem;
+        background: transparent;
+        font-weight: 300;
+        font-size: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #9c9a9a;
+        position: flex;
+        margin-bottom: 100px;
+    }
     .footer {
         height: 5vh;
         display: flex;
@@ -74,6 +135,8 @@ button{
         outline-color: #666;
         background-color: #0fb52beb !important;
    }
+
+
 
 .dashboard-text{
     color:#96008fc9;
@@ -121,6 +184,9 @@ button{
     position:relative;
     bottom:120px;
 }
+
+
+
 </style>
 
 
@@ -128,37 +194,31 @@ button{
 <script>
     import {onMount} from 'svelte';  
     import marked from 'marked';
-    
-    let source = '';
-    import {getAllClients} from "../storageAPI/indexedDB";
     import {updateWorkflow} from "../storageAPI/indexedDB";
-    import {getClientById} from "../storageAPI/indexedDB";
     import {getWorkflowById} from "../storageAPI/indexedDB";
     export let params = {};
-    $: workflowContent = marked(source);
+    // $: workflowContent = marked(source);
 
 
- let clientId;
- let currentWorkflow;
-
+let currentWorkflow;
 let workflowId = parseInt(params["workflow-id"]);
 
 
 onMount(async ()=>{
 
    await getWorkflowById(workflowId).then((workflow)=>{
-        source = workflow.content;
+        currentWorkflow = workflow
+    
    })
 
-   await getAllClients().then((x)=>{
-    console.log(x)
+});
 
-   })
-
-   // console.log(workflowItem)
-
-
-})
+    let rawData = '';
+    let preview = false;
+    
+    function togglePreview() {
+        preview = !preview;
+    }
 
 
 async function saveWorkflow(){
@@ -171,13 +231,6 @@ async function saveWorkflow(){
 </script>
 
 
-<!-- <div class="markdown-editor">
-    <div class="markdown-editor__right-panel">
-        <textarea bind:value={source} class="markdown-editor__source"></textarea>
-    </div>
-
-</div>
- -->
 
  <div class="logo-form-container">
     <div class="container">
@@ -191,27 +244,51 @@ async function saveWorkflow(){
              <h2 class="logo-title">Workflow name</h2>
             <header class="header">
     
-<!--     <button on:click={saveWorkflow}>Save This Workflow</button>
- -->     <button on:click = {saveWorkflow} class="btn btn-info btn-block my-4" >Save This Workflow</button>
-    
-</header>
 
+             <button on:click = {saveWorkflow} class="btn btn-info btn-block my-4" >Save This Workflow</button>
+    
+           </header>
+          
+
+          <main class='main-container' on:dblclick={togglePreview}>
+  
+
+    {#if preview}
+        <div>
+                     
+<div class="button-container">
+                      <button class='show-btn' on:click={togglePreview}>
+             Show Preview
+            </button>
+            </div>
+            {@html marked(rawData)}
+
+        </div>
+    
+    {:else}
+        <form class='form'>
+            <div class="button-container">
+                  <button class='show-btn' on:click={togglePreview}>
+             Show Preview
+            </button>
+        </div>
+            <textarea type='text' bind:value={rawData} class='markdown-input' placeholder='Enter your markdown content here...'/>
+      
+    </form>
+    {/if}
+</main>
+          
             
 
           </div>
           <div class="col-0">
           
-          </div>
-        </div>
-        <div class="row">
-       <div class="markdown-editor">
-    <div class="markdown-editor__right-panel">
-        <textarea bind:value={source} class="markdown-editor__source" ></textarea>
-    </div>
 
-</div>
-          <div class="col-0">
+
+
+
           </div>
         </div>
+
       </div>
   </div>
