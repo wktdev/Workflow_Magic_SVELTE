@@ -208,7 +208,7 @@ let workflowId = parseInt(params["workflow-id"]);
 
 onMount(async ()=>{
 
- 
+ console.log(params)
 
    await getWorkflowById(workflowId).then((workflow)=>{
         currentWorkflow = workflow
@@ -232,7 +232,7 @@ onMount(async ()=>{
 
 async function saveWorkflow(){
     await updateWorkflow(workflowId, currentWorkflow.title, workflowContent).then((result)=>{
-           alert("Complete")
+           window.location.href = "#/client/"+params.clientId+"/dashboard/workflows/"
     })
 }
 

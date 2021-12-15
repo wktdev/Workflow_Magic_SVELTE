@@ -16,6 +16,10 @@ input{
     text-align:center;
 }
 
+input::placeholder{
+    font-size: 1em;
+}
+
 li{
 
     font-size: 2em;
