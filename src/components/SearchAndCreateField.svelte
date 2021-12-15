@@ -28,7 +28,7 @@ li{
 
 .list-group-item{
 
-      /*  text-align:center !important;*/
+        text-align:center !important;
     display: block;
     flex-flow: row wrap;
     align-items: center;
@@ -41,11 +41,18 @@ button{
     background-color: #8f4089 !important;
     font-size: 1.5em;
     color:white !important;
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10%;
     border-radius: 50px
 
 }
+
+    button:hover {
+        outline-color: #666;
+        background-color: #0fb52beb !important;
+   }
+
 
 .input-group{
     height:200px;

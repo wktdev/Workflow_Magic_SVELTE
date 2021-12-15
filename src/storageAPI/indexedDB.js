@@ -18,9 +18,6 @@ indexedDB.version(1).stores({
 
 
 
-
-
-
 export async function createCalendarEvent(name) {
     let result = await indexedDB.calendar_events.add({ title: name });
     return result
@@ -50,6 +47,7 @@ export async function getAllClients() {
 
 export async function getClientById(id) {
     let result = await indexedDB.clients.get(id);
+    console.log(result)
     return result
 }
 
@@ -67,6 +65,21 @@ export async function getClientWorkflows(clientID) {
 
     return correctWorkflows
 }
+
+
+
+export async function updateWorkflow(id, title, content) {
+    let result = await indexedDB.workflows.update(id, { title: title, content: content })
+    return result
+}
+
+
+export async function getWorkflowById(id) {
+    let result = await indexedDB.workflows.get(id);
+    console.log(result)
+    return result
+}
+
 
 
 export async function deleteWorkflow(id) {

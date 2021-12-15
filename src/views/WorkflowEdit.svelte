@@ -59,21 +59,68 @@
         justify-content: center;
     }
 
-    button{
-        background-color: orange;
-        outline-style: solid;
-        border-radius: 5px;
-        padding: 5px;
-        margin: 5px;
+button{
+    background-color: #8f4089 !important;
+    font-size: 1.5em;
+    color:white !important;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10%;
+    border-radius: 50px
 
-    }
+}
 
     button:hover {
         outline-color: #666;
-        background-color: #f4ee40;
+        background-color: #0fb52beb !important;
    }
 
+.dashboard-text{
+    color:#96008fc9;
+    text-align:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color:#787878db;
+  font-size:1.2em;
+  position:relative;
+  top:00px;
+  margin-bottom:0px;
+  text-align:center;
+}
 
+.get-started-text{
+    text-align:center;
+    font-size:1.1em;
+}
+
+.container{
+    margin-top:120px;
+}
+
+.logo-title{
+  text-align:center;
+  color:#266d2591;
+  font-size:3em;
+
+}
+
+.client-name{
+  font-family: logoFont;
+    font-size: 1.8em;
+    color: #be3ebc91;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+        margin-bottom: -30px;
+
+}
+
+.logo-form-container{
+    position:relative;
+    bottom:120px;
+}
 </style>
 
 
@@ -81,45 +128,90 @@
 <script>
     import {onMount} from 'svelte';  
     import marked from 'marked';
-    let source = '# Write markdown here';
+    
+    let source = '';
+    import {getAllClients} from "../storageAPI/indexedDB";
+    import {updateWorkflow} from "../storageAPI/indexedDB";
     import {getClientById} from "../storageAPI/indexedDB";
+    import {getWorkflowById} from "../storageAPI/indexedDB";
     export let params = {};
-    $: markdown = marked(source);
+    $: workflowContent = marked(source);
 
- 
+
+ let clientId;
+ let currentWorkflow;
+
+let workflowId = parseInt(params["workflow-id"]);
+
+
 onMount(async ()=>{
-   await getClientById(1).then((client)=>{
-      console.log(client)
-    });
+
+   await getWorkflowById(workflowId).then((workflow)=>{
+        source = workflow.content;
+   })
+
+   await getAllClients().then((x)=>{
+    console.log(x)
+
+   })
+
+   // console.log(workflowItem)
+
+
 })
 
 
-function saveWorkflow(item){
-
-    console.log(item)
-    debugger;
-
-
-    // indexDB save
-    // forward Route to items view page
-
+async function saveWorkflow(){
+    await updateWorkflow(workflowId, currentWorkflow.title, workflowContent).then((result)=>{
+           alert("Complete")
+    })
 }
-
 
 
 </script>
 
-<header class="header">
-    <button on:click={saveWorkflow}>Save This Workflow</button>
-    
-</header>
 
-<div class="markdown-editor">
+<!-- <div class="markdown-editor">
     <div class="markdown-editor__right-panel">
         <textarea bind:value={source} class="markdown-editor__source"></textarea>
     </div>
 
+</div>
+ -->
+
+ <div class="logo-form-container">
+    <div class="container">
+        <div class="row">
+          <div class="col-0">
+
+         </div>
+          <div class="col-12">
+                          <h1 class="client-name">Client name</h1>
+
+             <h2 class="logo-title">Workflow name</h2>
+            <header class="header">
+    
+<!--     <button on:click={saveWorkflow}>Save This Workflow</button>
+ -->     <button on:click = {saveWorkflow} class="btn btn-info btn-block my-4" >Save This Workflow</button>
+    
+</header>
+
+            
+
+          </div>
+          <div class="col-0">
+          
+          </div>
+        </div>
+        <div class="row">
+       <div class="markdown-editor">
+    <div class="markdown-editor__right-panel">
+        <textarea bind:value={source} class="markdown-editor__source" ></textarea>
+    </div>
 
 </div>
-
-
+          <div class="col-0">
+          </div>
+        </div>
+      </div>
+  </div>

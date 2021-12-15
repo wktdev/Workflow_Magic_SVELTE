@@ -85,6 +85,8 @@ onMount(async ()=>{
     await getClientById( parseInt(params.clientId)).then((client)=>{
       clientName = client.name
     });
+
+
 });
 
 
@@ -99,8 +101,20 @@ async function submitToDatabase(item){
 
 
 function goToRoute(item){
-    let workflowID = item.id;
-    window.location.href = "#/client/"+clientID+"/dashboard/workflows/" + workflowID + "/edit";
+  let workflowID = item.id;
+  if(item.title === undefined && item.content === undefined){
+     window.location.href = "#/client/"+clientID+"/dashboard/workflows/" + workflowID + "/edit";
+  }else{
+          window.location.href = "#/client/"+clientID+"/dashboard/workflows/" + workflowID
+
+  }
+
+  // get workflow from IndexDB
+  // If not exist then go to EDIT
+  // If DOES exist go to page
+console.log(item)
+    // let workflowID = item.id;
+    
 }
 
 async function onDelete(id){

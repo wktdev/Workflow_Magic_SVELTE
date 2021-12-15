@@ -1,6 +1,5 @@
 <style>
 .dashboard-text{
-	/*background-color:#96008fc9;*/
 	color:#96008fc9;
 	text-align:center;
   display: flex;

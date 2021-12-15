@@ -29,11 +29,13 @@ li{
     color: grey;
     text-align:center !important;
       margin:0 auto;
+      width: 100%;
+       padding-left: 0px;
 }
 
-.list-group-item{
+/*.list-group-item{
     text-align:center !important;
-}
+}*/
 
 button{
     background-color: #8f4089 !important;
@@ -46,6 +48,22 @@ button{
     height:200px;
 }
   
+  .list-group-item{
+    text-align: center !important;
+    display: block;
+    flex-flow: row wrap;
+    align-items: center;
+    padding: 1rem;
+    line-height: 1;
+}
+  .selected{
+    text-align: center !important;
+    display: block;
+    flex-flow: row wrap;
+    align-items: center;
+    padding: 1rem;
+    line-height: 1;
+}
 
 </style>
 

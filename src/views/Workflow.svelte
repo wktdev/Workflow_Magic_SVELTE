@@ -81,8 +81,8 @@
     import {onMount} from 'svelte';  
     import marked from 'marked';
     let source = '# Write markdown here';
-    import {getClientById} from "../storageAPI/indexedDB";
     export let params = {};
+    import {getClientById} from "../storageAPI/indexedDB";
     $: markdown = marked(source);
 
  
@@ -90,6 +90,8 @@ onMount(async ()=>{
    await getClientById(1).then((client)=>{
       console.log(client)
     });
+
+   console.log(params)
 })
 
 
