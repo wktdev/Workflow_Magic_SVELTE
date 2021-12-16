@@ -200,18 +200,22 @@ button{
     import {updateWorkflow} from "../storageAPI/indexedDB";
     import {getWorkflowById} from "../storageAPI/indexedDB";
     export let params = {};
-    $: workflowContent = marked(rawData);
+    $: workflowContent = rawData;
 
 
 let currentWorkflow;
 let workflowId = parseInt(params["workflow-id"]);
+ let rawData = '';
 
 onMount(async ()=>{
 
- console.log(params)
+ 
 
    await getWorkflowById(workflowId).then((workflow)=>{
-        currentWorkflow = workflow
+        currentWorkflow = workflow;
+        console.log(marked(workflow.content));
+        console.log(currentWorkflow)
+        rawData = workflow.content;
     
    });
 
@@ -219,21 +223,29 @@ onMount(async ()=>{
 
 });
 
-    let rawData = '';
+   
     let preview = false;
     let previewText = "Preview" ;
 
     
     function togglePreview() {
         preview = !preview;
+
         previewText = preview ? "Edit" : "Preview";
     }
 
 
+
 async function saveWorkflow(){
-    await updateWorkflow(workflowId, currentWorkflow.title, workflowContent).then((result)=>{
-           window.location.href = "#/client/"+params.clientId+"/dashboard/workflows/"
-    })
+    console.log(rawData)
+    // await updateWorkflow(workflowId, currentWorkflow.title, workflowContent).then((result)=>{
+          
+    // })
+}
+
+
+function info(){
+    console.log(rawData)
 }
 
 
@@ -242,7 +254,9 @@ async function saveWorkflow(){
 
 
  <div class="logo-form-container">
+
     <div class="container">
+        {rawData}
         <div class="row">
           <div class="col-0">
 
@@ -281,7 +295,7 @@ async function saveWorkflow(){
              {previewText }
             </button>
         </div>
-            <textarea focused type='text' autofocus bind:value={rawData} class='markdown-input' placeholder='Enter your markdown content here...'/>
+            <textarea on:change = {info} focused type='text' autofocus bind:value={rawData} class='markdown-input' placeholder='Enter your markdown content here...'/>
       
     </form>
     {/if}

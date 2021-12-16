@@ -93,6 +93,7 @@ onMount(async ()=>{
 
 async function submitToDatabase(item){
     let workflowID = await createWorkflow(clientID,item); // create new client
+    
     await getClientWorkflows(clientID).then(result=>{
          workflows = [...result.reverse()];            // store new state to page
     });
@@ -101,8 +102,9 @@ async function submitToDatabase(item){
 
 
 function goToRoute(item){
+  alert(item.content)
   let workflowID = item.id;
-  if(item.title === undefined && item.content === undefined){
+  if(item.content === undefined){
      window.location.href = "#/client/"+clientID+"/dashboard/workflows/" + workflowID + "/edit";
   }else{
           window.location.href = "#/client/"+clientID+"/dashboard/workflows/" + workflowID
