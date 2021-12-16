@@ -75,17 +75,17 @@ onMount(async ()=>{
 	let calendarURL =  window.location.href  +"/"+ "calendar";
 
 	let dashboardLinks = [
-	    {title:"Workflows",description:"- Your personalized client documentation", url: workflowsURL},
+	    {title:"Workflows",description:"- Your personalized client documentation", url: workflowsURL,endpoint:"Workflows"},
 
 
-    {title:"Calendar",description:"- Your personalized event calendar", url: calendarURL},
+    {title:"Meetings & Events",description:"- Your personalized event calendar", url: calendarURL,endpoint:"Calendar-events"},
 
 
 	    /*{title:"Contacts", url: contactsURL}*/
 	]
 
 	function onSelection(index){
-	     window.location.href = "#/client/"+params.clientId+"/dashboard/" + dashboardLinks[index].title.toLowerCase();
+	     window.location.href = "#/client/"+params.clientId+"/dashboard/" + dashboardLinks[index].endpoint.toLowerCase();
 	}
 
 

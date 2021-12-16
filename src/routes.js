@@ -10,6 +10,7 @@ import WorkflowEdit from './views/WorkflowEdit.svelte';
 import Workflow from './views/Workflow.svelte';
 import NotFound from './views/NotFound.svelte';
 import Calendar from './views/Calendar.svelte'
+import CalendarEvents from './views/CalendarEvents.svelte'
 import sandbox from './views/sandbox.svelte'
 
 export default {
@@ -19,6 +20,7 @@ export default {
     '/client/:clientId/dashboard/workflows/:workflow-id/' : Workflow,
     '/client/:clientId/dashboard/workflows/:workflow-id/edit' : WorkflowEdit,
     '/client/:clientId/dashboard/calendar/' : Calendar,
+    '/client/:clientId/dashboard/calendar-events/' : CalendarEvents,
     '/sandbox/' : sandbox,
     '*': NotFound
 };

@@ -15,12 +15,25 @@ indexedDB.version(1).stores({
 
 
 
-
+// export async function getAllCalendarEvents() {
+//     let result = await indexedDB.calendar_events.toArray();
+//     return result // returns an entire array (not individual objects)
+// }
 
 
 export async function createCalendarEvent(name) {
     let result = await indexedDB.calendar_events.add({ title: name });
     return result
+}
+
+export async function getClientCalendarEvents(clientID) {
+
+    let allCalendarEvents = await indexedDB.calendar_events.toArray();
+    let correctCalendarEvents= await allCalendarEvents.filter((val) => {
+        return val.client_id === clientID
+    });
+
+    return correctCalendarEvents
 }
 
 

@@ -5,6 +5,20 @@
   import interactionPlugin from "@fullcalendar/interaction"; // needed for dateClick
   import { createCalendarEvent } from "../storageAPI/indexedDB";
 
+
+
+
+
+
+
+
+	import DatePicker from "@beyonk/svelte-datepicker/src/components/DatePicker.svelte";
+	
+	let selected
+
+
+
+
   let options = {
     dateClick: handleDateClick,
     droppable: true,
@@ -72,6 +86,11 @@ title: "New Event"
 			on:click={gotoPast}>go to a date in the past</button> &nbsp; (also, click
 		a date/time to add an event)
 	</div> -->
+
+
+	<DatePicker range={true} on:range-selected={(e) => selected = e.detail}></DatePicker>
+<br />
+{JSON.stringify(selected)}
 
   <div>
     <Draggable {eventData} class="draggable">
