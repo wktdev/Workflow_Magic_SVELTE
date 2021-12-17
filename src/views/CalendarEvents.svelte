@@ -68,7 +68,7 @@ console.log(clientID)
   function goToRoute(item) {
     console.log(item);
 
-    window.location.href = "#/client/" + item.id + "/dashboard/calendar-events";
+    window.location.href = "#/client/" + clientID + "/dashboard/calendar-events/" +item.id+ "/edit";
   }
 
   // function goToRoute(item) {
