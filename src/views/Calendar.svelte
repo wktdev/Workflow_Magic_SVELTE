@@ -88,9 +88,7 @@ title: "New Event"
 	</div> -->
 
 
-	<DatePicker range={true} on:range-selected={(e) => selected = e.detail}></DatePicker>
-<br />
-{JSON.stringify(selected)}
+	
 
   <div>
     <Draggable {eventData} class="draggable">

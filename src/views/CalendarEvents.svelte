@@ -1,5 +1,6 @@
 <script>
   import DatePicker from "@beyonk/svelte-datepicker/src/components/DatePicker.svelte";
+
   import Dexie from "dexie";
   import SearchAndCreateField from "../components/SearchAndCreateField.svelte";
   import { createWorkflow } from "../storageAPI/indexedDB";
@@ -17,49 +18,51 @@
   let clientID = parseInt(params.clientId);
   let clientName;
   $: allClientCalendarEvents = [];
+  
 
   onMount(async () => {
+    console.log(params);
 
-console.log(params)
+    console.log(clientID);
+    getClientById(clientID).then((obj) => {
+      console.log(obj);
+      clientName = obj.name;
+    });
 
-console.log(clientID)
-    getClientById(clientID).then((obj)=>{
-      console.log(obj)
-       clientName = obj.name
-    })
-
-
-    console.log(params)
+    console.log(params);
     clientID = parseInt(params.clientId);
-
 
     await getClientCalendarEvents(parseInt(params.clientId)).then(
       (calendarEvents) => {
         allClientCalendarEvents = calendarEvents;
 
-        console.log(calendarEvents)
+        console.log(calendarEvents);
       }
     );
-
-
-
   });
 
   async function submitToDatabase(title) {
+    
     //___________________________________________________BEGIN replace with calendar events
     // let workflowID = await createWorkflow(clientID, item); // create new client
     //________________________________________________________END
 
-    await createCalendarEvent("2021-12-25T06:00:00.000Z","2021-12-25T06:00:00.000Z",title,"Description test","test client name",clientID,"group-data");
+    await createCalendarEvent(
+      "2021-12-25T06:00:00.000Z",
+      "2021-12-25T06:00:00.000Z",
+      title,
+      "Description test",
+      "test client name",
+      clientID,
+      "group-data"
+    );
 
-    await getClientCalendarEvents(parseInt(params.clientId)).then((events)=>{
-        let eventsOrdered = events.reverse();
-          allClientCalendarEvents = [...eventsOrdered ]
+    await getClientCalendarEvents(parseInt(params.clientId)).then((events) => {
+      let eventsOrdered = events.reverse();
+      allClientCalendarEvents = [...eventsOrdered];
     });
 
-
-  // 2021-12-25T06:00:00.000Z
-
+    // 2021-12-25T06:00:00.000Z
 
     // window.location.href =
     // "#/client/" + clientID + "/dashboard/calendar-events/" + calendarID + "/edit";
@@ -68,7 +71,12 @@ console.log(clientID)
   function goToRoute(item) {
     console.log(item);
 
-    window.location.href = "#/client/" + clientID + "/dashboard/calendar-events/" +item.id+ "/edit";
+    window.location.href =
+      "#/client/" +
+      clientID +
+      "/dashboard/calendar-events/" +
+      item.id +
+      "/edit";
   }
 
   // function goToRoute(item) {
@@ -95,16 +103,28 @@ console.log(clientID)
     await deleteCalendarEvent(calendarEventID);
     await getClientCalendarEvents(clientID).then((result) => {
       let list = result.reverse();
-     allClientCalendarEvents = [...list];
+      allClientCalendarEvents = [...list];
     });
   }
 
   let selected;
 </script>
 
-<DatePicker range={true} on:range-selected={(e) => (selected = e.detail)} />
-<br />
-{JSON.stringify(selected)}
+
+
+<DatePicker range={true} time = {true} on:range-selected={(e) => (selected = e.detail)} />
+
+  <DatePicker range={true} time = {true} on:range-selected={function(e){
+    
+    console.log(selected)
+    console.log(e.detail)
+    
+    }} />
+
+  {JSON.stringify(selected)}
+
+
+
 <div class="logo-form-container">
   <div class="container">
     <div class="row">
@@ -125,7 +145,7 @@ console.log(clientID)
           keyToRender="title"
           onSubmit={submitToDatabase}
           onSelectionEvent={goToRoute}
-          {onDelete}
+          {onDelete} 
           buttonText="Create Event"
         />
       </div>
