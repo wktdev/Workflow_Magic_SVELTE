@@ -62,16 +62,21 @@
         calendar.deleteSchedule(e.schedule.id, e.schedule.calendarId);
       },
 
-      beforeUpdateSchedule: function (e) {
+      beforeUpdateSchedule: function (e) {           // AFTER DRAG and before DROP
         console.log("beforeUpdateSchedule", e);
      
       },
 
-      // aferRenderSchedule: function (e) {               //____ ??
-      //   console.log("afterRenderSchedule", e);
-      //   const schedule = e.schedule;
+      beforeCreateSchedule: function (e) {           // AFTER DRAG and before DROP
+        console.log("beforeUpdateSchedule", e);
      
-      // },
+      },
+
+      aferRenderSchedule: function (e) {               //____ ??
+        console.log("afterRenderSchedule", e);
+        // const schedule = e.schedule;
+     
+      },
     });
   });
 

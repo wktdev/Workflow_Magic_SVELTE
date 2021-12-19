@@ -112,7 +112,7 @@
 
 
 
-<DatePicker range={true} time = {true} on:range-selected={(e) => (selected = e.detail)} />
+<!-- <DatePicker range={true} time = {true} on:range-selected={(e) => (selected = e.detail)} />
 
   <DatePicker range={true} time = {true} on:range-selected={function(e){
     
@@ -121,7 +121,7 @@
     
     }} />
 
-  {JSON.stringify(selected)}
+  {JSON.stringify(selected)} -->
 
 
 
