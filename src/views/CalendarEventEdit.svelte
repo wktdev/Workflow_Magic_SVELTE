@@ -3,6 +3,11 @@
   import "tui-calendar/dist/tui-calendar.css";
   import "tui-date-picker/dist/tui-date-picker.css";
   import "tui-time-picker/dist/tui-time-picker.css";
+  import { createCalendarEvent } from "../storageAPI/indexedDB";
+  import { getClientCalendarEvents } from "../storageAPI/indexedDB";
+  import { getAllCalendarEvents } from "../storageAPI/indexedDB";
+  import { getCalendarEventById } from "../storageAPI/indexedDB";
+  import { updateCalendarEvent } from "../storageAPI/indexedDB";
 
   import { onMount } from "svelte";
 
@@ -10,9 +15,10 @@
   import "tui-date-picker/dist/tui-date-picker.css";
   import "tui-time-picker/dist/tui-time-picker.css";
   let calendar;
-  // let next;
+  export let params = {};
+  let clientId = parseInt(params["clientId"]);
 
-  onMount(function () {
+  onMount(async function () {
     calendar = new TuiCalendar("#calendar", {
       defaultView: "month",
       taskView: true,
@@ -21,30 +27,14 @@
       useDetailPopup: true,
     });
 
-    // index db to loop and populate calendar.createSchedules
+    //________________________________________________________BEGIN get calendar events from IndexDB
 
-    calendar.createSchedules([
-      {
-        id: "3",
-        calendarId: "1",
-        title: "second schedule",
-        category: "time",
-        dueDateClass: "",
-        start: "2021-12-18T17:30:00+09:00",
-        end: "2021-12-19T17:31:00+09:00",
-      },
-      {
-        id: "4",
-        calendarId: "1",
-        title: "second schedule",
-        category: "time",
-        dueDateClass: "",
-        start: "2021-12-18T17:30:00+09:00",
-        end: "2021-12-19T17:31:00+09:00",
-      },
-    ]);
+    await getAllCalendarEvents().then((calendarEventList) => {
+      console.log("calendar events !", calendarEventList);
+      calendar.createSchedules([...calendarEventList]);
+    });
 
-    console.log(calendar)
+    //_________________________________________________________END get calendar events from IndexDB
 
     calendar.on({
       //___________________________________________________On EVENTS CLICKS !IMPORTANT
@@ -61,49 +51,67 @@
       },
 
       beforeUpdateSchedule: function (e) {
-        // AFTER DRAG and before DROP
-        console.log("beforeUpdateSchedule", e);
+        console.log(e.changes.start);
 
-        // createCalendarEvent(
-        //   startDate,
-        //   endDate,
-        //   title,
-        //   description,
-        //   clientName,
-        //   clientId,
-        //   groupId
-        // );
+        
+
+        async function updateEvent() {
+          let result;
+          await getCalendarEventById(e.schedule.id).then((calendarEvent) => {
+            result = Object.assign({}, calendarEvent, e.changes);
+            result.start = new Date(result.start);
+            result.end = new Date(result.end);
+            console.log("Updated", result);
+          });
+
+          await updateCalendarEvent(e.schedule.id, result).then((x) => {
+            console.log("Updated..?", x);
+            location.reload();
+          });
+        }
+
+
+        
+
+        updateEvent();
+
+        // get event by id IndexedDB, diff with e.changes
+
+        // let obj = {
+        //   start:e.start,
+        //   end:e.end,
+        //   title:e.title,
+        //   location: e.location,
+        //   isPrivate:e.isPrivate,
+        //   isAllDay:e.isAllDay,
+        //   category:e.category,
+        //   calendarId:e.calendarId
+        // }
+
+        console.log(e.schedule);
       },
 
       beforeCreateSchedule: function (e) {
         console.log("beforeCreateSchedule", e);
         let x = e.start;
         let y = e.end;
-        let one = x.toUTCString();
-        let two = y.toUTCString();
 
-        console.log("TZ", x.toUTCString());
-        calendar.createSchedules([
-          {
-            id: "1",
-            calendarId: "1",
-            title: e.title,
-            category: "time",
-            start: one,
-            end: two,
-            isAllDay:true,
-            isPrivate:true,
-            location:"ONLINE 123"
-          },
-          {
-            id: "2",
-            calendarId: "1",
-            title: e.title,
-            category: "time",
-            start: one,
-            end: two,
-          },
-        ]);
+        async function makeEvent() {
+          createCalendarEvent(
+            new Date(x),
+            new Date(y),
+            e.title,
+            e.location,
+            e.isPrivate,
+            e.isAllDay,
+            "time",
+            e.calendarId
+          ).then(() => {
+            location.reload();
+          });
+        }
+
+        makeEvent();
       },
 
       aferRenderSchedule: function (e) {

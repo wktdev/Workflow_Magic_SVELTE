@@ -9,7 +9,8 @@ indexedDB.version(1).stores({
     '++id,client_id,full_name,first_name,last_name,email,phone_number,additional_information',
 
   calendar_events:
-    '++id,start,end,title,description,client_name,client_id,group_id',
+    '++id,calendar_id,start,end,title,location,isPrivate,isAllDay,category',
+
   calendar_event_group_id: '++id, title, client_name, client_id',
   user: 'user_id',
 })
@@ -19,39 +20,57 @@ indexedDB.version(1).stores({
 //     return result // returns an entire array (not individual objects)
 // }
 
+
+export async function getCalendarEventById(id) {
+  let result = await indexedDB.calendar_events.get(id)
+  console.log(result)
+  return result
+}
+
+export async function updateCalendarEvent(id,obj) {
+  let result = await indexedDB.calendar_events.update(id,obj)
+
+  return obj
+}
+
 export async function createCalendarEvent(
   startDate,
   endDate,
   title,
-  description,
-  clientName,
-  clientId,
-  groupId,
+  location,
+  isPrivate,
+  isAllDay,
+  category,
+  calendarId,
 ) {
   let result = await indexedDB.calendar_events.add({
     start: startDate,
     end: endDate,
     title: title,
-    description: description,
-    client_name: clientName,
-    client_id: clientId,
-    group_id: groupId,
+    location: location,
+    isPrivate: isPrivate,
+    isAllDay: isAllDay,
+    category: category,
+    calendar_id: calendarId,
   })
   return result
 }
 
-
-
+export async function getAllCalendarEvents() {
+  let allCalendarEvents = await indexedDB.calendar_events.toArray()
+  return allCalendarEvents
+}
 
 export async function getClientCalendarEvents(clientID) {
   let allCalendarEvents = await indexedDB.calendar_events.toArray()
+  console.log(allCalendarEvents)
+  console.log(clientID)
   let correctCalendarEvents = await allCalendarEvents.filter((val) => {
     return val.client_id === clientID
   })
 
   return correctCalendarEvents
 }
-
 
 export async function deleteCalendarEvent(id) {
   let result = await indexedDB.calendar_events.where('id').equals(id).delete()
@@ -93,7 +112,6 @@ export async function getClientWorkflows(clientID) {
   let correctWorkflows = await allWorkflows.filter((val) => {
     return val.client_id === clientID
   })
-
   return correctWorkflows
 }
 
