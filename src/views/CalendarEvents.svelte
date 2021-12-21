@@ -47,20 +47,12 @@
     // let workflowID = await createWorkflow(clientID, item); // create new client
     //________________________________________________________END
 
-    await createCalendarEvent(
-      "2021-12-25T06:00:00.000Z",
-      "2021-12-25T06:00:00.000Z",
-      title,
-      "Description test",
-      "test client name",
-      clientID,
-      "group-data"
-    );
 
-    await getClientCalendarEvents(parseInt(params.clientId)).then((events) => {
-      let eventsOrdered = events.reverse();
-      allClientCalendarEvents = [...eventsOrdered];
-    });
+
+    // await getClientCalendarEvents(parseInt(params.clientId)).then((events) => {
+    //   let eventsOrdered = events.reverse();
+    //   allClientCalendarEvents = [...eventsOrdered];
+    // });
 
     // 2021-12-25T06:00:00.000Z
 
@@ -98,16 +90,16 @@
   //   // }
   // }
 
-  async function onDelete(id) {
-    let calendarEventID = allClientCalendarEvents[id].id;
-    await deleteCalendarEvent(calendarEventID);
-    await getClientCalendarEvents(clientID).then((result) => {
-      let list = result.reverse();
-      allClientCalendarEvents = [...list];
-    });
-  }
+  // async function onDelete(id) {
+  //   let calendarEventID = allClientCalendarEvents[id].id;
+  //   await deleteCalendarEvent(calendarEventID);
+  //   await getClientCalendarEvents(clientID).then((result) => {
+  //     let list = result.reverse();
+  //     allClientCalendarEvents = [...list];
+  //   });
+  //}
 
-  let selected;
+ 
 </script>
 
 
@@ -123,9 +115,29 @@
 
   {JSON.stringify(selected)} -->
 
+  <div class="logo-form-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-0" />
+        <div class="col-12">
+          <h1 class="client-name">Events & Meetings</h1>
+          <h2 class="logo-title">{clientName}</h2>
+        </div>
+        <div class="col-0" />
+      </div>
+      <div class="row">
+        <div class="col-0" />
+        <div class="col-12">
+          <!-- Replace value of arrayOfObject with calendarEvents-->
+          <button class="btn btn-info btn-block my-4" >Create Event</button>
 
+        </div>
+        <div class="col-0" />
+      </div>
+    </div>
+  </div>
 
-<div class="logo-form-container">
+<!-- <div class="logo-form-container">
   <div class="container">
     <div class="row">
       <div class="col-0" />
@@ -138,7 +150,7 @@
     <div class="row">
       <div class="col-0" />
       <div class="col-12">
-        <!-- Replace value of arrayOfObject with calendarEvents-->
+      
         <SearchAndCreateField
           placeholder="Type the title of event"
           arrayOfObjects={allClientCalendarEvents}
@@ -152,7 +164,7 @@
       <div class="col-0" />
     </div>
   </div>
-</div>
+</div> -->
 
 <style>
   .get-started-text {
@@ -210,4 +222,24 @@
     align-items: center;
     justify-content: center;
   }
+
+  button{
+    background-color: #8f4089 !important;
+    font-size: 1.5em;
+    color:white !important;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10%;
+    border-radius: 50px
+
+}
+
+    button:hover {
+        outline-color: #666;
+        background-color: #0fb52beb !important;
+   }
+
+   .input-group{
+    height:200px;
+}
 </style>

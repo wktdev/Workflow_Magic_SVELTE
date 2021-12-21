@@ -1,6 +1,8 @@
 <script>
   import { onMount } from "svelte";
   import marked from "marked";
+  import BackButton from "../components/BackButton.svelte";
+
   import {updateWorkflow} from "../storageAPI/indexedDB";
   import { getWorkflowById } from "../storageAPI/indexedDB";
   import {getClientById} from "../storageAPI/indexedDB";
@@ -53,14 +55,14 @@
 
 <div class="logo-form-container">
   <div class="container">
+    <BackButton top = "10px"></BackButton>
     <div class="row">
       <div class="col-0" />
       <div class="col-12">
-
-        <h2 class="logo-title">{clientName}</h2>
         <h1 class="client-name">{workflowTitle}</h1>
+        <h2 class="logo-title">{clientName}</h2>
+        
 
-  
         <header class="header">
           <button on:click={editWorkflow} class="btn btn-info btn-block my-4"
             >Edit This Workflow</button
@@ -347,8 +349,8 @@ onMount(async ()=>{
     text-align: center;
     color: #266d2591;
     font-size: 3em;
-    margin-top: 70px;
-    margin-bottom: -20px;
+    /* margin-top: 70px;
+    margin-bottom: -20px; */
 
   }
 

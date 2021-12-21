@@ -23,6 +23,7 @@ export default {
    
     '/client/:clientId/dashboard/calendar-events/' : CalendarEvents,
      '/client/:clientId/dashboard/calendar-events/:calendar-event-id/edit/' : CalendarEventEdit,
+     '/client/:clientId/dashboard/calendar-events/all/edit/' : CalendarEventEdit,
     '/sandbox/' : sandbox,
     '*': NotFound
 };

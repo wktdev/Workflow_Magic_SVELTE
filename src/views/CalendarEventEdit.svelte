@@ -8,6 +8,9 @@
   import { getAllCalendarEvents } from "../storageAPI/indexedDB";
   import { getCalendarEventById } from "../storageAPI/indexedDB";
   import { updateCalendarEvent } from "../storageAPI/indexedDB";
+  import { deleteCalendarEvent } from "../storageAPI/indexedDB";
+
+
 
   import { onMount } from "svelte";
 
@@ -17,7 +20,7 @@
   let calendar;
   export let params = {};
   let clientId = parseInt(params["clientId"]);
-
+  let calendarEvents = [];
   onMount(async function () {
     calendar = new TuiCalendar("#calendar", {
       defaultView: "month",
@@ -27,10 +30,14 @@
       useDetailPopup: true,
     });
 
+    
+
+
     //________________________________________________________BEGIN get calendar events from IndexDB
 
     await getAllCalendarEvents().then((calendarEventList) => {
       console.log("calendar events !", calendarEventList);
+      calendarEvents = [...calendarEventList];
       calendar.createSchedules([...calendarEventList]);
     });
 
@@ -46,14 +53,24 @@
       //__________ _____________________SELECT ITEM AND DELETE BUTTON
 
       beforeDeleteSchedule: function (e) {
-        console.log("beforeDeleteSchedule", e);
+        console.log("beforeDeleteSchedule", e.schedule.id);
+        
+        //____________________________________REMOVE FROM CALENDAR & UPDATES IMMEDIATLY
         calendar.deleteSchedule(e.schedule.id, e.schedule.calendarId);
+        
+
+        //___________________________________REMOVE FROM DB
+         async function removeEvent(){
+          await deleteCalendarEvent(e.schedule.id)
+         }
+
+         removeEvent()   // ____ NO PAGE REFRESH !
+
       },
 
       beforeUpdateSchedule: function (e) {
         console.log(e.changes.start);
 
-        
 
         async function updateEvent() {
           let result;
@@ -70,23 +87,9 @@
           });
         }
 
-
-        
-
         updateEvent();
 
-        // get event by id IndexedDB, diff with e.changes
-
-        // let obj = {
-        //   start:e.start,
-        //   end:e.end,
-        //   title:e.title,
-        //   location: e.location,
-        //   isPrivate:e.isPrivate,
-        //   isAllDay:e.isAllDay,
-        //   category:e.category,
-        //   calendarId:e.calendarId
-        // }
+   
 
         console.log(e.schedule);
       },
@@ -112,7 +115,11 @@
         }
 
         makeEvent();
+
+        
       },
+
+      
 
       aferRenderSchedule: function (e) {
         //____ ??

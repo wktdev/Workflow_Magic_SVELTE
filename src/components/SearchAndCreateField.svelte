@@ -1,265 +1,184 @@
-<style>
-
-.selected{
-    text-align:center!important;
-    display: block;
- /*   flex-flow: row wrap;*/
-    align-items: center;
-    padding: 1rem;
-    line-height: 1;
-    background-color:#8a0eff3b;
-}
-
-input{
-    font-size: 2em;
-    color: grey;
-    text-align:center;
-}
-
-input::placeholder{
-    font-size: 1em;
-}
-
-li{
-
-    font-size: 2em;
-    color: grey;
-    text-align:center !important;
-      list-style-type: none;
-  padding-left: 0px;
-  /*  width:900%;*/
-}
-
-.list-group-item{
-
-        text-align:center !important;
-    display: block;
-    flex-flow: row wrap;
-    align-items: center;
-    padding: 1rem;
-    line-height: 1;
-    
-    }
-
-button{
-    background-color: #8f4089 !important;
-    font-size: 1.5em;
-    color:white !important;
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 10%;
-    border-radius: 50px
-
-}
-
-    button:hover {
-        outline-color: #666;
-        background-color: #0fb52beb !important;
-   }
-
-
-.input-group{
-    height:200px;
-}
-
-.delete{
-
-    float:left;
-}
-
-ul{
-    position:relative;
-    list-style-position: inside;
-    padding:0px;
-}
-
-
-</style>
-
-
 <script>
-      import * as S from 'svelte-materialify';
+  import * as S from "svelte-materialify";
   // OR
-  import { Button } from 'svelte-materialify';
+  import { Button } from "svelte-materialify";
 
-    import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
-    export let keyToRender;
-    export let arrayOfObjects = []; 
-    export let onSubmit;
-    export let onDelete;
-    export let redirect;
-    export let idPropName;
-    export let onSelectionEvent;
-    export let placeholder;
-    export let buttonText;
-    let arrayOfObjectsCopy;
+  export let keyToRender;
+  export let arrayOfObjects = [];
+  export let onSubmit;
+  export let onDelete;
+  export let redirect;
+  export let idPropName;
+  export let onSelectionEvent;
+  export let placeholder;
+  export let buttonText;
+  let arrayOfObjectsCopy;
 
+  $: arrayOfObjectsCopy = arrayOfObjects;
+  $: nameOfKey = keyToRender;
+  let hoverID;
+  let indexVal = -1;
+  let downArrowPress = 40;
+  let upArrowPress = 38;
+  let enterKeyPress = 13;
+  let inputTextField = "";
+  let itemVal = "";
+  let inputIsFocused = true;
+  let onHoverClassChangeState = "";
 
-    $: arrayOfObjectsCopy = arrayOfObjects ;
-    $:nameOfKey = keyToRender;
-    let hoverID;
-    let indexVal = -1;
-    let downArrowPress = 40;
-    let upArrowPress = 38; 
-    let enterKeyPress = 13;
-    let inputTextField = "";
-    let itemVal = "";
-    let inputIsFocused = true;
-    let onHoverClassChangeState = '';
+  onMount(function () {
+    inputTextField.focus();
+  });
 
+  console.log(arrayOfObjectsCopy);
 
-    onMount(function() {
-        inputTextField.focus();
+  function isFocused() {
+    inputIsFocused = true;
+    indexVal = arrayOfObjectsCopy.length || -1;
+  }
 
+  function isBlurred() {
+    inputIsFocused = false;
+  }
+
+  function search(e) {
+    console.log(e.target.value);
+    const searchString = e.target.value.toLowerCase();
+    const filteredCharacters = arrayOfObjects.filter((character) => {
+      return (
+        character[nameOfKey].toLowerCase().includes(searchString) ||
+        character[nameOfKey].toLowerCase().includes(searchString)
+      );
     });
 
-    console.log(arrayOfObjectsCopy)
+    arrayOfObjectsCopy = [...filteredCharacters];
+  }
 
-    function isFocused(){
-       inputIsFocused = true;
-       indexVal = arrayOfObjectsCopy.length || -1;
+  function handleKeydown(event) {
+    if (event.keyCode === upArrowPress) {
+      indexVal -= 1;
+      indexVal = indexVal < 0 ? arrayOfObjectsCopy.length : indexVal;
+      console.log(indexVal);
     }
 
-    function isBlurred(){
-        inputIsFocused = false;
+    if (event.keyCode === downArrowPress) {
+      indexVal += 1;
+      indexVal = indexVal > arrayOfObjectsCopy.length ? 0 : indexVal;
+      console.log(indexVal);
     }
 
-
-    function search(e){
-        console.log(e.target.value)
-        const searchString = e.target.value.toLowerCase();
-        const filteredCharacters = arrayOfObjects.filter((character) => {
-            return (
-                character[nameOfKey].toLowerCase().includes(searchString) ||
-                character[nameOfKey].toLowerCase().includes(searchString)
-            );
-    });
-    
-     arrayOfObjectsCopy = [...filteredCharacters]
-    
+    if (indexVal > arrayOfObjectsCopy.length - 1 || indexVal < 0) {
+      inputTextField.focus();
+    } else {
+      inputTextField.blur();
     }
 
+    if (
+      event.keyCode === enterKeyPress &&
+      indexVal !== arrayOfObjectsCopy.length
+    ) {
+      if (inputIsFocused) {
+      } else {
+        console.log(indexVal, "onSelectionEvent");
+        // router.redirect(redirect + "/" +arrayOfObjectsCopy[indexVal][idPropName])
+        onSelectionEvent(arrayOfObjectsCopy[indexVal]); /// need OBJECT!
+      }
+    }
+  }
 
-    function handleKeydown(event) {
-        if(event.keyCode === upArrowPress) {
-            indexVal-=1;    
-            indexVal = indexVal < 0 ?  arrayOfObjectsCopy.length : indexVal
-            console.log(indexVal);
-        }
+  function onClickHandler(i) {
+    onSelectionEvent(arrayOfObjectsCopy[i]);
+  }
 
-        if(event.keyCode === downArrowPress) {
-            indexVal+=1;
-            indexVal = indexVal > arrayOfObjectsCopy.length ?  0 : indexVal
-            console.log(indexVal);
-        }
-
-        if(indexVal > arrayOfObjectsCopy.length -1 || indexVal < 0){
-            inputTextField.focus(); 
-        } else {
-            inputTextField.blur()
-        }   
-
-        if(event.keyCode === enterKeyPress && indexVal !== arrayOfObjectsCopy.length ){
-            if(inputIsFocused ){
-
-            }else{
-               console.log(indexVal,"onSelectionEvent")
-               // router.redirect(redirect + "/" +arrayOfObjectsCopy[indexVal][idPropName])
-               onSelectionEvent(arrayOfObjectsCopy[indexVal]) /// need OBJECT!
-            }
-        }
+  function handleSubmit(e) {
+    const value = e.target.input.value;
+    let trimmedVal = value.trim();
+    if (trimmedVal) {
+      arrayOfObjects = [...arrayOfObjects, { name: value }];
+      onSubmit(trimmedVal);
+    } else {
+      alert("value can not be empty");
     }
 
+    itemVal = "";
+  }
 
-    function onClickHandler(i){
-      
+  function resetClassOnMouseout() {
+    onHoverClassChangeState = "";
+  }
 
-      onSelectionEvent( arrayOfObjectsCopy[i])
-
-    }
-    
-
-    function handleSubmit(e) {
-
-
-        const value = e.target.input.value;
-        let trimmedVal = value.trim();
-        if(trimmedVal){
-            arrayOfObjects = [...arrayOfObjects, {name:value}];
-            onSubmit(trimmedVal);
-        }else{
-            alert("value can not be empty")
-        }
-       
-        itemVal = "";
-    }
-
-    function resetClassOnMouseout(){
-        onHoverClassChangeState = "";
-
-    }
-
-
-    function handleDelete(i){
-       // onDelete()
-       onDelete(i)
-    }
-
+  function handleDelete(i) {
+    // onDelete()
+    onDelete(i);
+  }
 </script>
 
-    <svelte:window on:keydown={handleKeydown}/>
+<svelte:window on:keydown={handleKeydown} />
 
-    <section class ="container">
+<section class="container">
+  <form on:submit|preventDefault={handleSubmit} class="input-group">
+    <input
+      placeholder={placeholder || "Type the name of an item here and submit"}
+      aria-label="Clients name"
+      aria-describedby=""
+      class="form-control"
+      on:click={isFocused}
+      on:focus={isFocused}
+      on:blur={isBlurred}
+      type="text"
+      name="input"
+      bind:this={inputTextField}
+      bind:value={itemVal}
+      on:input={search}
+      autocomplete="off"
+    />
 
-    <form on:submit|preventDefault={handleSubmit} class="input-group">
-        <input placeholder={placeholder || "Type the name of an item here and submit"} aria-label="Clients name" aria-describedby=""class="form-control" on:click = {isFocused} on:focus={isFocused} on:blur={isBlurred} type="text" name="input" bind:this={inputTextField}  bind:value={itemVal} on:input={search} autocomplete="off"/>
-
-    <button class="btn btn-info btn-block my-4" type="submit">{buttonText}</button>
-
-
-
-
-
-    </form>
-    <div>
+    <button class="btn btn-info btn-block my-4" type="submit"
+      >{buttonText}</button
+    >
+  </form>
+  <div>
     <ul>
-        {#each arrayOfObjectsCopy as item, i}
+      {#each arrayOfObjectsCopy as item, i}
+        {#if i === indexVal}
+          <Button class="red white-text" on:click={() => handleDelete(i)}
+            >DELETE</Button
+          >
+          <li
+            class={onHoverClassChangeState === item["id"]
+              ? "selected"
+              : "list-group-item"}
+            style="background-color:#8a0eff3b"
+            on:mouseover={() => (onHoverClassChangeState = item["id"])}
+            on:mouseout={resetClassOnMouseout}
+            on:click={() => onClickHandler(i)}
+          >
+            {item[nameOfKey]}
+          </li>
+        {:else}
+          <Button class="red white-text" on:click={() => handleDelete(i)}
+            >DELETE</Button
+          >
+          <li
+            class={onHoverClassChangeState === item["id"]
+              ? "selected"
+              : "list-group-item"}
+            on:mouseover={() => (onHoverClassChangeState = item["id"])}
+            on:mouseout={resetClassOnMouseout}
+            on:click={() => onClickHandler(i)}
+            style=""
+          >
+            {item[nameOfKey]}
+          </li>
+        {/if}
 
-            {#if i === indexVal}
-             <Button class="red white-text" on:click={()=>handleDelete(i)} >DELETE</Button>
-               <li  class={onHoverClassChangeState === item["id"] ? 'selected' : "list-group-item" } 
-                   style="background-color:#8a0eff3b"
-                   on:mouseover={() => onHoverClassChangeState = item["id"] }
-                   on:mouseout = {resetClassOnMouseout}
-                   on:click={()=>onClickHandler(i)}>
-
-                   {item[nameOfKey]} 
-              </li>    
-              {:else}
-             <Button class="red white-text" on:click={()=>handleDelete(i)}  >DELETE</Button>
-               <li class= {onHoverClassChangeState === item["id"] ? 'selected' : "list-group-item" }
-                   on:mouseover= {() => onHoverClassChangeState = item["id"] }
-                   on:mouseout = {resetClassOnMouseout}
-                   on:click={()=>onClickHandler(i)} style="">
-
-                   {item[nameOfKey]}
-
-
-              </li>  
-
-            {/if}
-
-            <hr/>
-
-        {/each}
+        <hr />
+      {/each}
     </ul>
-   </div>
+  </div>
 </section>
-
-
-
-
 
 <!-- Documentation___________________________________
 
@@ -301,10 +220,77 @@ For more documentation check the documentation folder in src/documentation
 
 _____________________________________________________________-->
 
-
-
 <!-- NOTE
 
 
 On hover, you need to select the index value of the thing you are hovering over
     -->
+
+<style>
+  .selected {
+    text-align: center !important;
+    display: block;
+    /*   flex-flow: row wrap;*/
+    align-items: center;
+    padding: 1rem;
+    line-height: 1;
+    background-color: #8a0eff3b;
+  }
+
+  input {
+    font-size: 2em;
+    color: grey;
+    text-align: center;
+  }
+
+  input::placeholder {
+    font-size: 1em;
+  }
+
+  li {
+    font-size: 2em;
+    color: grey;
+    text-align: center !important;
+    list-style-type: none;
+    padding-left: 0px;
+    /*  width:900%;*/
+  }
+
+  .list-group-item {
+    text-align: center !important;
+    display: block;
+    flex-flow: row wrap;
+    align-items: center;
+    padding: 1rem;
+    line-height: 1;
+  }
+
+  button {
+    background-color: #8f4089 !important;
+    font-size: 1.5em;
+    color: white !important;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10%;
+    border-radius: 50px;
+  }
+
+  button:hover {
+    outline-color: #666;
+    background-color: #0fb52beb !important;
+  }
+
+  .input-group {
+    height: 200px;
+  }
+
+  .delete {
+    float: left;
+  }
+
+  ul {
+    position: relative;
+    list-style-position: inside;
+    padding: 0px;
+  }
+</style>

@@ -77,6 +77,8 @@ export async function deleteCalendarEvent(id) {
   return result
 }
 
+
+
 export async function createClient(name) {
   let result = await indexedDB.clients.add({ name: name })
   return result

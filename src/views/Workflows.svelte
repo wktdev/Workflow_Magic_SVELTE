@@ -1,6 +1,9 @@
 <script>
   import SearchAndCreateField from "../components/SearchAndCreateField.svelte";
   import { createWorkflow } from "../storageAPI/indexedDB";
+  import BackButton from "../components/BackButton.svelte";
+  import Test from "../components/Test.svelte";
+
   import {
     getClientWorkflows,
     getClientById,
@@ -60,10 +63,17 @@
       workflows = [...list];
     });
   }
+
+
 </script>
 
 <div class="logo-form-container">
   <div class="container">
+    <!-- <Test color='darkgreen' width='22px' top='0px'>
+      I'm styled with component props that set 
+      CSS variables inside the component</Test> -->
+
+  <BackButton></BackButton>
     <div class="row">
       <div class="col-0" />
       <div class="col-12">
