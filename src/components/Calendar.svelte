@@ -19,6 +19,24 @@
       scheduleView: ["time"],
       useCreationPopup: true,
       useDetailPopup: true,
+      calendars: [
+        {
+          id: "1",
+          name: "My Calendar",
+          color: "#ffffff",
+          bgColor: "#9e5fff",
+          dragBgColor: "#9e5fff",
+          borderColor: "#9e5fff",
+        },
+        {
+          id: "2",
+          name: "Company",
+          color: "#00a9ff",
+          bgColor: "#00a9ff",
+          dragBgColor: "#00a9ff",
+          borderColor: "#00a9ff",
+        },
+      ],
     });
 
     calendar.createSchedules([
@@ -62,20 +80,20 @@
         calendar.deleteSchedule(e.schedule.id, e.schedule.calendarId);
       },
 
-      beforeUpdateSchedule: function (e) {           // AFTER DRAG and before DROP
+      beforeUpdateSchedule: function (e) {
+        // AFTER DRAG and before DROP
         console.log("beforeUpdateSchedule", e);
-     
       },
 
-      beforeCreateSchedule: function (e) {           // AFTER DRAG and before DROP
+      beforeCreateSchedule: function (e) {
+        // AFTER DRAG and before DROP
         console.log("beforeUpdateSchedule", e);
-     
       },
 
-      aferRenderSchedule: function (e) {               //____ ??
+      aferRenderSchedule: function (e) {
+        //____ ??
         console.log("afterRenderSchedule", e);
         // const schedule = e.schedule;
-     
       },
     });
   });

@@ -1,245 +1,225 @@
 <script>
-  import DatePicker from "@beyonk/svelte-datepicker/src/components/DatePicker.svelte";
+  import TuiCalendar from "tui-calendar"; /* ES6 */
+  import "tui-calendar/dist/tui-calendar.css";
+  import "tui-date-picker/dist/tui-date-picker.css";
+  import "tui-time-picker/dist/tui-time-picker.css";
+  import { createCalendarEvent } from "../storageAPI/indexedDB";
+  import { getClientCalendarEvents } from "../storageAPI/indexedDB";
+  import { getAllCalendarEvents } from "../storageAPI/indexedDB";
+  import { getCalendarEventById } from "../storageAPI/indexedDB";
+  import { updateCalendarEvent } from "../storageAPI/indexedDB";
+  import { deleteCalendarEvent } from "../storageAPI/indexedDB";
+  import { getClientById } from "../storageAPI/indexedDB";
+  import BackButton from "../components/BackButton.svelte";
+  import { push, pop, replace } from "svelte-spa-router";
 
-  import Dexie from "dexie";
-  import SearchAndCreateField from "../components/SearchAndCreateField.svelte";
-  import { createWorkflow } from "../storageAPI/indexedDB";
-  import {
-    deleteCalendarEvent,
-    createCalendarEvent,
-    getClientCalendarEvents,
-    getClientById,
-    deleteWorkflow,
-  } from "../storageAPI/indexedDB";
   import { onMount } from "svelte";
+
+  // If you use the default popups, use this.
+  import "tui-date-picker/dist/tui-date-picker.css";
+  import "tui-time-picker/dist/tui-time-picker.css";
+  let calendar;
   export let params = {};
-
-  let calendarEvents = [];
-  let clientID = parseInt(params.clientId);
+  let clientId = parseInt(params["clientId"]);
   let clientName;
-  $: allClientCalendarEvents = [];
-  
+  let calendarEvents = [];
+  onMount(async function () {
+    //________________________________________________________BEGIN get calendar events from IndexDB
 
-  onMount(async () => {
-    console.log(params);
+    //_________________________________________________________END get calendar events from IndexDB
 
-    console.log(clientID);
-    getClientById(clientID).then((obj) => {
-      console.log(obj);
-      clientName = obj.name;
+    await getClientById(clientId).then((client) => {
+      clientName = client.name;
+    }).then(()=>{
+
+
+      calendar = new TuiCalendar("#calendar", {
+      defaultView: "month",
+      taskView: true,
+      scheduleView: ["time"],
+      useCreationPopup: true,
+      useDetailPopup: true,
+      calendars: [
+        {
+          id: clientId,
+          name: clientName,
+          color: "#ffffff",
+          bgColor: "#9e5fff",
+          dragBgColor: "#9e5fff",
+          borderColor: "#9e5fff",
+        },
+      ],
+    });
+    })
+
+   
+
+    await getAllCalendarEvents().then((calendarEventList) => {
+      console.log("calendar events !", calendarEventList);
+
+      let calEvents = calendarEventList.filter((val, index, arr) => {
+        return val.calendar_id === clientId;
+      });
+
+      // calendarEvents = [...calendarEventList];
+      calendar.createSchedules([...calEvents]);
     });
 
-    console.log(params);
-    clientID = parseInt(params.clientId);
+    calendar.on({
+      //___________________________________________________On EVENTS CLICKS !IMPORTANT
+      //_______________________________ CLICK LISTED EVENT
+      clickSchedule: function (e) {
+        console.log("clickMore", e);
+      },
 
-    await getClientCalendarEvents(parseInt(params.clientId)).then(
-      (calendarEvents) => {
-        allClientCalendarEvents = calendarEvents;
+      //__________ _____________________SELECT ITEM AND DELETE BUTTON
 
-        console.log(calendarEvents);
-      }
-    );
+      beforeDeleteSchedule: function (e) {
+        console.log("beforeDeleteSchedule", e.schedule.id);
+
+        //____________________________________REMOVE FROM CALENDAR & UPDATES IMMEDIATLY
+        calendar.deleteSchedule(e.schedule.id, e.schedule.calendarId);
+
+        //___________________________________REMOVE FROM DB
+        async function removeEvent() {
+          await deleteCalendarEvent(e.schedule.id);
+        }
+
+        removeEvent(); // ____ NO PAGE REFRESH !
+      },
+
+      beforeUpdateSchedule: function (e) {
+        console.log(e.changes.start);
+
+        async function updateEvent() {
+          let result;
+          await getCalendarEventById(e.schedule.id).then((calendarEvent) => {
+            result = Object.assign({}, calendarEvent, e.changes);
+            result.start = new Date(result.start);
+            result.end = new Date(result.end);
+            console.log("Updated", result);
+          });
+
+          await updateCalendarEvent(e.schedule.id, result).then((x) => {
+            console.log("Updated..?", x);
+            location.reload();
+          });
+        }
+
+        updateEvent();
+
+        console.log(e.schedule);
+      },
+
+      beforeCreateSchedule: function (e) {
+        console.log("beforeCreateSchedule", e);
+        let x = e.start;
+        let y = e.end;
+
+        async function makeEvent() {
+          createCalendarEvent(
+            new Date(x),
+            new Date(y),
+            e.title,
+            e.location,
+            e.isPrivate,
+            e.isAllDay,
+            "time",
+            clientId
+          ).then(() => {
+            location.reload();
+          });
+        }
+
+        makeEvent();
+      },
+
+      aferRenderSchedule: function (e) {
+        //____ ??
+        console.log("afterRenderSchedule", e);
+        // const schedule = e.schedule;
+      },
+    });
   });
 
-  async function submitToDatabase(title) {
-    
-    //___________________________________________________BEGIN replace with calendar events
-    // let workflowID = await createWorkflow(clientID, item); // create new client
-    //________________________________________________________END
-
-
-
-    // await getClientCalendarEvents(parseInt(params.clientId)).then((events) => {
-    //   let eventsOrdered = events.reverse();
-    //   allClientCalendarEvents = [...eventsOrdered];
-    // });
-
-    // 2021-12-25T06:00:00.000Z
-
-    // window.location.href =
-    // "#/client/" + clientID + "/dashboard/calendar-events/" + calendarID + "/edit";
+  function nextMonth() {
+    calendar.next();
   }
 
-  function goToRoute(item) {
-    console.log(item);
-
-    window.location.href =
-      "#/client/" +
-      clientID +
-      "/dashboard/calendar-events/" +
-      item.id +
-      "/edit";
+  function prevMonth() {
+    calendar.prev();
   }
-
-  // function goToRoute(item) {
-  //   window.location.href =
-  //       "#/client/" +
-  //       clientID +
-  //       "/dashboard/calendar-events/"
-  //   // let calendarEventID = item.id;
-  //   // if (item.title === undefined) {
-  //   //   window.location.href =
-  //   //     "#/client/" +
-  //   //     clientID +
-  //   //     "/dashboard/calendar-events/" +
-  //   //     calendarEventID +
-  //   //     "/edit";
-  //   // } else {
-  //   //   window.location.href =
-  //   //     "#/client/" + clientID + "/dashboard/calendar-events/" + calendarEventID;
-  //   // }
-  // }
-
-  // async function onDelete(id) {
-  //   let calendarEventID = allClientCalendarEvents[id].id;
-  //   await deleteCalendarEvent(calendarEventID);
-  //   await getClientCalendarEvents(clientID).then((result) => {
-  //     let list = result.reverse();
-  //     allClientCalendarEvents = [...list];
-  //   });
-  //}
-
- 
 </script>
 
-
-
-<!-- <DatePicker range={true} time = {true} on:range-selected={(e) => (selected = e.detail)} />
-
-  <DatePicker range={true} time = {true} on:range-selected={function(e){
-    
-    console.log(selected)
-    console.log(e.detail)
-    
-    }} />
-
-  {JSON.stringify(selected)} -->
-
-  <div class="logo-form-container">
-    <div class="container">
-      <div class="row">
-        <div class="col-0" />
-        <div class="col-12">
-          <h1 class="client-name">Events & Meetings</h1>
-          <h2 class="logo-title">{clientName}</h2>
-        </div>
-        <div class="col-0" />
-      </div>
-      <div class="row">
-        <div class="col-0" />
-        <div class="col-12">
-          <!-- Replace value of arrayOfObject with calendarEvents-->
-          <button class="btn btn-info btn-block my-4" >Create Event</button>
-
-        </div>
-        <div class="col-0" />
-      </div>
-    </div>
-  </div>
-
-<!-- <div class="logo-form-container">
+<div class="logo-form-container">
   <div class="container">
+    <BackButton top="65px" />
     <div class="row">
       <div class="col-0" />
       <div class="col-12">
-        <h1 class="client-name">Events & Meetings</h1>
-        <h2 class="logo-title">{clientName}</h2>
+        <div id="menu">
+          <span id="menu-navi">
+            <button
+              type="button"
+              class="btn btn-default btn-sm move-today"
+              data-action="move-today">Today</button
+            >
+            <button
+              on:click={prevMonth}
+              type="button"
+              class="btn btn-default btn-sm move-day"
+              id="move-prev"
+            >
+              PREV
+            </button>
+            <button
+              on:click={nextMonth}
+              type="button"
+              class="btn btn-default btn-sm move-day"
+              id="move-next"
+            >
+              NEXT
+            </button>
+          </span>
+          <span id="renderRange" class="render-range" />
+        </div>
+
+        <div class="calendar-container">
+          <div id="calendar" />
+        </div>
+
+        <hr />
       </div>
       <div class="col-0" />
     </div>
     <div class="row">
       <div class="col-0" />
-      <div class="col-12">
-      
-        <SearchAndCreateField
-          placeholder="Type the title of event"
-          arrayOfObjects={allClientCalendarEvents}
-          keyToRender="title"
-          onSubmit={submitToDatabase}
-          onSelectionEvent={goToRoute}
-          {onDelete} 
-          buttonText="Create Event"
-        />
-      </div>
+      <div class="col-12" />
       <div class="col-0" />
     </div>
   </div>
-</div> -->
+</div>
 
 <style>
-  .get-started-text {
-    text-align: center;
+  #menu {
+    height: 50px;
+    position: relative;
+    top: 110px;
+    left: 20%;
+  }
+
+  #calendar {
+    position: relative;
+    top: 90px;
+    width: 70%;
+    margin: 0 auto;
+  }
+
+  .calendar-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #787878db;
-    font-size: 1.2em;
-    position: relative;
-    top: 20px;
-    margin-bottom: 50px;
+    width: 100%;
+    /* background-color:orange */
   }
-
-  .top-text {
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #787878db;
-    font-size: 1.2em;
-    position: relative;
-    top: 0px;
-    margin-bottom: 30px;
-  }
-
-  @font-face {
-    font-family: logoFont;
-    src: url(/fonts/next.ttf);
-  }
-
-  .logo-form-container {
-    position: relative;
-    top: 100px;
-  }
-
-  .app-is-ready-text {
-    color: #819dc2;
-    text-align: center;
-    font-size: 2em;
-  }
-
-  .logo-title {
-    text-align: center;
-    color: #266d2591;
-    font-size: 3em;
-  }
-
-  .client-name {
-    font-family: logoFont;
-    font-size: 1.8em;
-    color: #be3ebc91;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  button{
-    background-color: #8f4089 !important;
-    font-size: 1.5em;
-    color:white !important;
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 10%;
-    border-radius: 50px
-
-}
-
-    button:hover {
-        outline-color: #666;
-        background-color: #0fb52beb !important;
-   }
-
-   .input-group{
-    height:200px;
-}
 </style>

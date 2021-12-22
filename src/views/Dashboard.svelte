@@ -35,7 +35,7 @@
       title: "Meetings & Events",
       description: "- Your personalized event calendar",
       url: calendarURL,
-      endpoint: "Calendar-events/all/edit/",
+      endpoint: "calendar",
     },
 
     /*{title:"Contacts", url: contactsURL}*/

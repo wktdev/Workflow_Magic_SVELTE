@@ -55,6 +55,9 @@
 	    </div>
 	     <ul class="navbar-nav mr-auto">
 	        <li class="nav-item active" >
+	          <a class="nav-link" href="/#/calendar">All Calendar Events<span class="sr-only">(current)</span></a>
+	        </li>
+          <li class="nav-item active" >
 	          <a class="nav-link" href="/">All Clients<span class="sr-only">(current)</span></a>
 	        </li>
 	      </ul>
@@ -81,6 +84,11 @@
       </div>
       <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
+            
+            <a class="nav-link " href="/#/calendar">All Calendar Events<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            
             <a class="nav-link " href="/"> All Clients<span class="sr-only">(current)</span></a>
           </li>
         </ul>
@@ -104,10 +112,13 @@ nav {
   
 nav a {
   color:white !important;
+  margin-left:20px;
+  background-color:#ff9042;
 }
 
 .nav-item{
-  background-color:green;
+ 
+
 
 }
 </style>
