@@ -139,7 +139,7 @@
             console.log(e);
             // debugger;
         async function makeEvent() {
-          createCalendarEvent(
+          await createCalendarEvent(
             new Date(x),
             new Date(y),
             e.title,
@@ -149,11 +149,23 @@
             "time",
             e.calendarId
           ).then(() => {
-            location.reload();
+            // location.reload();
           });
+
+          await getAllCalendarEvents().then((calendarEventList) => {
+      // console.log("calendar events !", calendarEventList);
+      calendarEvents = [...calendarEventList];
+      calendar.clear();
+      calendar.createSchedules([...calendarEventList]);
+
+      console.log(calendarEventList);
+    });
         }
 
         makeEvent();
+
+
+        
       },
 
       aferRenderSchedule: function (e) {
