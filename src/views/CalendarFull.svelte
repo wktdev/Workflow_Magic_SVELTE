@@ -31,38 +31,35 @@
     //   useDetailPopup: true,
     //   calendars:[]
     // });
-    
 
     let tempCalendars = [];
     //________________________________________________________BEGIN get calendar events from IndexDB
-    await getAllClients().then((item) => {
-  
-    
-      item.forEach((val) => {
-        tempCalendars.push({
-          name: val.name,
-          id: val.id,
-          color: "#ffffff",
-          bgColor: stringToColour(val.name),
-          dragBgColor: "#9e5fff",
-          borderColor: "#9e5fff",
+    await getAllClients()
+      .then((item) => {
+        item.forEach((val) => {
+          tempCalendars.push({
+            name: val.name,
+            id: val.id,
+            color: "#ffffff",
+            bgColor: stringToColour(val.name),
+            dragBgColor: "#9e5fff",
+            borderColor: "#9e5fff",
+          });
+        });
+
+        console.log(tempCalendars);
+      })
+      .then(() => {
+        console.log(tempCalendars);
+        calendar = new TuiCalendar("#calendar", {
+          defaultView: "month",
+          taskView: true,
+          scheduleView: ["time"],
+          useCreationPopup: true,
+          useDetailPopup: true,
+          calendars: [...tempCalendars],
         });
       });
-
-      console.log(tempCalendars);
-      
-    }).then(()=>{
-      console.log(tempCalendars);
-          calendar = new TuiCalendar("#calendar", {
-        defaultView: "month",
-        taskView: true,
-        scheduleView: ["time"],
-        useCreationPopup: true,
-        useDetailPopup: true,
-        calendars: [...tempCalendars],
-      });
-    })
-
 
     await getAllCalendarEvents().then((calendarEventList) => {
       // console.log("calendar events !", calendarEventList);
@@ -110,20 +107,29 @@
       },
 
       beforeUpdateSchedule: function (e) {
-        console.log(e.changes.start);
-
+        console.log(e);
+        
         async function updateEvent() {
           let result;
+          let oldCalendarId;
+          console.log("Changes",e.changes);
           await getCalendarEventById(e.schedule.id).then((calendarEvent) => {
+            console.log("BEFORE CHANGES",calendarEvent);
+            oldCalendarId = calendarEvent.calendarId;
             result = Object.assign({}, calendarEvent, e.changes);
             result.start = new Date(result.start);
             result.end = new Date(result.end);
+            console.log("CHANGES", e.changes);
             console.log("Updated", result);
           });
 
           await updateCalendarEvent(e.schedule.id, result).then((x) => {
             console.log("Updated..?", x);
-            location.reload();
+            // location.reload();
+            calendar.updateSchedule(x.id, oldCalendarId, result);
+            console.log(calendar.updateSchedule);
+            console.log(result);
+            // calendar.updateSchedule(e.schedule.id,e.calendarId,x)
           });
         }
 
@@ -136,8 +142,8 @@
         console.log("beforeCreateSchedule", e);
         let x = e.start;
         let y = e.end;
-            console.log(e);
-            // debugger;
+        console.log(e);
+        // debugger;
         async function makeEvent() {
           await createCalendarEvent(
             new Date(x),
@@ -153,19 +159,16 @@
           });
 
           await getAllCalendarEvents().then((calendarEventList) => {
-      // console.log("calendar events !", calendarEventList);
-      calendarEvents = [...calendarEventList];
-      calendar.clear();
-      calendar.createSchedules([...calendarEventList]);
+            // console.log("calendar events !", calendarEventList);
+            calendarEvents = [...calendarEventList];
+            calendar.clear();
+            calendar.createSchedules([...calendarEventList]);
 
-      console.log(calendarEventList);
-    });
+            console.log(calendarEventList);
+          });
         }
 
         makeEvent();
-
-
-        
       },
 
       aferRenderSchedule: function (e) {

@@ -62,16 +62,27 @@ export async function getAllCalendarEvents() {
   return allCalendarEvents
 }
 
-export async function getClientCalendarEvents(clientID) {
+export async function getClientCalendarEvents(calendarID) {
   let allCalendarEvents = await indexedDB.calendar_events.toArray()
   console.log(allCalendarEvents)
-  console.log(clientID)
+  // console.log(clientID)
   let correctCalendarEvents = await allCalendarEvents.filter((val) => {
-    return val.client_id === clientID
+    return val.calendarId === calendarID
   })
 
   return correctCalendarEvents
 }
+
+// export async function getClientCalendarEvents(clientID) {
+//   let allCalendarEvents = await indexedDB.calendar_events.toArray()
+//   console.log(allCalendarEvents)
+//   console.log(clientID)
+//   let correctCalendarEvents = await allCalendarEvents.filter((val) => {
+//     return val.client_id === clientID
+//   })
+
+//   return correctCalendarEvents
+// }
 
 export async function deleteCalendarEvent(id) {
   let result = await indexedDB.calendar_events.where('id').equals(id).delete()

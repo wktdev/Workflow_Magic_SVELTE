@@ -7,7 +7,7 @@
   import { createCalendarEvent } from "../storageAPI/indexedDB";
   import { getClientCalendarEvents } from "../storageAPI/indexedDB";
   import { getAllCalendarEvents } from "../storageAPI/indexedDB";
-  import { getCalendarEventById } from "../storageAPI/indexedDB";
+  import { getCalendarEventById } from "../storageAPI/indexedDB";  
   import { updateCalendarEvent } from "../storageAPI/indexedDB";
   import { deleteCalendarEvent } from "../storageAPI/indexedDB";
   import { getClientById } from "../storageAPI/indexedDB";
@@ -57,6 +57,9 @@
             },
           ],
         });
+        
+
+        
       });
 
       
@@ -122,9 +125,10 @@
         console.log("beforeCreateSchedule", e);
         let x = e.start;
         let y = e.end;
-
+        console.log(e);
+        // debugger;
         async function makeEvent() {
-          createCalendarEvent(
+          await createCalendarEvent(
             new Date(x),
             new Date(y),
             e.title,
@@ -132,9 +136,18 @@
             e.isPrivate,
             e.isAllDay,
             "time",
-            clientId
+            e.calendarId
           ).then(() => {
-            location.reload();
+            // location.reload();
+          });
+
+          await getClientCalendarEvents(clientId).then((calendarEventList) => {
+            // console.log("calendar events !", calendarEventList);
+            calendarEvents = [...calendarEventList];
+            calendar.clear();
+            calendar.createSchedules([...calendarEventList]);
+
+            console.log(calendarEventList);
           });
         }
 
