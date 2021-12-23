@@ -28,31 +28,31 @@
 
     //_________________________________________________________END get calendar events from IndexDB
 
-    await getClientById(clientId).then((client) => {
-      clientName = client.name;
-    }).then(()=>{
+    await getClientById(clientId)
+      .then((client) => {
+        clientName = client.name;
+      })
+      .then(() => {
+        calendar = new TuiCalendar("#calendar", {
+          defaultView: "month",
+          taskView: true,
+          scheduleView: ["time"],
+          useCreationPopup: true,
+          useDetailPopup: true,
+          calendars: [
+            {
+              id: clientId,
+              name: clientName,
+              color: "#ffffff",
+              bgColor: "#9e5fff",
+              dragBgColor: "#9e5fff",
+              borderColor: "#9e5fff",
+            },
+          ],
+        });
+      });
 
-
-      calendar = new TuiCalendar("#calendar", {
-      defaultView: "month",
-      taskView: true,
-      scheduleView: ["time"],
-      useCreationPopup: true,
-      useDetailPopup: true,
-      calendars: [
-        {
-          id: clientId,
-          name: clientName,
-          color: "#ffffff",
-          bgColor: "#9e5fff",
-          dragBgColor: "#9e5fff",
-          borderColor: "#9e5fff",
-        },
-      ],
-    });
-    })
-
-   
+      
 
     await getAllCalendarEvents().then((calendarEventList) => {
       console.log("calendar events !", calendarEventList);
