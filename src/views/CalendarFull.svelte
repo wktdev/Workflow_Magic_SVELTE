@@ -3,6 +3,7 @@
   import "tui-calendar/dist/tui-calendar.css";
   import "tui-date-picker/dist/tui-date-picker.css";
   import "tui-time-picker/dist/tui-time-picker.css";
+  import { stringToColour } from "../helper_functions/";
   import { createCalendarEvent } from "../storageAPI/indexedDB";
   import { getClientCalendarEvents } from "../storageAPI/indexedDB";
   import { getAllCalendarEvents } from "../storageAPI/indexedDB";
@@ -20,57 +21,58 @@
   import "tui-time-picker/dist/tui-time-picker.css";
   let calendar;
   export let params = {};
-  let clientId = parseInt(params["clientId"]);
   let calendarEvents = [];
   onMount(async function () {
-
+    // calendar = new TuiCalendar("#calendar", {
+    //   defaultView: "month",
+    //   taskView: true,
+    //   scheduleView: ["time"],
+    //   useCreationPopup: true,
+    //   useDetailPopup: true,
+    //   calendars:[]
+    // });
     
-    calendar = new TuiCalendar("#calendar", {
-      defaultView: "month",
-      taskView: true,
-      scheduleView: ["time"],
-      useCreationPopup: true,
-      useDetailPopup: true,
-      calendars:[]
-    });
 
+    let tempCalendars = [];
     //________________________________________________________BEGIN get calendar events from IndexDB
+    await getAllClients().then((item) => {
+  
+    
+      item.forEach((val) => {
+        tempCalendars.push({
+          name: val.name,
+          id: val.id,
+          color: "#ffffff",
+          bgColor: stringToColour(val.name),
+          dragBgColor: "#9e5fff",
+          borderColor: "#9e5fff",
+        });
+      });
+
+      console.log(tempCalendars);
+      
+    }).then(()=>{
+      console.log(tempCalendars);
+          calendar = new TuiCalendar("#calendar", {
+        defaultView: "month",
+        taskView: true,
+        scheduleView: ["time"],
+        useCreationPopup: true,
+        useDetailPopup: true,
+        calendars: [...tempCalendars],
+      });
+    })
+
 
     await getAllCalendarEvents().then((calendarEventList) => {
-      console.log("calendar events !", calendarEventList);
+      // console.log("calendar events !", calendarEventList);
       calendarEvents = [...calendarEventList];
-
-      
-
       calendar.createSchedules([...calendarEventList]);
 
-     
+      console.log(calendarEventList);
     });
 
     // console.log(calendar._controller.calendars);
-
-   
-    await getAllClients().then((item)=>{
-
-         item.forEach((val)=>{
-
-          calendar._controller.calendars.push({
-              name:val.name,
-              id:val.id,
-              color: "#ffffff",
-              bgColor: "#9e5fff",
-              dragBgColor: "#9e5fff",
-              borderColor: "#9e5fff"
-            })
-
-         })
-
-
-
-    });
-
-
-
 
     // calendars: [
     //   {
@@ -82,83 +84,84 @@
     //     borderColor: "#9e5fff",
     //   },
     // ],
-      //_________________________________________________________END get calendar events from IndexDB
+    //_________________________________________________________END get calendar events from IndexDB
 
-      calendar.on({
-        //___________________________________________________On EVENTS CLICKS !IMPORTANT
-        //_______________________________ CLICK LISTED EVENT
-        clickSchedule: function (e) {
-          console.log("clickMore", e);
-        },
+    calendar.on({
+      //___________________________________________________On EVENTS CLICKS !IMPORTANT
+      //_______________________________ CLICK LISTED EVENT
+      clickSchedule: function (e) {
+        console.log("clickMore", e);
+      },
 
-        //__________ _____________________SELECT ITEM AND DELETE BUTTON
+      //__________ _____________________SELECT ITEM AND DELETE BUTTON
 
-        beforeDeleteSchedule: function (e) {
-          console.log("beforeDeleteSchedule", e.schedule.id);
+      beforeDeleteSchedule: function (e) {
+        console.log("beforeDeleteSchedule", e.schedule.id);
 
-          //____________________________________REMOVE FROM CALENDAR & UPDATES IMMEDIATLY
-          calendar.deleteSchedule(e.schedule.id, e.schedule.calendarId);
+        //____________________________________REMOVE FROM CALENDAR & UPDATES IMMEDIATLY
+        calendar.deleteSchedule(e.schedule.id, e.schedule.calendarId);
 
-          //___________________________________REMOVE FROM DB
-          async function removeEvent() {
-            await deleteCalendarEvent(e.schedule.id);
-          }
+        //___________________________________REMOVE FROM DB
+        async function removeEvent() {
+          await deleteCalendarEvent(e.schedule.id);
+        }
 
-          removeEvent(); // ____ NO PAGE REFRESH !
-        },
+        removeEvent(); // ____ NO PAGE REFRESH !
+      },
 
-        beforeUpdateSchedule: function (e) {
-          console.log(e.changes.start);
+      beforeUpdateSchedule: function (e) {
+        console.log(e.changes.start);
 
-          async function updateEvent() {
-            let result;
-            await getCalendarEventById(e.schedule.id).then((calendarEvent) => {
-              result = Object.assign({}, calendarEvent, e.changes);
-              result.start = new Date(result.start);
-              result.end = new Date(result.end);
-              console.log("Updated", result);
-            });
+        async function updateEvent() {
+          let result;
+          await getCalendarEventById(e.schedule.id).then((calendarEvent) => {
+            result = Object.assign({}, calendarEvent, e.changes);
+            result.start = new Date(result.start);
+            result.end = new Date(result.end);
+            console.log("Updated", result);
+          });
 
-            await updateCalendarEvent(e.schedule.id, result).then((x) => {
-              console.log("Updated..?", x);
-              location.reload();
-            });
-          }
+          await updateCalendarEvent(e.schedule.id, result).then((x) => {
+            console.log("Updated..?", x);
+            location.reload();
+          });
+        }
 
-          updateEvent();
+        updateEvent();
 
-          console.log(e.schedule);
-        },
+        console.log(e.schedule);
+      },
 
-        beforeCreateSchedule: function (e) {
-          console.log("beforeCreateSchedule", e);
-          let x = e.start;
-          let y = e.end;
+      beforeCreateSchedule: function (e) {
+        console.log("beforeCreateSchedule", e);
+        let x = e.start;
+        let y = e.end;
+            console.log(e);
+            // debugger;
+        async function makeEvent() {
+          createCalendarEvent(
+            new Date(x),
+            new Date(y),
+            e.title,
+            e.location,
+            e.isPrivate,
+            e.isAllDay,
+            "time",
+            e.calendarId
+          ).then(() => {
+            location.reload();
+          });
+        }
 
-          async function makeEvent() {
-            createCalendarEvent(
-              new Date(x),
-              new Date(y),
-              e.title,
-              e.location,
-              e.isPrivate,
-              e.isAllDay,
-              "time",
-              e.calendarId
-            ).then(() => {
-              location.reload();
-            });
-          }
+        makeEvent();
+      },
 
-          makeEvent();
-        },
-
-        aferRenderSchedule: function (e) {
-          //____ ??
-          console.log("afterRenderSchedule", e);
-          // const schedule = e.schedule;
-        },
-      });
+      aferRenderSchedule: function (e) {
+        //____ ??
+        console.log("afterRenderSchedule", e);
+        // const schedule = e.schedule;
+      },
+    });
   });
 
   function nextMonth() {

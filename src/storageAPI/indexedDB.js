@@ -9,7 +9,7 @@ indexedDB.version(1).stores({
     '++id,client_id,full_name,first_name,last_name,email,phone_number,additional_information',
 
   calendar_events:
-    '++id,calendar_id,start,end,title,location,isPrivate,isAllDay,category',
+    '++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
 
   calendar_event_group_id: '++id, title, client_name, client_id',
   user: 'user_id',
@@ -41,7 +41,7 @@ export async function createCalendarEvent(
   isPrivate,
   isAllDay,
   category,
-  calendarId,
+  clientId,
 ) {
   let result = await indexedDB.calendar_events.add({
     start: startDate,
@@ -51,7 +51,8 @@ export async function createCalendarEvent(
     isPrivate: isPrivate,
     isAllDay: isAllDay,
     category: category,
-    calendar_id: calendarId,
+    calendarId: clientId,
+    // calendar_id: clientId,
   })
   return result
 }

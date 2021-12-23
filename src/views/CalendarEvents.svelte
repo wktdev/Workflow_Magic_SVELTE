@@ -1,5 +1,6 @@
 <script>
   import TuiCalendar from "tui-calendar"; /* ES6 */
+  import {stringToColour} from "../helper_functions/";
   import "tui-calendar/dist/tui-calendar.css";
   import "tui-date-picker/dist/tui-date-picker.css";
   import "tui-time-picker/dist/tui-time-picker.css";
@@ -34,6 +35,12 @@
       })
       .then(() => {
         calendar = new TuiCalendar("#calendar", {
+          // id:clientId,
+          // name: clientName,
+          //     color: "#ffffff",
+          //     bgColor: "#9e5fff",
+          //     dragBgColor: "#9e5fff",
+          //     borderColor: "#9e5fff",
           defaultView: "month",
           taskView: true,
           scheduleView: ["time"],
@@ -44,7 +51,7 @@
               id: clientId,
               name: clientName,
               color: "#ffffff",
-              bgColor: "#9e5fff",
+              bgColor: stringToColour(clientName),
               dragBgColor: "#9e5fff",
               borderColor: "#9e5fff",
             },
@@ -58,7 +65,7 @@
       console.log("calendar events !", calendarEventList);
 
       let calEvents = calendarEventList.filter((val, index, arr) => {
-        return val.calendar_id === clientId;
+        return val.calendarId === clientId;
       });
 
       // calendarEvents = [...calendarEventList];
