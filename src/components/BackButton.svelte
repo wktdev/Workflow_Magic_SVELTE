@@ -1,12 +1,19 @@
 <script>
   export let color = `red`;
   export let top = `${-90}px`;
+  export let onClick;
   import {push, pop, replace} from 'svelte-spa-router'
+  
+
+
 
 </script>
 
 <div class="circle-container" style="--top:{top}">
-  <div class="res-circle" on:click={()=>{ pop() }}>
+  <div class="res-circle" on:click={function(){ pop() }}>
+
+
+    
     <div class="circle-txt"><slot>BACK</slot></div>
   </div>
 </div>

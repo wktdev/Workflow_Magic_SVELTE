@@ -10,6 +10,7 @@ import WorkflowEdit from './views/WorkflowEdit.svelte';
 import Workflow from './views/Workflow.svelte';
 import NotFound from './views/NotFound.svelte';
 
+import SaveAndLoadIndexedDB from './views/SaveAndLoadIndexedDB.svelte'
 import CalendarFull from './views/CalendarFull.svelte'
 import CalendarEvents from './views/CalendarEvents.svelte'
 import CalendarEventEdit from './views/CalendarEventEdit.svelte'
@@ -24,6 +25,7 @@ export default {
    
     '/client/:clientId/dashboard/calendar/' : CalendarEvents,
     '/calendar/': CalendarFull,
+    '/save-and-load/': SaveAndLoadIndexedDB,
 
     //  '/client/:clientId/dashboard/calendar-events/:calendar-event-id/edit/' : CalendarEventEdit,
     //  '/client/:clientId/dashboard/calendar-events' : CalendarEventEdit,

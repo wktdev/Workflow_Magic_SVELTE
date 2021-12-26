@@ -1,6 +1,8 @@
 import Dexie from 'dexie'
 
-var indexedDB = new Dexie('WorkflowMagicUserDB')
+let indexedDB = new Dexie('WorkflowMagicUserDB')
+import download from 'downloadjs'
+
 indexedDB.version(1).stores({
   workflows: '++id,client_id,content,title',
   clients: '++id,name',
@@ -15,11 +17,17 @@ indexedDB.version(1).stores({
   user: 'user_id',
 })
 
+import {
+  importDB,
+  exportDB,
+  importInto,
+  peakImportFile,
+} from 'dexie-export-import'
+
 // export async function getAllCalendarEvents() {
 //     let result = await indexedDB.calendar_events.toArray();
 //     return result // returns an entire array (not individual objects)
 // }
-
 
 export async function getCalendarEventById(id) {
   let result = await indexedDB.calendar_events.get(id)
@@ -27,8 +35,8 @@ export async function getCalendarEventById(id) {
   return result
 }
 
-export async function updateCalendarEvent(id,obj) {
-  let result = await indexedDB.calendar_events.update(id,obj)
+export async function updateCalendarEvent(id, obj) {
+  let result = await indexedDB.calendar_events.update(id, obj)
 
   return obj
 }
@@ -89,8 +97,6 @@ export async function deleteCalendarEvent(id) {
   return result
 }
 
-
-
 export async function createClient(name) {
   let result = await indexedDB.clients.add({ name: name })
   return result
@@ -147,3 +153,71 @@ export async function deleteWorkflow(id) {
   let result = await indexedDB.workflows.where('id').equals(id).delete()
   return result
 }
+
+export async function exportIndexedDB() {
+  const blob = await exportDB(indexedDB, { prettyJson: true })
+  download(blob, 'WorkflowMagic', 'application/json')
+  return blob
+}
+
+
+export async function importIndexedDB(file) {
+
+
+  await indexedDB.delete().then(()=>{
+    
+    indexedDB = new Dexie('WorkflowMagicUserDB');
+    indexedDB.version(1).stores({
+      workflows: '++id,client_id,content,title',
+      clients: '++id,name',
+      // contacts:"++id,client_id,content,title",
+      contacts:
+        '++id,client_id,full_name,first_name,last_name,email,phone_number,additional_information',
+    
+      calendar_events:
+        '++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
+    
+      calendar_event_group_id: '++id, title, client_name, client_id',
+      user: 'user_id',
+    })
+  
+  }).then(()=>{
+    indexedDB.import(file,{ prettyJson: true });
+  });
+
+  
+  // let db = await indexedDB.import(file,{ prettyJson: true });
+
+  
+
+  return "done"
+}
+
+
+
+// export async function importIndexedDB(file, callback) {
+//   await indexedDB.delete().then(()=>{
+    
+//     indexedDB = new Dexie('WorkflowMagicUserDB');
+//     indexedDB.version(1).stores({
+//       workflows: '++id,client_id,content,title',
+//       clients: '++id,name',
+//       // contacts:"++id,client_id,content,title",
+//       contacts:
+//         '++id,client_id,full_name,first_name,last_name,email,phone_number,additional_information',
+    
+//       calendar_events:
+//         '++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
+    
+//       calendar_event_group_id: '++id, title, client_name, client_id',
+//       user: 'user_id',
+//     })
+  
+//   }).then(()=>{
+//     indexedDB.import(file)
+//   })
+//   // indexedDB = new Dexie('WorkflowMagicUserDB')
+//   // let db = await indexedDB.import(file);
+
+//   // return db
+// }

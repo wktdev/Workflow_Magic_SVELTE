@@ -103,18 +103,28 @@
 
         async function updateEvent() {
           let result;
+          let oldCalendarId;
+          console.log("Changes",e.changes);
           await getCalendarEventById(e.schedule.id).then((calendarEvent) => {
+            console.log("BEFORE CHANGES",calendarEvent);
+            oldCalendarId = calendarEvent.calendarId;
             result = Object.assign({}, calendarEvent, e.changes);
             result.start = new Date(result.start);
             result.end = new Date(result.end);
+            console.log("CHANGES", e.changes);
             console.log("Updated", result);
           });
 
           await updateCalendarEvent(e.schedule.id, result).then((x) => {
             console.log("Updated..?", x);
-            location.reload();
+            // location.reload();
+            calendar.updateSchedule(x.id, oldCalendarId, result);
+            console.log(calendar.updateSchedule);
+            console.log(result);
+            // calendar.updateSchedule(e.schedule.id,e.calendarId,x)
           });
         }
+
 
         updateEvent();
 

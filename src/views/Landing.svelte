@@ -7,6 +7,9 @@
     import { animateNav } from '../store/nav_animation.js';
     import { fade, fly }          from 'svelte/transition';
      import { spring } from "svelte/motion";
+     import BackButton from "../components/BackButton.svelte";
+
+    //  import downloadjs from "downloadjs";
 
 
    
@@ -226,17 +229,11 @@ opacity: 0.2;
       <div class="container">
         <div class="row">
           <div class="col-0">
-
+        <BackButton onClick = {console.log("WORKS CLICKED")} />
          </div>
           <div class="col-12">
              <h2 class="logo-title">Workflow Magic</h2>
-              <h2 class="top-text">
-                 SignIn / SignUp
-               </h2>
-
-                   <h2 class="top-text">
-                 No?
-               </h2>
+       
 
                         <h2 class="top-text">
                  Get Started Now!
