@@ -183,10 +183,10 @@
 
 <div class="logo-form-container">
   <div class="container">
-    <BackButton top="65px" />
+    <BackButton top="10px" />
     <div class="row">
       <div class="col-0" />
-      <div class="col-12">
+      <div class="col-12" id="cal-box">
         <div id="menu">
           <span id="menu-navi">
             <button
@@ -231,25 +231,97 @@
 </div>
 
 <style>
-  #menu {
-    height: 50px;
-    position: relative;
-    top: 110px;
-    left: 20%;
-  }
 
-  #calendar {
-    position: relative;
-    top: 90px;
-    width: 70%;
-    margin: 0 auto;
+#cal-box{
+    top:120px;
+    position:relative
   }
-
-  .calendar-container {
+    .header {
+    height: 10vh;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .header-title {
+    margin: 0;
+  }
+
+
+  .button-container {
+    height: 10vh;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 100px;
+  }
+
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0.6rem;
+    margin: 0;
+    height: 100%;
     width: 100%;
-    /* background-color:orange */
+  }
+
+  .form {
+    height: 100%;
+    width: 100%;
+  }
+
+
+
+
+
+
+
+  .dashboard-text {
+    color: #96008fc9;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #787878db;
+    font-size: 1.2em;
+    position: relative;
+    top: 00px;
+    margin-bottom: 0px;
+    text-align: center;
+  }
+
+  .get-started-text {
+    text-align: center;
+    font-size: 1.1em;
+  }
+
+  .container {
+    margin-top: 120px;
+  }
+
+  .logo-title {
+    text-align: center;
+    color: #266d2591;
+    font-size: 3em;
+    /* margin-top: 70px;
+    margin-bottom: -20px; */
+
+  }
+
+  .client-name {
+    font-family: logoFont;
+    font-size: 1.8em;
+    color: #be3ebc91;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -30px;
+  }
+
+  .logo-form-container {
+    position: relative;
+    bottom: 120px;
   }
 </style>

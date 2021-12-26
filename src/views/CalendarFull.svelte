@@ -191,9 +191,13 @@
 <div class="logo-form-container">
   <div class="container">
     <BackButton top="10px"/>
+    
     <div class="row">
+      
       <div class="col-0" />
       <div class="col-12" id="cal-box">
+        <div class="pleasure-voice">Create a Event with Voice</div>
+
         <div id="menu">
           <span id="menu-navi">
             <button
@@ -239,10 +243,12 @@
 
 <style>
 
-  #cal-box{
-    top:120px;
-    position:relative
-  }
+.pleasure-voice{
+  height:40px;
+  background-color:#f4ff0073;
+  
+
+}
     /* .logo-form-container {
     position: relative;
     bottom: 120px;
@@ -268,6 +274,10 @@
     justify-content: center;
     width: 100%; */
 
+    #cal-box{
+    top:120px;
+    position:relative
+  }
     .header {
     height: 10vh;
     display: flex;
@@ -279,42 +289,6 @@
     margin: 0;
   }
 
-  /*    .markdown-editor {
-        width: 100%;
-        display: flex;
-        align-items:flex-start;
-        justify-content: space-evenly;
-    }
-*/
-
-  /*    .markdown-editor__right-panel {
-        width: 85%;
-        border: solid 1px black;
-        height: 85vh;
-    }
-
-    .markdown-editor__right-panel {
-        overflow: auto;
-    }
-
-    .markdown-editor__source {
-        border: none;
-        width: 100%;
-        height: 100%;
-        font-size: 2em;
-    }
-
-    .markdown-editor__source:focus {
-        outline: none;
-    }
-
-    .markdown-editor__output {
-        width: 100%;
-        padding: 0 2em;
-        font-size: 2em;
-
-    }
-*/
 
   .button-container {
     height: 10vh;
@@ -343,21 +317,7 @@
 
 
 
-/* 
-  button {
-    background-color: #8f4089 !important;
-    font-size: 1.5em;
-    color: white !important;
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 10%;
-    border-radius: 50px;
-  }
 
-  button:hover {
-    outline-color: #666;
-    background-color: #0fb52beb !important;
-  } */
 
   .dashboard-text {
     color: #96008fc9;
@@ -407,5 +367,58 @@
     bottom: 120px;
   }
     /* background-color:orange */
+
+      /*    .markdown-editor {
+        width: 100%;
+        display: flex;
+        align-items:flex-start;
+        justify-content: space-evenly;
+    }
+*/
+
+  /*    .markdown-editor__right-panel {
+        width: 85%;
+        border: solid 1px black;
+        height: 85vh;
+    }
+
+    .markdown-editor__right-panel {
+        overflow: auto;
+    }
+
+    .markdown-editor__source {
+        border: none;
+        width: 100%;
+        height: 100%;
+        font-size: 2em;
+    }
+
+    .markdown-editor__source:focus {
+        outline: none;
+    }
+
+    .markdown-editor__output {
+        width: 100%;
+        padding: 0 2em;
+        font-size: 2em;
+
+    }
+*/
+
+/* 
+  button {
+    background-color: #8f4089 !important;
+    font-size: 1.5em;
+    color: white !important;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10%;
+    border-radius: 50px;
+  }
+
+  button:hover {
+    outline-color: #666;
+    background-color: #0fb52beb !important;
+  } */
   
 </style>

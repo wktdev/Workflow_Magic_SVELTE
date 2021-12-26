@@ -141,6 +141,8 @@
   }
 
   nav a {
+    outline-color:#9c27b0;
+    outline-style:solid;
     color: white !important;
     margin-left: 20px;
     background-color: #9191a58a;
