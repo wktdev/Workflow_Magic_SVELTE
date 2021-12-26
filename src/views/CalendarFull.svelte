@@ -190,10 +190,10 @@
 
 <div class="logo-form-container">
   <div class="container">
-    <BackButton top="65px" />
+    <BackButton top="10px"/>
     <div class="row">
       <div class="col-0" />
-      <div class="col-12">
+      <div class="col-12" id="cal-box">
         <div id="menu">
           <span id="menu-navi">
             <button
@@ -238,6 +238,16 @@
 </div>
 
 <style>
+
+  #cal-box{
+    top:120px;
+    position:relative
+  }
+    /* .logo-form-container {
+    position: relative;
+    bottom: 120px;
+  }
+  
   #menu {
     height: 50px;
     position: relative;
@@ -256,7 +266,146 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    /* background-color:orange */
+    width: 100%; */
+
+    .header {
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+
+  .header-title {
+    margin: 0;
+  }
+
+  /*    .markdown-editor {
+        width: 100%;
+        display: flex;
+        align-items:flex-start;
+        justify-content: space-evenly;
+    }
+*/
+
+  /*    .markdown-editor__right-panel {
+        width: 85%;
+        border: solid 1px black;
+        height: 85vh;
+    }
+
+    .markdown-editor__right-panel {
+        overflow: auto;
+    }
+
+    .markdown-editor__source {
+        border: none;
+        width: 100%;
+        height: 100%;
+        font-size: 2em;
+    }
+
+    .markdown-editor__source:focus {
+        outline: none;
+    }
+
+    .markdown-editor__output {
+        width: 100%;
+        padding: 0 2em;
+        font-size: 2em;
+
+    }
+*/
+
+  .button-container {
+    height: 10vh;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 100px;
+  }
+
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0.6rem;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .form {
+    height: 100%;
+    width: 100%;
+  }
+
+
+
+
+
+/* 
+  button {
+    background-color: #8f4089 !important;
+    font-size: 1.5em;
+    color: white !important;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10%;
+    border-radius: 50px;
+  }
+
+  button:hover {
+    outline-color: #666;
+    background-color: #0fb52beb !important;
+  } */
+
+  .dashboard-text {
+    color: #96008fc9;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #787878db;
+    font-size: 1.2em;
+    position: relative;
+    top: 00px;
+    margin-bottom: 0px;
+    text-align: center;
+  }
+
+  .get-started-text {
+    text-align: center;
+    font-size: 1.1em;
+  }
+
+  .container {
+    margin-top: 120px;
+  }
+
+  .logo-title {
+    text-align: center;
+    color: #266d2591;
+    font-size: 3em;
+    /* margin-top: 70px;
+    margin-bottom: -20px; */
+
+  }
+
+  .client-name {
+    font-family: logoFont;
+    font-size: 1.8em;
+    color: #be3ebc91;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -30px;
+  }
+
+  .logo-form-container {
+    position: relative;
+    bottom: 120px;
+  }
+    /* background-color:orange */
+  
 </style>
