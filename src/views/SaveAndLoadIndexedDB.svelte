@@ -16,41 +16,13 @@
     });
   }
 
-  // async function handleFileChange(event) {
-  //   console.log("File(s) dropped");
-  //   event.preventDefault();
-  //   console.log(event.target.files[0]);
-
-  //   importIndexedDB(event.target.files[0]);
-  // }
-
-
-  async function handleFileChange(event) {
-    console.log("File(s) dropped");
-    event.preventDefault();
-    console.log(event.target.files[0]);
-
-    importIndexedDB(event.target.files[0]);
-  }
-
-
-  async function handleFileDrop(event) {
-    console.log("File(s) dropped");
-    event.preventDefault();
-    console.log(event.dataTransfer.files[0]);
-
-    importIndexedDB(event.dataTransfer.files[0]);
-  }
-
-
   //_________________________________________________
-
-
 
   let files = {
     accepted: [],
-    rejected: []
+    rejected: [],
   };
+  let redirectMessage = "Drag file here or click to upload";
 
   function handleFilesSelect(e) {
     const { acceptedFiles, fileRejections } = e.detail;
@@ -58,16 +30,24 @@
     files.rejected = [...files.rejected, ...fileRejections];
 
     importIndexedDB(files.accepted[0]);
+    
+    if (files.accepted[0]) {
+      console.log("true");
+      redirectMessage = "Data is loaded. Page will redirect in 2 seconds";
+      setTimeout(() => {
+        window.location.replace("/#/");
+      }, 2000);
+    } else {
+      console.log("false");
+    }
+
+    // if(files.accepted[0]){
+    //   setTimeout(()=>{
+    //     window.location.redirect("/#/")
+    //   },3000)
+    // }
   }
-
-
 </script>
-
-<!-- <form> -->
-  <input on:change={handleFileChange} type="file" name="filename" />
-
-  <!-- <input type="submit" /> -->
-<!-- </form> -->
 
 <div class="logo-form-container">
   <div class="container">
@@ -81,13 +61,17 @@
         <h2 class="top-text" on:click={downloadIndexDBUserData}>
           Click Here to Save & Download Your Data
         </h2>
+
+        <Dropzone on:drop={handleFilesSelect}>
+
+          {redirectMessage}
+          <ul>
+            {#each files.accepted as item}
+              <li>{item.name}</li>
+            {/each}
+          </ul>
+        </Dropzone>
       </div>
-      <Dropzone on:drop={handleFilesSelect} />
-<ol>
-  {#each files.accepted as item}
-    <li>{item.name}</li>
-  {/each}
-</ol>
 
       <div class="col-0" />
 
@@ -103,6 +87,9 @@
 </div>
 
 <style>
+  ol {
+    display: inline-block;
+  }
   #dropzone {
     width: 600px;
     height: 120px;
