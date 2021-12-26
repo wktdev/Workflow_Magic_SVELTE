@@ -11,6 +11,7 @@
   import { updateCalendarEvent } from "../storageAPI/indexedDB";
   import { deleteCalendarEvent } from "../storageAPI/indexedDB";
   import { getAllClients } from "../storageAPI/indexedDB";
+  import {createNewPleasureVoiceCalendarEvent} from "../pleasure_voice_api/pleasurevoice";
   import BackButton from "../components/BackButton.svelte";
   import { push, pop, replace } from "svelte-spa-router";
 
@@ -196,7 +197,9 @@
       
       <div class="col-0" />
       <div class="col-12" id="cal-box">
-        <div class="pleasure-voice">Create a Event with Voice</div>
+        <div class="pleasure-voice-container" on:click = {createNewPleasureVoiceCalendarEvent}>
+          <div class="create-voice-text">Create Event with PleasureVoice Service</div>
+        </div>
 
         <div id="menu">
           <span id="menu-navi">
@@ -247,6 +250,25 @@
   height:40px;
   background-color:#f4ff0073;
   
+
+}
+
+.create-voice-text{
+  background-color:rgb(180 13 129 / 76%);
+  width:300px;
+  margin:0 auto;
+  text-align:center;
+  color:white;
+  font-size:1.3em;
+  border-radius:20px;
+
+}
+
+.create-voice-text:hover{
+  background-color:rgb(180 23 132 / 88%);
+  width:300px;
+  margin:0 auto;
+  text-align:center;
 
 }
     /* .logo-form-container {
