@@ -47,15 +47,22 @@
     //   },3000)
     // }
   }
+
+
+  function redirectURL(){
+
+window.location.href = "/#/";
+
+}
 </script>
 
 <div class="logo-form-container">
   <div class="container">
     <div class="row">
       <div class="col-0">
-        <BackButton onClick={console.log("WORKS CLICKED")} />
+        <BackButton top="-80px" text="Go to Client List" width="160px" buttonEvent = {redirectURL}></BackButton>
       </div>
-      <div class="col-12">
+      <div class="col-12" id="box">
         <h2 class="logo-title">Workflow Magic</h2>
 
         <h2 class="top-text" on:click={downloadIndexDBUserData}>
@@ -64,13 +71,15 @@
 
         <Dropzone on:drop={handleFilesSelect}>
 
-          {redirectMessage}
+          <div class ="upload-text"> {redirectMessage} </div>
           <ul>
             {#each files.accepted as item}
               <li>{item.name}</li>
             {/each}
           </ul>
+
         </Dropzone>
+
       </div>
 
       <div class="col-0" />
@@ -87,6 +96,15 @@
 </div>
 
 <style>
+
+  #box{
+    margin-top:80px;
+  }
+  .upload-text{
+     font-size:2em;
+  }
+
+
   ol {
     display: inline-block;
   }
@@ -102,6 +120,7 @@
     margin: 0 auto;
     text-align: center;
   }
+
 
   .get-started-text {
     text-align: center;
