@@ -72,6 +72,7 @@
           Below is a list of useful tools to make working with the client easier.<br />
           Each item has a description below it. <br />
           To start organizing your project, make a selection.<br />
+          If at any time you feel lost, click the big yellow circle to go back a step.
         </p>
         <hr />
       </div>
