@@ -187,19 +187,30 @@
   function prevMonth() {
     calendar.prev();
   }
+
+
+  function redirectURL(){
+
+    window.location.href = "/#/";
+
+  }
+
 </script>
 
 <div class="logo-form-container">
   <div class="container">
-    <BackButton top="10px"/>
+    <BackButton top="10px" text="Go to Client List" width="140px" buttonEvent = {redirectURL}></BackButton>
+
     
     <div class="row">
       
       <div class="col-0" />
       <div class="col-12" id="cal-box">
-        <div class="pleasure-voice-container" on:click = {createNewPleasureVoiceCalendarEvent}>
+        <!-- <div class="pleasure-voice-container" on:click = {createNewPleasureVoiceCalendarEvent}>
           <div class="create-voice-text">Create Event with PleasureVoice Service</div>
-        </div>
+        </div> -->
+        <h1 class="client-name">Meetings & Events</h1>
+        <h2 class="logo-title">All Clients</h2>
 
         <div id="menu">
           <span id="menu-navi">
@@ -297,7 +308,7 @@
     width: 100%; */
 
     #cal-box{
-    top:120px;
+    top:100px;
     position:relative
   }
     .header {

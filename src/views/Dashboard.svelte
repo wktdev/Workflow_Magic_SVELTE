@@ -26,14 +26,14 @@
   let dashboardLinks = [
     {
       title: "Workflows",
-      description: "- Your personalized client documentation",
+      description: "- A note pad to document client information",
       url: workflowsURL,
       endpoint: "Workflows",
     },
 
     {
       title: "Meetings & Events",
-      description: "- Your personalized event calendar",
+      description: "- Event calendar for this client",
       url: calendarURL,
       endpoint: "calendar",
     },
@@ -48,12 +48,19 @@
       "/dashboard/" +
       dashboardLinks[index].endpoint.toLowerCase();
   }
+
+
+  function redirectURL(){
+
+   window.location.assign("/#/"); // or
+  }
 </script>
+
 
 
 <div class="logo-form-container">
   <div class="container">
-    <BackButton top="-100px"></BackButton>
+    <BackButton top="-100px" text="Go to Client List" width="160px" buttonEvent = {redirectURL}></BackButton>
     <div class="row">
       <div class="col-0" />
       <div class="col-12">
@@ -62,10 +69,9 @@
         <h1 class="client-name">Dashboard</h1>
         <h2 class="logo-title">{clientName}</h2>
         <p class="get-started-text">
-          Below is a list of data categories for the client.<br />
-          You can add to, remove from, and search each category. <br />
+          Below is a list of useful tools to make working with the client easier.<br />
           Each item has a description below it. <br />
-          To start organizing your project, select a category.<br />
+          To start organizing your project, make a selection.<br />
         </p>
         <hr />
       </div>
@@ -136,6 +142,7 @@
   .get-started-text {
     text-align: center;
     font-size: 1.1em;
+    color:#787878db;
   }
 
   .container {

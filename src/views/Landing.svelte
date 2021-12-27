@@ -160,6 +160,7 @@ opacity: 0.2;
       <div class="container">
         <div class="row">
           <div class="col-0">
+   
           </div>
 
           {#if $animateNav && !$showNav}
@@ -170,11 +171,9 @@ opacity: 0.2;
                <h2 class="logo-title">Workflow Magic</h2>
                <h3 class="app-is-ready-text">Your app is ready!</h3>
                <p class="get-started-text" in:fly="{{ y: -50, duration: 900 }}">
-                 To get started select a client name that <br/>
-                 you entered below. You can add <br/>
-                 as many clients as you want. Use the up <br/> 
-                 and down arrows on your keyboard to <br/>
-                 make toggling faster!
+                Add all the clients you want.<br/>  Use the up 
+                and down arrows on your keyboard <br/>to 
+                select a client and go to the next step.
                </p>
             </div>
           {/if}
@@ -183,16 +182,14 @@ opacity: 0.2;
 
 
             <div class="col-12">
-                                    <div class="background-image"></div>
+            <div class="background-image"></div>
 
                <h2 class="logo-title">Workflow Magic</h2>
                <h3 class="app-is-ready-text">Your app is ready!</h3>
                <p class="get-started-text" >
-                 To get started select a client name that <br/>
-                 you entered below. You can add <br/>
-                 as many clients as you want. Use the up <br/> 
-                 and down arrows on your keyboard to <br/>
-                 make toggling faster!
+                 Add all the clients you want.<br/>  Use the up 
+                 and down arrows on your keyboard <br/>to
+                 select a client and go to the next step.
                </p>
             </div>
           {/if}
@@ -212,7 +209,7 @@ opacity: 0.2;
                onSubmit = {submitToDatabase}  
                onDelete = {onDelete}   
                onSelectionEvent = {goToRoute}
-               placeholder= "Type the name of a company or client that you work with"
+               placeholder= "Type the name of a company or client you work with"
 
                />
           </div>
@@ -229,7 +226,7 @@ opacity: 0.2;
       <div class="container">
         <div class="row">
           <div class="col-0">
-        <BackButton onClick = {console.log("WORKS CLICKED")} />
+      
          </div>
           <div class="col-12">
              <h2 class="logo-title">Workflow Magic</h2>
@@ -250,7 +247,7 @@ opacity: 0.2;
           <div class="col-12">
               <SearchAndCreateField 
                buttonText = "Create Client"
-               placeholder= "Type the name of a client"
+               placeholder= "Type the name of a company or client you work with"
                arrayOfObjects = {clients} 
                keyToRender="name"           
                onSubmit = {submitToDatabase}     

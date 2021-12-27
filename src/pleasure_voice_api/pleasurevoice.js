@@ -216,6 +216,16 @@ export async function createNewPleasureVoiceCalendarEvent() {
   calendarDateSchema.month = { monthNumber: monthNumber, monthName: monthName }
   calendarDateSchema.time = convertedTime
   calendarDateSchema.year = yearOfEvent
-
+  
   console.log(calendarDateSchema)
 }
+
+
+
+// day: 2
+// month: {monthNumber: 1, monthName: 'january'}
+// name: "somebody"
+// time: "07:00"
+// year: 2022
+
+//'++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',

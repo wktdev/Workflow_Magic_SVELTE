@@ -38,7 +38,6 @@
   }
 
   function goToRoute(item) {
-
     let workflowID = item.id;
     if (item.content === undefined) {
       window.location.href =
@@ -64,7 +63,11 @@
     });
   }
 
+  function redirectURL() {
+    window.location.assign("/#/client/" + clientID + "/dashboard/"); // or
+  }
 
+  
 </script>
 
 <div class="logo-form-container">
@@ -73,7 +76,13 @@
       I'm styled with component props that set 
       CSS variables inside the component</Test> -->
 
-  <BackButton></BackButton>
+    <BackButton
+      top="-90px"
+      text="Client Dashboard"
+      width="160px"
+      buttonEvent={redirectURL}
+    />
+    
     <div class="row">
       <div class="col-0" />
       <div class="col-12">

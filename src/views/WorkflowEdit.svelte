@@ -25,7 +25,7 @@
       currentWorkflow = workflow;
       workflowTitle = workflow.title;
       console.log(currentWorkflow);
-      rawData = workflow.content;
+      rawData = workflow.content || " ";
     });
 
     await getClientById(clientID).then((client)=>{
@@ -41,6 +41,8 @@
     preview = !preview;
 
     previewText = preview ? "Edit" : "Preview";
+
+    
   }
 
   async function saveWorkflow() {
@@ -59,12 +61,21 @@
     });
   }
 
-
+function redirectURL(){
+  window.location.assign("/#/client/" + clientID + "/dashboard/workflows"); 
+}
 </script>
 
 <div class="logo-form-container">
   <div class="container">
-    <BackButton top='10px'></BackButton>
+ 
+
+    <BackButton
+      top="10px"
+      text="Go to Workflows"
+      width="140px"
+      buttonEvent={redirectURL}
+    />
     <div class="row">
       <div class="col-0" />
       <div class="col-12">
@@ -72,9 +83,7 @@
         <h2 class="logo-title">{clientName}</h2>
        
         <header class="header">
-          <button on:click={saveWorkflow} class="btn btn-info btn-block my-4"
-            >Save This Workflow</button
-          >
+          <button on:click={saveWorkflow} class="btn btn-info btn-block my-4">Save This Workflow</button>
         </header>
 
         <main class="main-container" on:dblclick={togglePreview}>

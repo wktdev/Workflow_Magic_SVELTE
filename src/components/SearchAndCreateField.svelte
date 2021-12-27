@@ -244,7 +244,7 @@ On hover, you need to select the index value of the thing you are hovering over
   }
 
   input::placeholder {
-    font-size: 1em;
+    font-size: 0.6em;
   }
 
   li {

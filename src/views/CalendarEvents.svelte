@@ -1,13 +1,13 @@
 <script>
   import TuiCalendar from "tui-calendar"; /* ES6 */
-  import {stringToColour} from "../helper_functions/";
+  import { stringToColour } from "../helper_functions/";
   import "tui-calendar/dist/tui-calendar.css";
   import "tui-date-picker/dist/tui-date-picker.css";
   import "tui-time-picker/dist/tui-time-picker.css";
   import { createCalendarEvent } from "../storageAPI/indexedDB";
   import { getClientCalendarEvents } from "../storageAPI/indexedDB";
   import { getAllCalendarEvents } from "../storageAPI/indexedDB";
-  import { getCalendarEventById } from "../storageAPI/indexedDB";  
+  import { getCalendarEventById } from "../storageAPI/indexedDB";
   import { updateCalendarEvent } from "../storageAPI/indexedDB";
   import { deleteCalendarEvent } from "../storageAPI/indexedDB";
   import { getClientById } from "../storageAPI/indexedDB";
@@ -57,12 +57,7 @@
             },
           ],
         });
-        
-
-        
       });
-
-      
 
     await getAllCalendarEvents().then((calendarEventList) => {
       console.log("calendar events !", calendarEventList);
@@ -104,9 +99,9 @@
         async function updateEvent() {
           let result;
           let oldCalendarId;
-          console.log("Changes",e.changes);
+          console.log("Changes", e.changes);
           await getCalendarEventById(e.schedule.id).then((calendarEvent) => {
-            console.log("BEFORE CHANGES",calendarEvent);
+            console.log("BEFORE CHANGES", calendarEvent);
             oldCalendarId = calendarEvent.calendarId;
             result = Object.assign({}, calendarEvent, e.changes);
             result.start = new Date(result.start);
@@ -124,7 +119,6 @@
             // calendar.updateSchedule(e.schedule.id,e.calendarId,x)
           });
         }
-
 
         updateEvent();
 
@@ -179,14 +173,29 @@
   function prevMonth() {
     calendar.prev();
   }
+
+  function redirectURL() {
+    window.location.assign("/#/client/" + clientId + "/dashboard/");
+  }
 </script>
+
+
 
 <div class="logo-form-container">
   <div class="container">
-    <BackButton top="10px" />
+    <BackButton
+      top="10px"
+      text="GoTo Dashboard"
+      width="140px"
+      buttonEvent={redirectURL}
+    />
     <div class="row">
       <div class="col-0" />
+      
       <div class="col-12" id="cal-box">
+
+  <h1 class="client-name">Meetings & Events</h1>
+  <h2 class="logo-title">{clientName}</h2>
         <div id="menu">
           <span id="menu-navi">
             <button
@@ -231,12 +240,11 @@
 </div>
 
 <style>
-
-#cal-box{
-    top:120px;
-    position:relative
+  #cal-box {
+    top: 100px;
+    position: relative;
   }
-    .header {
+  .header {
     height: 10vh;
     display: flex;
     align-items: center;
@@ -246,7 +254,6 @@
   .header-title {
     margin: 0;
   }
-
 
   .button-container {
     height: 10vh;
@@ -270,12 +277,6 @@
     height: 100%;
     width: 100%;
   }
-
-
-
-
-
-
 
   .dashboard-text {
     color: #96008fc9;
@@ -306,7 +307,6 @@
     font-size: 3em;
     /* margin-top: 70px;
     margin-bottom: -20px; */
-
   }
 
   .client-name {

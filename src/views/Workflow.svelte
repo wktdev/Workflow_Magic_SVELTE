@@ -51,11 +51,24 @@
       workflowId +
       "/edit";
   }
+
+  function redirectURL(){
+  window.location.assign("/#/client/" + clientID + "/dashboard/workflows"); 
+}
+
+
 </script>
 
 <div class="logo-form-container">
   <div class="container">
-    <BackButton top = "10px"></BackButton>
+    
+<BackButton
+top="10px"
+text="Go to Workflows"
+width="140px"
+buttonEvent={redirectURL}
+/>
+
     <div class="row">
       <div class="col-0" />
       <div class="col-12">
