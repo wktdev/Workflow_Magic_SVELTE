@@ -172,8 +172,8 @@ opacity: 0.2;
                <h3 class="app-is-ready-text">Your app is ready!</h3>
                <p class="get-started-text" in:fly="{{ y: -50, duration: 900 }}">
                 Add all the clients you want.<br/>  Use the up 
-                and down arrows on your keyboard <br/>to 
-                select a client and go to the next step.
+                and down arrows on your keyboard. <br/>
+                To go to the next step, select a client!
                </p>
             </div>
           {/if}
@@ -187,9 +187,9 @@ opacity: 0.2;
                <h2 class="logo-title">Workflow Magic</h2>
                <h3 class="app-is-ready-text">Your app is ready!</h3>
                <p class="get-started-text" >
-                 Add all the clients you want.<br/>  Use the up 
-                 and down arrows on your keyboard <br/>to
-                 select a client and go to the next step.
+                Add all the clients you want.<br/>  Use the up 
+                and down arrows on your keyboard. <br/>
+                To go to the next step, select a client!
                </p>
             </div>
           {/if}

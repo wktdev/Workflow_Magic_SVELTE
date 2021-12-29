@@ -15,6 +15,7 @@ import CalendarFull from './views/CalendarFull.svelte'
 import CalendarEvents from './views/CalendarEvents.svelte'
 import CalendarEventEdit from './views/CalendarEventEdit.svelte'
 import SpeechService from './views/SpeechService.svelte'
+import Apps from './views/Apps.svelte'
 import sandbox from './views/sandbox.svelte'
 
 export default {
@@ -27,6 +28,7 @@ export default {
     '/client/:clientId/dashboard/calendar/' : CalendarEvents,
     '/calendar/': CalendarFull,
     '/save-and-load/': SaveAndLoadIndexedDB,
+    '/apps/' : Apps,
     '/speech/' : SpeechService, 
 
     //  '/client/:clientId/dashboard/calendar-events/:calendar-event-id/edit/' : CalendarEventEdit,

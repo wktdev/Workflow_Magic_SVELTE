@@ -11,8 +11,10 @@
   import { updateCalendarEvent } from "../storageAPI/indexedDB";
   import { deleteCalendarEvent } from "../storageAPI/indexedDB";
   import { getAllClients } from "../storageAPI/indexedDB";
-  import {createNewPleasureVoiceCalendarEvent} from "../pleasure_voice_api/pleasurevoice";
+  import { createNewPleasureVoiceCalendarEvent } from "../pleasure_voice_api/pleasurevoice";
   import BackButton from "../components/BackButton.svelte";
+  import { fade, fly } from 'svelte/transition';
+	
   import { push, pop, replace } from "svelte-spa-router";
 
   import { onMount } from "svelte";
@@ -68,6 +70,7 @@
       calendar.createSchedules([...calendarEventList]);
 
       console.log(calendarEventList);
+      console.log(calendar.id);
     });
 
     // console.log(calendar._controller.calendars);
@@ -109,13 +112,13 @@
 
       beforeUpdateSchedule: function (e) {
         console.log(e);
-        
+
         async function updateEvent() {
           let result;
           let oldCalendarId;
-          console.log("Changes",e.changes);
+          console.log("Changes", e.changes);
           await getCalendarEventById(e.schedule.id).then((calendarEvent) => {
-            console.log("BEFORE CHANGES",calendarEvent);
+            console.log("BEFORE CHANGES", calendarEvent);
             oldCalendarId = calendarEvent.calendarId;
             result = Object.assign({}, calendarEvent, e.changes);
             result.start = new Date(result.start);
@@ -188,22 +191,93 @@
     calendar.prev();
   }
 
-
-  function redirectURL(){
-
+  function redirectURL() {
     window.location.href = "/#/";
-
   }
 
+
+//______________________________________________________________________Calendar animate
+
+
+
+let showCalendar = true;
+
+
+
+
+
+
+
+
+  async function pleasureVoiceInvoke() {
+    //'++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
+    //time: '12:45
+
+    // NOTE still need to add time!!
+
+    // new Date(year, month, day, hours, minutes, seconds, milliseconds)
+    let result = await createNewPleasureVoiceCalendarEvent();
+
+    let startDate = new Date();
+
+    console.log(result);
+    let timeSplit = result.time.split(":");
+    let hour = parseInt(timeSplit[0]);
+    let minutes = parseInt(timeSplit[1]);
+
+    console.log("Time split", timeSplit);
+
+    let defaultEventLength = minutes + 30;
+    // day: 2
+    // month: {monthNumber: 1, monthName: 'january'}
+    // name: "somebody"
+    // time: "07:00"
+    // year: 2022
+
+    let startDateFromVoice = new Date(
+      result.year,
+      result.month.monthNumber-1,
+      result.day,
+      hour,
+      minutes
+    );
+    let endDate = new Date(
+      result.year,
+      result.month.monthNumber-1,
+      result.day,
+      hour,
+      defaultEventLength
+    );
+
+    await createCalendarEvent(
+      startDateFromVoice,
+      startDateFromVoice,
+      result.name,
+      "",
+      true,
+      true,
+      "time",
+       1
+    ).then(()=>{
+
+      window.location.reload();
+
+    });
+
+  
+  }
 </script>
 
 <div class="logo-form-container">
   <div class="container">
-    <BackButton top="10px" text="Go to Client List" width="140px" buttonEvent = {redirectURL}></BackButton>
+    <BackButton
+      top="10px"
+      text="Go to Client List"
+      width="140px"
+      buttonEvent={redirectURL}
+    />
 
-    
     <div class="row">
-      
       <div class="col-0" />
       <div class="col-12" id="cal-box">
         <!-- <div class="pleasure-voice-container" on:click = {createNewPleasureVoiceCalendarEvent}>
@@ -211,6 +285,14 @@
         </div> -->
         <h1 class="client-name">Meetings & Events</h1>
         <h2 class="logo-title">All Clients</h2>
+        <p class="instructions">Select a date to add an event</p>
+        <p
+          class="instructions"
+          id="pleasure-voice"
+          on:click={pleasureVoiceInvoke}
+        >
+          Click here to use Pleasure Voice service
+        </p>
 
         <div id="menu">
           <span id="menu-navi">
@@ -239,7 +321,7 @@
           <span id="renderRange" class="render-range" />
         </div>
 
-        <div class="calendar-container">
+        <div class="calendar-container" >
           <div id="calendar" />
         </div>
 
@@ -256,33 +338,41 @@
 </div>
 
 <style>
+  .instructions {
+    text-align: center;
+  }
 
-.pleasure-voice{
+  #pleasure-voice:hover {
+    display: block;
+    text-align: center;
+    color: orange;
+    cursor: pointer;
+  }
+
+  /* .pleasure-voice{
   height:40px;
   background-color:#f4ff0073;
   
 
-}
+} */
 
-.create-voice-text{
-  background-color:rgb(180 13 129 / 76%);
-  width:300px;
-  margin:0 auto;
-  text-align:center;
-  color:white;
-  font-size:1.3em;
-  border-radius:20px;
+  .create-voice-text {
+    background-color: rgb(180 13 129 / 76%);
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    font-size: 1.3em;
+    border-radius: 20px;
+  }
 
-}
-
-.create-voice-text:hover{
-  background-color:rgb(180 23 132 / 88%);
-  width:300px;
-  margin:0 auto;
-  text-align:center;
-
-}
-    /* .logo-form-container {
+  .create-voice-text:hover {
+    background-color: rgb(180 23 132 / 88%);
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  /* .logo-form-container {
     position: relative;
     bottom: 120px;
   }
@@ -307,11 +397,11 @@
     justify-content: center;
     width: 100%; */
 
-    #cal-box{
-    top:100px;
-    position:relative
+  #cal-box {
+    top: 100px;
+    position: relative;
   }
-    .header {
+  .header {
     height: 10vh;
     display: flex;
     align-items: center;
@@ -321,7 +411,6 @@
   .header-title {
     margin: 0;
   }
-
 
   .button-container {
     height: 10vh;
@@ -345,12 +434,6 @@
     height: 100%;
     width: 100%;
   }
-
-
-
-
-
-
 
   .dashboard-text {
     color: #96008fc9;
@@ -381,7 +464,6 @@
     font-size: 3em;
     /* margin-top: 70px;
     margin-bottom: -20px; */
-
   }
 
   .client-name {
@@ -399,9 +481,9 @@
     position: relative;
     bottom: 120px;
   }
-    /* background-color:orange */
+  /* background-color:orange */
 
-      /*    .markdown-editor {
+  /*    .markdown-editor {
         width: 100%;
         display: flex;
         align-items:flex-start;
@@ -438,7 +520,7 @@
     }
 */
 
-/* 
+  /* 
   button {
     background-color: #8f4089 !important;
     font-size: 1.5em;
@@ -453,5 +535,4 @@
     outline-color: #666;
     background-color: #0fb52beb !important;
   } */
-  
 </style>

@@ -63,8 +63,17 @@
           <li class="nav-item active">
             
 
+            <a class="nav-link " href="/#/apps">
+              Apps<span class="sr-only">(current)</span></a>
+
+
+
+          </li>
+          <li class="nav-item active">
+            
+
             <a class="nav-link " href="/#/save-and-load">
-              Load or Save Your Data to File<span class="sr-only">(current)</span></a
+              Load or Save Data<span class="sr-only">(current)</span></a
             >
 
 
@@ -110,10 +119,19 @@
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
             
-              <a class="nav-link " href="/#/save-and-load">
-                Load or Save Your Data to File<span class="sr-only">(current)</span></a
-              >
+              <a class="nav-link " href="/#/apps">
+                Apps<span class="sr-only">(current)</span></a>
+  
 
+            </li>
+            <li class="nav-item active">
+            
+
+              <a class="nav-link " href="/#/save-and-load">
+                Load or Save Data<span class="sr-only">(current)</span></a
+              >
+  
+  
             </li>
             <li class="nav-item active">
               <a class="nav-link " href="/#/calendar"

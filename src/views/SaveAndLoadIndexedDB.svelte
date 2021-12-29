@@ -54,6 +54,11 @@
 window.location.href = "/#/";
 
 }
+
+
+
+
+
 </script>
 
 <div class="logo-form-container">

@@ -1,7 +1,9 @@
 import moment from 'moment';
 
 
-let SpeechRecognition = webkitSpeechRecognition || SpeechRecognition
+
+
+let SpeechRecognition = webkitSpeechRecognition ?? SpeechRecognition;
 
 let months = {
   january: 1,
@@ -122,13 +124,15 @@ function speechInput(inputData) {
     speechcalendarDateVoiceInput.start()
     speechcalendarDateVoiceInput.onresult = function (event) {
       const current = event.resultIndex
-
+     
       let str = event.results[current][0].transcript
-
+         console.log("Speech input")
       resolve(str)
     }
   })
 }
+
+
 
 let calendarDateVoiceInput = {
   name: undefined,
@@ -145,13 +149,14 @@ let calendarDateSchema = {
 }
 
 export async function createNewPleasureVoiceCalendarEvent() {
-  let questionOne = await speechOutput('what is the students name')
+  let questionOne = await speechOutput('what is the name ofthe event')
+  console.log("Question 1 voice service", questionOne)
   let answerOne = await speechInput()
   calendarDateVoiceInput['name'] = answerOne
-  let questionTwo = await speechOutput('What date is the session')
+  let questionTwo = await speechOutput('What date is the event')
   let answerTwo = await speechInput()
   calendarDateVoiceInput['date'] = answerTwo
-  let questionThree = await speechOutput('what time is the session')
+  let questionThree = await speechOutput('what time is the event')
   let answerThree = await speechInput()
   calendarDateVoiceInput['time'] = answerThree
 
@@ -218,6 +223,9 @@ export async function createNewPleasureVoiceCalendarEvent() {
   calendarDateSchema.year = yearOfEvent
   
   console.log(calendarDateSchema)
+
+  return calendarDateSchema
+
 }
 
 
@@ -227,5 +235,9 @@ export async function createNewPleasureVoiceCalendarEvent() {
 // name: "somebody"
 // time: "07:00"
 // year: 2022
+
+// compose start date out of output for newDate()
+
+
 
 //'++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',

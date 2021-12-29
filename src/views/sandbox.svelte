@@ -1,149 +1,165 @@
 <script>
-	import TuiCalendar from "tui-calendar"; /* ES6 */
-	import "tui-calendar/dist/tui-calendar.css";
-	import "tui-date-picker/dist/tui-date-picker.css";
-	import "tui-time-picker/dist/tui-time-picker.css";
+  //createNewPleasureVoiceCalendarEvent
+  import { pleasureVoiceEvent } from "../pleasure_voice_api/pv_sandbox";
+  import { onMount } from "svelte";
+  import moment from "moment";
+
+  onMount(function () {});
+
+  //_____________________________________________________________BEGIN parse name of event
+
+  function parseVoiceEventName(voiceEventName) {
+    let result = voiceEventName.toLowerCase();
+    return result;
+  }
+
+  //_____________________________________________________________END parse name of event
+
+  //_____________________________________________________________BEGIN parse date of event
+
+  function parseVoiceEventDate(voiceInput) {
+    let months = {
+      january: 1,
+      february: 2,
+      march: 3,
+      april: 4,
+      may: 5,
+      june: 6,
+      july: 7,
+      august: 8,
+      september: 9,
+      october: 10,
+      november: 11,
+      december: 12,
+    };
+
+    //____________________________________________________________________START functions
+    // months @takes an object of months with the key the month name and the value the month number
+    // monthAndDayVoiceInput @ takes a string with a month name in it such as "December 15"
+    // This functions parses out the month name from a string
+    function parseMonthFromVoiceInput(months, monthAndDayVoiceInput) {
+      let bool = false;
+      let prop = undefined;
+      for (prop in months) {
+        if (monthAndDayVoiceInput.includes(prop)) {
+          return prop;
+        }
+      }
+      return prop;
+    }
+
+    function getYearOfEvent(monthNumberOfDate) {
+      let date = new Date();
+      let currentMonthNumber = moment().month() + 1; // moment starts months at a zero based list
+      let currentYear = date.getFullYear();
+      let returnedYear;
+
+      console.log(currentMonthNumber);
+
+      if (monthNumberOfDate < currentMonthNumber) {
+        return (currentYear += 1);
+      } else {
+        return currentYear;
+      }
+    }
+
+    let lowerCaseDate = voiceInput.toLowerCase(); // lower case month
+    let monthName = parseMonthFromVoiceInput(months, lowerCaseDate);
+    let dateOfMonth = lowerCaseDate.replace(/[^0-9]/g, "");
+    let monthNumber = months[monthName]; // 11
+    let yearOfEvent = getYearOfEvent(monthNumber);
+    console.log(yearOfEvent, "year of event");
+    let day = voiceInput.replace(/[^0-9]/g, ""); // get number of day
+    let numericalDay = parseInt(day);
+
+    return {
+      monthName: monthName,
+      monthNumber: monthNumber,
+      year: yearOfEvent,
+    };
+  }
+
+  //______________________________________________________________END parse date of event
+
+  function parseVoiceStartTime(startTime) {
+
+
+    const convertTime12to24 = (time12h) => {
+      const [time, modifier] = time12h.split(" ");
+      let [hours, minutes] = time.split(":");
+      if (hours === "12") {
+        hours = "00";
+      }
+
+      if (modifier === "PM") {
+        hours = parseInt(hours, 10) + 12;
+      }
+      return `${hours}:${minutes}`;
+    };
+
+    function timeVoiceConversion(time) {
+      let removePeriods = time.replace(/\./g, "");
+      console.log(removePeriods, "PERIODS");
+      let originalTime = removePeriods; //"7 PM";
+      let upcaseTime = originalTime.toUpperCase();
+      let timeNoWhiteSpace = upcaseTime.replace(/ /g, "");
+      console.log(timeNoWhiteSpace);
+      let splitTime = timeNoWhiteSpace.split("");
+
+      let answer = splitTime.map((val, index, arr) => {
+        let unTouched = val;
+        let result = parseInt(val);
+        if (isNaN(result)) {
+          return val;
+        } else {
+          return result;
+        }
+      });
+
+      console.log(answer);
+      if (typeof answer[1] !== "number") {
+        let x = answer.unshift(0);
+        console.log(answer);
+      }
+
+      if (answer[2] !== ":") {
+        answer.splice(2, 0, ":00");
+      }
+
+      answer.splice(answer.length - 2, 0, " ");
+      return answer.join("");
+    }
+
+
+
+    
+
+	let timeVal = timeVoiceConversion(startTime);
+	console.log(timeVal, "pre 24 hour");
+    let convertedTime = convertTime12to24(timeVal);
+	return {time:convertedTime}
+  }
+
+  let questions = [
+    "What is the name of the event?",
+    "What date is the event?",
+    "what time is the event",
+  ];
+
+  let parserFunctions = [
+    parseVoiceEventName,
+    parseVoiceEventDate,
+    parseVoiceStartTime,
+  ];
   
-	import { onMount } from "svelte";
-  
-	// If you use the default popups, use this.
-	import "tui-date-picker/dist/tui-date-picker.css";
-	import "tui-time-picker/dist/tui-time-picker.css";
-	let calendar;
-	// let next;
-  
-	onMount(function () {
-	  calendar = new TuiCalendar("#calendar", {
-		defaultView: "month",
-		taskView: true,
-		scheduleView: ["time"],
-		useCreationPopup: true,
-		useDetailPopup: true,
-		calendars: [
-		  {
-			id: "1",
-			name: "ACME",
-			// color: "#ffffff",
-			// bgColor: "#9e5fff",
-			// dragBgColor: "#9e5fff",
-			// borderColor: "#9e5fff",
-		  },
-		  {
-			id: "2",
-			name: "TWITCH",
-			// color: "#00a9ff",
-			// bgColor: "#00a9ff",
-			// dragBgColor: "#00a9ff",
-			// borderColor: "#00a9ff",
-		  },
-		],
-	  });
-  
-	  calendar.createSchedules([
-		{
-		  id: "1",
-		  calendarId: "1",
-		  title: "my schedule",
-		  category: "time",
-		  dueDateClass: "",
-		  start: "2021-12-18T22:30:00+09:00",
-		  end: "2021-01-19T02:30:00+09:00",
-		},
-		{
-		  id: "2",
-		  calendarId: "1",
-		  title: "second schedule",
-		  category: "time",
-		  dueDateClass: "",
-		  start: "2021-12-18T17:30:00+09:00",
-		  end: "2021-12-19T17:31:00+09:00",
-		},
-	  ]);
-  
-	  // next = document.getElementById("move-next");
-	  // next.addEventListener("click",()=>{
-	  //   calendar.next()
-	  //   alert()
-	  // })
-  
-	  calendar.on({
-		//___________________________________________________On EVENTS CLICKS !IMPORTANT
-		//_______________________________ CLICK LISTED EVENT
-		clickSchedule: function (e) {
-		  console.log("clickMore", e);
-		},
-  
-		//__________ _____________________SELECT ITEM AND DELETE BUTTON
-  
-		beforeDeleteSchedule: function (e) {
-		  console.log("beforeDeleteSchedule", e);
-		  calendar.deleteSchedule(e.schedule.id, e.schedule.calendarId);
-		},
-  
-		beforeUpdateSchedule: function (e) {
-		  // AFTER DRAG and before DROP
-		  console.log("beforeUpdateSchedule", e);
-		},
-  
-		beforeCreateSchedule: function (e) {
-		  // AFTER DRAG and before DROP
-		  console.log("beforeUpdateSchedule", e);
-		},
-  
-		aferRenderSchedule: function (e) {
-		  //____ ??
-		  console.log("afterRenderSchedule", e);
-		  // const schedule = e.schedule;
-		},
-	  });
-	});
-  
-	// if(next){
-	//   console.log(next)
-	// }
-  
-	function nextMonth() {
-	  calendar.next();
-	}
-  
-	function prevMonth() {
-	  calendar.prev();
-	}
-  </script>
-  
-  <div id="menu">
-	<span id="menu-navi">
-	  <button
-		type="button"
-		class="btn btn-default btn-sm move-today"
-		data-action="move-today">Today</button
-	  >
-	  <button
-		on:click={prevMonth}
-		type="button"
-		class="btn btn-default btn-sm move-day"
-		id="move-prev"
-	  >
-		PREV
-	  </button>
-	  <button
-		on:click={nextMonth}
-		type="button"
-		class="btn btn-default btn-sm move-day"
-		id="move-next"
-	  >
-		NEXT
-	  </button>
-	</span>
-	<span id="renderRange" class="render-range" />
-  </div>
-  
-  <div id="calendar" />
-  
-  <style>
-	#menu {
-	  height: 200px;
-	  background-color: orange;
-	}
-  </style>
-  
+</script>
+
+<div
+  on:click={() => {
+    pleasureVoiceEvent(questions, parserFunctions, (parsedStuff) => {
+      console.log(parsedStuff);
+    });
+  }}
+>
+  Click me
+</div>

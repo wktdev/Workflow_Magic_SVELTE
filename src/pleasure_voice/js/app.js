@@ -269,9 +269,9 @@ let convertedTime = convertTime12to24(timeVal);
 }
 
 
-window.addEventListener("click", () => {
-    createNewStudentEvent()
-});
+// window.addEventListener("click", () => {
+//     createNewStudentEvent()
+// });
 
 
 

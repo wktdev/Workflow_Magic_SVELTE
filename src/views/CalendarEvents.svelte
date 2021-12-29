@@ -196,6 +196,8 @@
 
   <h1 class="client-name">Meetings & Events</h1>
   <h2 class="logo-title">{clientName}</h2>
+  <p class="instructions">Select a date to add an event</p>
+  <p class="instructions"  id="pleasure-voice">Click here to use Pleasure Voice service</p>
         <div id="menu">
           <span id="menu-navi">
             <button
@@ -240,6 +242,19 @@
 </div>
 
 <style>
+
+  .instructions{
+    display:block;
+    text-align:center;
+  }
+
+  #pleasure-voice:hover{
+    display:block;
+    text-align:center;
+    color:orange;
+    cursor:pointer;
+  }
+
   #cal-box {
     top: 100px;
     position: relative;
