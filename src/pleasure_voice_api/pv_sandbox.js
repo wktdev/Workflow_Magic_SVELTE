@@ -40,9 +40,6 @@ export function parseVoiceEventName(voiceEventName) {
 
 
 
-
-
-
 //_____________________________________________________________BEGIN parse Event Date
 
 export function parseVoiceEventDate(voiceInput) {
@@ -168,13 +165,13 @@ export async function pleasureVoiceEvent(questions, parserList, callback) {
   let parsedData = []
 
   for (let i = 0; i < questions.length; i++) {
-    callback(questions[i])
+    callback(i)
     let question = await speechOutput(questions[i])
     let result = await speechInput()
     parsedData.push(parserList[i](result))
-    callback(parserList[i](result))
+    // callback(parserList[i](result))
     
   }
 
-   callback(parsedData)
+   return {allData:parsedData}
 }

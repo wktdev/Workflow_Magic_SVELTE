@@ -1,6 +1,4 @@
 let SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
-import moment from 'moment';
-
 
 
 
@@ -8,7 +6,7 @@ import moment from 'moment';
 
 //___________________________________________________MODULE
 
-export let pleasureVoiceApp = (function Module(userVoiceInput) {
+let pleasureVoiceApp = (function Module(userVoiceInput) {
 
     let app = {
 
@@ -39,9 +37,9 @@ export let pleasureVoiceApp = (function Module(userVoiceInput) {
         //________________________________________________________________
 
 
-        booleanCheckParser(input) {
+       booleanCheckParser(input){
 
-        },
+       },
 
         //________________________________________________________________
 
@@ -57,7 +55,7 @@ export let pleasureVoiceApp = (function Module(userVoiceInput) {
 
 
 
-        voiceEventDateParser: function(voiceInput) {
+        VoiceEventDateParser: function(voiceInput) {
             let months = {
                 january: 1,
                 february: 2,
@@ -86,7 +84,7 @@ export let pleasureVoiceApp = (function Module(userVoiceInput) {
 
             function getYearOfEvent(monthNumberOfDate) {
                 let date = new Date()
-                let currentMonthNumber = moment().month() // moment starts months at a zero based list
+                let currentMonthNumber = moment().month() + 1 // moment starts months at a zero based list
                 let currentYear = date.getFullYear()
                 let returnedYear
 
@@ -171,85 +169,50 @@ export let pleasureVoiceApp = (function Module(userVoiceInput) {
         },
 
 
-        questions: [],
-        parsers: [],
-        parsedData: [],
-
-        loadQuestions: function(arr) {
-            app.questions = [...arr];
-
-        },
-
-        loadParsers: function(arr) {
-            app.parsers = [...arr];
-
-        },
 
         //__________________________________________________________________
 
-       summaryDataParse:function(){
-          console.log(app.parsedData)
-       },
 
-         //___________________________________________________________________
-
-        summary: async function(summaryPrompt,callback) {
-            let summaryPromptText = summaryPrompt;
-            callback(summaryPromptText)
-
-            let questionResult = await app.speechOutput(summaryPromptText); // "Is the summary of the information correct?
+        summary:async function(yesNoQuestion,trueResponse,falseResponse,callback){
+            let questionResult = await app.speechOutput(yesNoQuestion);
             let result = await app.speechInput();
-            // parse result as true or false
             console.log(result)
-            let resultLowercase = app.textToLowercaseParser(result);
 
-            callback(resultLowercase);
-
-            if (resultLowercase.title === "yes" || resultLowercase.title === "true") {
-                callback(summaryText)
-            let summaryCompleteText = "Thank you. The event has been submitted";
-            let summaryText = await app.speechOutput(summaryCompleteText);
-
-            }else{
-
-                let summaryCancelText = "The event has not been submitted.Please try again"
-                let cancel = await app.speechOutput(summaryCancelText);
-
-                callback(cancel)
-
-            }
-
-     
-        },
-
-
-
-        pleasureVoiceEvent: async function(questions, parser, callback) {
-
-            for (let i = 0; i < app.questions.length; i += 1) {
-                callback(questions[i])
-                let questionResult = await app.speechOutput(app.questions[i]);
-                let result = await app.speechInput();
-
-                app.parsedData.push(app.parsers[i](result));
-                callback("_", app.parsers[i](result))
-
-            }
-
-
-            return app.parsedData
+            // if(response){
+            //    callback()
+            
+            //    return true
+            // }
 
         },
 
 
-        send: async function(callback) {
-            callback(app.parsedData);
+
+        parsedData: [],
+
+        pleasureVoiceEvent: async function(question,parser,callback) {
+            let questionResult = await app.speechOutput(question);
+            let result = await app.speechInput();
+            app.parsedData.push(parser(result));
+            console.log(app.parsedData)
+             
+             if(callback){
+                callback(app.parsedData)
+             }
+
+             return app.parsedData
         },
 
 
+        send: async function(callback){
+            
+            callback(app.parsedData)
 
-        run: async function(data, parser, callback) {
-            await app.pleasureVoiceEvent(data, parser, callback);
+        },
+
+
+        run: async function(data,parser,callback) {
+            await app.pleasureVoiceEvent(data,parser,callback);
 
         }
 
@@ -266,38 +229,21 @@ export let pleasureVoiceApp = (function Module(userVoiceInput) {
 
 //______________________________________________________________BEGIN app
 
-
-/*
-
 let app = pleasureVoiceApp;
-app.loadQuestions(["What is the title of the event?", "What is the date of the event", "What time is the event" ]); // []
-app.loadParsers([app.textToLowercaseParser, app.voiceEventDateParser, app.voiceToTimeParser]) // []
 
+async function test(){
+     await app.run("what is the event",app.textToLowercaseParser);
+     await app.run("what is your name",app.textToLowercaseParser);
+     await app.summary("Is the following information correct?");
+     await app.send((data)=>{
 
-
-
-async function test() {
-    await app.run(app.questions, app.parsers, (questions, answers, results) => {
-        console.log("questions", questions);
-        console.log("answers", answers);
-        console.log("results", results);
-    })
-
-    await app.summary(()=>{
-
-        console.log("submitted to database",app.parsedData)
-
-    });
+        console.log(data)
+     });
 }
 
-*/
+window.addEventListener("click", async () => {
 
+    test()
 
-
-
-// window.addEventListener("click", async () => {
-
-//     test();
-
-// });
+});
 
