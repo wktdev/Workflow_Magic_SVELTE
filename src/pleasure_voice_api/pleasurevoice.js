@@ -256,8 +256,25 @@ export let pleasureVoiceApp = (function () {
             callback(app.parsedData);
         },
 
-        summary:function(result){
-            console.log("TEST RESULT",result)
+        summary: async function(data, message, thankYou, callback){
+            let questionResult = await app.speechOutput(message);
+            let answer = await app.speechInput();
+
+            console.log("answer",answer)
+            if(answer === "yes" || answer.includes("yes")){
+                await app.speechOutput(thankYou);
+                callback(data)
+            
+            }else{
+                await app.speechOutput("The data ha not been submitted. Please try again");
+            }
+
+           
+             
+            // //     await app.speechOutput(confirmation);
+            //     callback(data)
+            
+
          },
 
 

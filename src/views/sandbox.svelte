@@ -52,12 +52,14 @@
       app.questions,
       app.parsers,
       (info) => {
-        console.log("questions", info);
- 
+       console.log(info)
+       
 
         text = info
       }
     );
+
+    
 
 
     let title = data[0].title;
@@ -69,11 +71,13 @@
 
     console.log(app.data);
 
-    text = `Is the following summary of the information you submitted correct? 
+    let textSummary = `Is the following summary of the information you submitted correct? 
         The title of the event is ${title}. The month and day is ${monthName} ${day}. 
         The start time of the event is ${time} `;
 
-    
+    let summary = await app.summary(app.data, textSummary, "thank you", async function(data){
+          
+       
       console.log("submitted to database", app.parsedData);
 
       let hr = parseInt(time.split(":")[0]);
@@ -83,6 +87,11 @@
       let timeEnd = new Date(year, monthNumber - 1, day, hr, min + 30);
 
       await createCalendarEvent(timeStart, timeEnd, title, "", true, true, "time", 1);
+
+
+    })
+
+
      
       // active = false;
  
