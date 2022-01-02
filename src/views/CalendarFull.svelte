@@ -201,94 +201,101 @@
 
   let showCalendar = true;
 
-  async function pleasureVoiceInvoke() {
+  // async function pleasureVoiceInvoke() {
 
-    console.log("TEST");
-    let app = pleasureVoiceApp;
-    app.loadQuestions([
-      "What is the title of the event?",
-      "What is the date of the event",
-      "What time is the event",
-    ]); // []
-    app.loadParsers([
-      app.textToLowercaseParser,
-      app.voiceEventDateParser,
-      app.voiceToTimeParser,
-    ]); // []
+  //   console.log("TEST");
+  //   let app = pleasureVoiceApp;
+  //   app.loadQuestions([
+  //     "What is the title of the event?",
+  //     "What is the date of the event",
+  //     "What time is the event",
+  //   ]); // []
+  //   app.loadParsers([
+  //     app.textToLowercaseParser,
+  //     app.voiceEventDateParser,
+  //     app.voiceToTimeParser,
+  //   ]); // []
 
-    async function test() {
-      await app.run(
-        app.questions,
-        app.parsers,
-        (questions, answers, results) => {
-          console.log("questions", questions);
-          console.log("answers", answers);
-          console.log("results", results);
-        }
-      );
+  //   async function test() {
+  //     await app.run(
+  //       app.questions,
+  //       app.parsers,
+  //       (questions, answers, results) => {
+  //         console.log("questions", questions);
+  //         console.log("answers", answers);
+  //         console.log("results", results);
+  //       }
+  //     );
 
-      await app.summary(() => {
-        console.log("submitted to database", app.parsedData);
-      });
-    }
+  //     await app.summary(() => {
+  //       console.log("submitted to database", app.parsedData);
+          
 
-    test();
+  //     });
+  //   }
+
+  //   test();
 
 
-    //'++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
-    //time: '12:45
+  //   //'++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
+  //   //time: '12:45
 
-    // NOTE still need to add time!!
+  //   // NOTE still need to add time!!
 
-    // new Date(year, month, day, hours, minutes, seconds, milliseconds)
-    // let result = await createNewPleasureVoiceCalendarEvent();
+  //   // new Date(year, month, day, hours, minutes, seconds, milliseconds)
+  //   // let result = await createNewPleasureVoiceCalendarEvent();
 
-    // let startDate = new Date();
+  //   // let startDate = new Date();
 
-    // console.log(result);
-    // let timeSplit = result.time.split(":");
-    // let hour = parseInt(timeSplit[0]);
-    // let minutes = parseInt(timeSplit[1]);
+  //   // console.log(result);
+  //   // let timeSplit = result.time.split(":");
+  //   // let hour = parseInt(timeSplit[0]);
+  //   // let minutes = parseInt(timeSplit[1]);
 
-    // console.log("Time split", timeSplit);
+  //   // console.log("Time split", timeSplit);
 
-    // let defaultEventLength = minutes + 30;
-    // // day: 2
-    // // month: {monthNumber: 1, monthName: 'january'}
-    // // name: "somebody"
-    // // time: "07:00"
-    // // year: 2022
+  //   // let defaultEventLength = minutes + 30;
+  //   // // day: 2
+  //   // // month: {monthNumber: 1, monthName: 'january'}
+  //   // // name: "somebody"
+  //   // // time: "07:00"
+  //   // // year: 2022
 
-    // let startDateFromVoice = new Date(
-    //   result.year,
-    //   result.month.monthNumber-1,
-    //   result.day,
-    //   hour,
-    //   minutes
-    // );
-    // let endDate = new Date(
-    //   result.year,
-    //   result.month.monthNumber-1,
-    //   result.day,
-    //   hour,
-    //   defaultEventLength
-    // );
+  //   // let startDateFromVoice = new Date(
+  //   //   result.year,
+  //   //   result.month.monthNumber-1,
+  //   //   result.day,
+  //   //   hour,
+  //   //   minutes
+  //   // );
+  //   // let endDate = new Date(
+  //   //   result.year,
+  //   //   result.month.monthNumber-1,
+  //   //   result.day,
+  //   //   hour,
+  //   //   defaultEventLength
+  //   // );
 
-    // await createCalendarEvent(
-    //   startDateFromVoice,
-    //   startDateFromVoice,
-    //   result.name,
-    //   "",
-    //   true,
-    //   true,
-    //   "time",
-    //    1
-    // ).then(()=>{
+  //   // await createCalendarEvent(
+  //   //   startDateFromVoice,
+  //   //   startDateFromVoice,
+  //   //   result.name,
+  //   //   "",
+  //   //   true,
+  //   //   true,
+  //   //   "time",
+  //   //    1
+  //   // ).then(()=>{
 
-    //   window.location.reload();
+  //   //   window.location.reload();
 
-    // });
+  //   // });
+  // }
+
+  function pleasureVoiceInvoke(){
+
   }
+
 </script>
 
 <div class="logo-form-container">

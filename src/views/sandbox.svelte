@@ -35,7 +35,7 @@
   // ];
 
   async function pleasureVoice(finalCB) {
-    console.log("TEST");
+
     let app = pleasureVoiceApp;
     app.loadQuestions([
       "What is the title of the event?",
@@ -48,31 +48,44 @@
       app.voiceToTimeParser,
     ]); // []
 
-    await app.run(app.questions, app.parsers, (question, answers, results) => {
-      console.log("questions", question);
-      console.log("answers", answers);
-      console.log("results", results);
+    let data = await app.run(
+      app.questions,
+      app.parsers,
+      (info) => {
+        console.log("questions", info);
+ 
 
-      text = question;
-    });
+        text = info
+      }
+    );
 
-    let title = app.parsedData[0].title;
-    let monthName = app.parsedData[1].monthName;
-    let day = app.parsedData[1].day;
-    let time = app.parsedData[2].time;
+
+    let title = data[0].title;
+    let year = data[1].year;
+    let monthName = data[1].monthName;
+    let monthNumber = data[1].monthNumber;
+    let day = data[1].day;
+    let time = data[2].time;
+
+    console.log(app.data);
 
     text = `Is the following summary of the information you submitted correct? 
         The title of the event is ${title}. The month and day is ${monthName} ${day}. 
         The start time of the event is ${time} `;
 
-    await app.summary(text, (xyz) => {
+    
       console.log("submitted to database", app.parsedData);
 
-      createCalendarEvent(time, time, title, "", true, true, "time", 1);
+      let hr = parseInt(time.split(":")[0]);
+      let min = parseInt(time.split(":")[1]);
 
-      active = false;
-    });
+      let timeStart = new Date(year, monthNumber - 1, day, hr, min);
+      let timeEnd = new Date(year, monthNumber - 1, day, hr, min + 30);
 
+      await createCalendarEvent(timeStart, timeEnd, title, "", true, true, "time", 1);
+     
+      // active = false;
+ 
     finalCB();
   }
 </script>

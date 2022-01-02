@@ -8,11 +8,11 @@ import moment from 'moment';
 
 //___________________________________________________MODULE
 
-export let pleasureVoiceApp = (function Module(userVoiceInput) {
+export let pleasureVoiceApp = (function () {
 
     let app = {
 
-        userVoiceInput: userVoiceInput,
+        // userVoiceInput: userVoiceInput,
 
         speechOutput: function(m) {
             return new Promise((resolve) => {
@@ -115,6 +115,10 @@ export let pleasureVoiceApp = (function Module(userVoiceInput) {
         },
 
 
+        convertToNewDate:function(year,month,day,hours,minutes){
+            let result = new Date(year, month, day, hours, minutes);
+            return result
+        },
 
 
 
@@ -170,6 +174,9 @@ export let pleasureVoiceApp = (function Module(userVoiceInput) {
             return { time: convertedTime };
         },
 
+        eventStartTime:undefined,
+        eventEndTime:undefined,
+
 
         questions: [],
         parsers: [],
@@ -193,49 +200,52 @@ export let pleasureVoiceApp = (function Module(userVoiceInput) {
 
          //___________________________________________________________________
 
-        summary: async function(summaryPrompt,callback) {
-            let summaryPromptText = summaryPrompt;
-            callback(summaryPromptText)
+        // summary: async function(summaryPrompt,callback) {
+        //     let summaryPromptText = summaryPrompt;
+        //     callback(summaryPromptText)
 
-            let questionResult = await app.speechOutput(summaryPromptText); // "Is the summary of the information correct?
-            let result = await app.speechInput();
-            // parse result as true or false
-            console.log(result)
-            let resultLowercase = app.textToLowercaseParser(result);
+        //     let questionResult = await app.speechOutput(summaryPromptText); // "Is the summary of the information correct?
+        //     let result = await app.speechInput();
+        //     // parse result as true or false
+        //     console.log(result)
+        //     let resultLowercase = app.textToLowercaseParser(result);
 
-            callback(resultLowercase);
+        //     callback(resultLowercase);
 
-            if (resultLowercase.title === "yes" || resultLowercase.title === "true") {
-                callback(summaryText)
-            let summaryCompleteText = "Thank you. The event has been submitted";
-            let summaryText = await app.speechOutput(summaryCompleteText);
+        //     if (resultLowercase.title === "yes" || resultLowercase.title === "true") {
+                
+        //         let summaryCompleteText = "Thank you. The event has been submitted";
+        //         let summaryText = await app.speechOutput(summaryCompleteText);
+        //         callback(summaryText);
 
-            }else{
+        //     }else{
 
-                let summaryCancelText = "The event has not been submitted.Please try again"
-                let cancel = await app.speechOutput(summaryCancelText);
+        //         let summaryCancelText = "The event has not been submitted.Please try again"
+        //         let cancel = await app.speechOutput(summaryCancelText);
+        //         callback(cancel)
 
-                callback(cancel)
-
-            }
+        //     }
 
      
-        },
+        // },
+
+    
 
 
 
         pleasureVoiceEvent: async function(questions, parser, callback) {
-
             for (let i = 0; i < app.questions.length; i += 1) {
                 callback(questions[i])
                 let questionResult = await app.speechOutput(app.questions[i]);
                 let result = await app.speechInput();
-
                 app.parsedData.push(app.parsers[i](result));
-                callback("_", app.parsers[i](result))
+                console.log("PV_log")
+         
+
 
             }
 
+            callback(app.parsedData)
 
             return app.parsedData
 
@@ -246,10 +256,17 @@ export let pleasureVoiceApp = (function Module(userVoiceInput) {
             callback(app.parsedData);
         },
 
+        summary:function(result){
+            console.log("TEST RESULT",result)
+         },
+
 
 
         run: async function(data, parser, callback) {
-            await app.pleasureVoiceEvent(data, parser, callback);
+            let result = await app.pleasureVoiceEvent(data, parser, callback);
+           
+                        
+            return result
 
         }
 
