@@ -24,21 +24,20 @@
   let clientId;
   let clientName = "";
   let calendarEvents = [];
+  let currentEventDate= {
+    startDate:undefined,
+    endDate:undefined
+  };
 
   let selection;
   let calendar;
 
-  let currentEventDate;
+
 
   onMount(function () {
     clientId = params.clientId;
     calendar = new DateTimePicker("select_datetime", {
-      start_date: Date.now(),
-      last_date: moment(Date.now()).add(30, "m").toDate(),
-      first_day_no: 0,
-      getDate: function () {
-        console.log("TEST");
-      },
+    
       // l10n: it
     });
 
@@ -72,8 +71,8 @@
       // };
 
       await createCalendarEvent(
-        calendar.start_date,
-        calendar.last_date,
+        currentEventDate.startDate,
+        currentEventDate.endDate,
         eventTitle,
         undefined,
         false,
@@ -117,14 +116,18 @@
   }
 
   function dateSelect(e) {
-    let x = moment(calendar.start_date).add(30, "m").toDate(),
-    currentEventDate = {
-      startDate: calendar.start_date,
-      endDate: x,
+    let selection = document.querySelector( 'div#select_datetime input.date_output' ).value;
+   
+    let endDate = moment(selection).add(30, "m").toDate();
+    console.log(selection)
+    console.log(endDate)
+    currentEventDate.startDate = new Date(selection);
+    currentEventDate.endDate = new Date(endDate);
     
-    };
+    
 
-    console.log(currentEventDate )
+    //  console.log(currentEventDate);
+
   }
 
   function redirectURL() {
