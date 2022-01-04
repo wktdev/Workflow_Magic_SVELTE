@@ -28,6 +28,7 @@
     "@beyonk/svelte-datepicker": "^11.0.2",
     "bytemd": "^1.2.0",
     "cl-editor": "^2.3.0",
+    "date-time-picker-component": "^1.1.2",
     "dexie": "^3.0.3",
     "dexie-export-import": "^1.0.3",
     "downloadjs": "^1.4.7",

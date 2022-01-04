@@ -13,7 +13,7 @@ import NotFound from './views/NotFound.svelte';
 import SaveAndLoadIndexedDB from './views/SaveAndLoadIndexedDB.svelte'
 import CalendarFull from './views/CalendarFull.svelte'
 import CalendarEvents from './views/CalendarEvents.svelte'
-import CalendarEventEdit from './views/CalendarEventEdit.svelte'
+import Calendar from './views/Calendar.svelte'
 import SpeechService from './views/SpeechService.svelte'
 import Apps from './views/Apps.svelte'
 import Sandbox from './views/Sandbox.svelte'
@@ -24,8 +24,8 @@ export default {
     '/client/:clientId/dashboard/workflows' : Workflows,
     '/client/:clientId/dashboard/workflows/:workflow-id/' : Workflow,
     '/client/:clientId/dashboard/workflows/:workflow-id/edit' : WorkflowEdit,
-   
-    '/client/:clientId/dashboard/calendar/' : CalendarEvents,
+    '/client/:clientId/dashboard/calendar/' : Calendar,
+    // '/client/:clientId/dashboard/calendar/' : CalendarEvents,
     '/calendar/': CalendarFull,
     '/save-and-load/': SaveAndLoadIndexedDB,
     '/apps/' : Apps,
