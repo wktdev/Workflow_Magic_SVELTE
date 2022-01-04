@@ -11,6 +11,7 @@
   import { updateCalendarEvent } from "../storageAPI/indexedDB";
   import { deleteCalendarEvent } from "../storageAPI/indexedDB";
   import { getAllClients } from "../storageAPI/indexedDB";
+  import Sandbox from "./Sandbox.svelte";
   import { pleasureVoiceApp } from "../pleasure_voice_api/pleasurevoice";
   import moment from 'moment';
 
@@ -316,13 +317,11 @@
         <h1 class="client-name">Meetings & Events</h1>
         <h2 class="logo-title">All Clients</h2>
         <p class="instructions">Select a date to add an event</p>
-        <p
-          class="instructions"
-          id="pleasure-voice"
-          on:click={pleasureVoiceInvoke}
-        >
-          Click here to use Pleasure Voice service
+        <p>
+        <Sandbox></Sandbox>
         </p>
+
+     
 
         <div id="menu">
           <span id="menu-navi">
@@ -365,6 +364,8 @@
       <div class="col-0" />
     </div>
   </div>
+
+
 </div>
 
 <style>

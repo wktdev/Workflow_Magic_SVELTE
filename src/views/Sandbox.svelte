@@ -13,8 +13,8 @@
 
   onMount(function () {});
 
-  $: test = text;
-  let text = "";
+  $: questionPromptText = "";
+  // let text = "";
 
   //______________________________________________________________
   async function pleasureVoice(finalCB) {
@@ -34,7 +34,7 @@
 
     let data = await app.run(app.questions, app.parsers, async (data) => {
       if (typeof data === "string") {
-        text = data;
+        questionPromptText = data;
       } else {
         let title = data[0].title;
         let year = data[1].year;
@@ -43,20 +43,15 @@
         let day = data[1].day;
         let time = data[2].time;
 
-  
-        text = `The following is a summary of the information you submitted. 
+        questionPromptText = `The following is a summary of the information you submitted. 
         The title of the event is ${title}. The month and day is ${monthName} ${day}. 
         The start time of the event is ${time}. If this is correct please say yes`;
 
-        let questionResult =
-          await app.speechOutput(text);
+        let questionResult = await app.speechOutput(questionPromptText);
         let result = await app.speechInput();
 
-        if (result === "yes") {
+        if (result === "yes" || result.includes("yes") || result.includes("Yes")) {
           await app.speechOutput("Thank you your data is being submitted");
-          
-
-        
 
           let hr = parseInt(time.split(":")[0]);
           let min = parseInt(time.split(":")[1]);
@@ -73,9 +68,10 @@
             true,
             "time",
             1
-          ).then(()=>{
+          ).then(() => {
             active = false;
-          })
+            window.location.reload();
+          });
         }
       }
     });
@@ -88,7 +84,6 @@
       class=""
       on:click={() => {
         active = true;
-
         pleasureVoice();
       }}
     >
@@ -96,12 +91,17 @@
     </Button>
   </div>
 
-  <Overlay
+  <Overlay opacity={1} color="primary" class="white-text" style="font-size:1.5em"
     {active}
     on:click={() => {
       active = false;
     }}
   >
-    {test}
+    {questionPromptText}
   </Overlay>
 </MaterialApp>
+
+
+<style>
+ 
+</style>

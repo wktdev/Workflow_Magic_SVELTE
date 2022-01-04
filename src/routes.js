@@ -16,7 +16,7 @@ import CalendarEvents from './views/CalendarEvents.svelte'
 import CalendarEventEdit from './views/CalendarEventEdit.svelte'
 import SpeechService from './views/SpeechService.svelte'
 import Apps from './views/Apps.svelte'
-import sandbox from './views/sandbox.svelte'
+import Sandbox from './views/Sandbox.svelte'
 
 export default {
     '/': Landing,
@@ -33,7 +33,7 @@ export default {
 
     //  '/client/:clientId/dashboard/calendar-events/:calendar-event-id/edit/' : CalendarEventEdit,
     //  '/client/:clientId/dashboard/calendar-events' : CalendarEventEdit,
-    '/sandbox/' : sandbox,
+    '/sandbox/' : Sandbox,
     '*': NotFound
 };
 
