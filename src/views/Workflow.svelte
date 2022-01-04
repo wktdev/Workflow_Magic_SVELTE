@@ -382,4 +382,8 @@ onMount(async ()=>{
     position: relative;
     bottom: 120px;
   }
+
+  .circle-container{
+  top:-320px;
+}
 </style>

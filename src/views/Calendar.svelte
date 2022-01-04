@@ -1,13 +1,17 @@
 <script>
   import { onMount } from "svelte";
   import Dexie from "dexie";
-  import moment from 'moment';
+  import moment from "moment";
 
   import SearchAndCreateField from "../components/SearchAndCreateField.svelte";
-  import {
 
-    getClientById
+  import {
+    getClientCalendarEvents,
+    getClientById,
+    createCalendarEvent,
+    deleteCalendarEvent,
   } from "../storageAPI/indexedDB";
+
   import { showNav } from "../store/nav_animation.js";
   import { animateNav } from "../store/nav_animation.js";
   import { fade, fly } from "svelte/transition";
@@ -19,50 +23,71 @@
   export let params = {};
   let clientId;
   let clientName = "";
+  let calendarEvents = [];
 
-  //  import downloadjs from "downloadjs";
-
-  let clients = [];
-  let firstUseCookieBool;
   let selection;
   let calendar;
+
+  let currentEventDate;
+
   onMount(function () {
-  clientId = params.clientId
+    clientId = params.clientId;
     calendar = new DateTimePicker("select_datetime", {
       start_date: Date.now(),
-      last_date: moment(Date.now()).add(30, 'm').toDate(),
-      first_day_no: 1,
-      getDate:function(){
-        console.log("TEST")
-      }
+      last_date: moment(Date.now()).add(30, "m").toDate(),
+      first_day_no: 0,
+      getDate: function () {
+        console.log("TEST");
+      },
       // l10n: it
     });
 
-    getClientById(parseInt(params.clientId)).then((data)=>{
-        clientName = data.name
-    })
+    getClientById(parseInt(params.clientId)).then((data) => {
+      clientName = data.name;
+    });
     //________________________________________GET ALL CALENDAR EVENTS FOR CLIENT
-    // getAllClients().then((result) => {
-    //   let list = result.reverse();
-    //   clients = [...list];
-    // });
+    getClientCalendarEvents(clientId).then((result) => {
+      let list = result.reverse();
+      console.log(list);
+      calendarEvents = [...list];
+    });
     //_________________________________________END
   });
 
-  async function submitToDatabase(item) {
+  async function submitToDatabase(eventTitle) {
+    console.log(eventTitle);
+
     try {
-      /*_____________________________________________BEGIN change to calendar events for client
+      /*_____________________________________________BEGIN change to calendar events for client*/
 
-      let id = await createClient(item); 
+      //   let currentEventDate = {
+      //   startDate:calendar.start_date,
+      //   endDate:calendar.last_date.
+      //   title:
+      //   location: undefined
+      //   isPrivate: false
+      //   isAllDay:  false
+      //   category:  undefined
+      //   clientId:
+      // };
 
-      getAllClients().then((result) => {
-        clients = [...result.reverse()]; 
+      await createCalendarEvent(
+        calendar.start_date,
+        calendar.last_date,
+        eventTitle,
+        undefined,
+        false,
+        false,
+        undefined,
+        clientId
+      )
 
- 
-       
-      });
+      await   getClientCalendarEvents(clientId).then((result) => {
+      let list = result.reverse();
+      console.log(list);
+      calendarEvents = [...list];
+    });
 
-*/
       //_____________________________________________END
     } catch (error) {
       throw error;
@@ -76,49 +101,58 @@
   }
 
   async function onDelete(id) {
+
+    console.log(id);
+
+    console.log(calendarEvents[id].id);
     //________________________________________DELETE Calendar events
-    // let clientID = clients[id].id;
-    // await deleteClient(clientID);
-    // await getAllClients().then((result) => {
-    //   let list = result.reverse();
-    //   clients = [...list];
-    //   console.log(clients);
-    // });
+    let calendarID = calendarEvents[id].id;
+    await deleteCalendarEvent(calendarID);
+    await getClientCalendarEvents(clientId).then((result) => {
+      let list = result.reverse();
+      calendarEvents = [...list];
+      console.log(calendarEvents);
+    });
     //_________________________________________END
   }
 
-  function test(e) {
-    console.log(calendar.start_date);
+  function dateSelect(e) {
+    let x = moment(calendar.start_date).add(30, "m").toDate(),
+    currentEventDate = {
+      startDate: calendar.start_date,
+      endDate: x,
+    
+    };
 
+    console.log(currentEventDate )
+  }
+
+  function redirectURL() {
+    window.location.assign("/#/client/" + clientId + "/dashboard");
   }
 
 
-  function redirectURL(){
-  window.location.assign("/#/client/" + clientId + "/dashboard"); 
-}
+
 </script>
 
 <div class="logo-form-container">
   <div class="container">
-        
-<BackButton
-top="10px"
-text="Client Dashboard"
-width="140px"
-buttonEvent={redirectURL}
-/>
+    <BackButton
+      top="-90px"
+      text="Client Dashboard"
+      width="145px"
+      buttonEvent={redirectURL}
+    />
     <div class="row">
       <div class="col-0" />
       <div class="col-12">
         <h1 class="client-name">Calendar Events</h1>
         <h2 class="logo-title">{clientName}</h2>
-    
-        
       </div>
       <div class="col-0" />
     </div>
 
-    <div id="select_datetime" on:click={test} />
+    <div id="select_datetime" on:click={dateSelect} />
 
     <div class="row">
       <div class="col-0" />
@@ -126,8 +160,8 @@ buttonEvent={redirectURL}
         <SearchAndCreateField
           buttonText="Create Event"
           placeholder="Type the name of an event date"
-          arrayOfObjects={clients}
-          keyToRender="name"
+          arrayOfObjects={calendarEvents}
+          keyToRender="title"
           onSubmit={submitToDatabase}
           {onDelete}
           onSelectionEvent={goToRoute}
@@ -139,8 +173,7 @@ buttonEvent={redirectURL}
 </div>
 
 <style>
- 
- .button-container {
+  .button-container {
     height: 10vh;
     flex-direction: column;
     display: flex;
@@ -161,29 +194,6 @@ buttonEvent={redirectURL}
   .form {
     height: 100%;
     width: 100%;
-  }
-
-  .markdown-input {
-    font-size: 2rem;
-    width: 100%;
-    height: 150%;
-    border: unset;
-    border: 1px solid #9c9a9a;
-    padding: 0.8rem 1rem;
-    border-radius: 10px;
-    background: transparent;
-  }
-
-  .markdown-input::placeholder {
-    font-size: 2rem;
-    font-weight: 100;
-    font-family: sans-serif;
-    letter-spacing: 1px;
-  }
-
-  .markdown-input:focus {
-    outline: unset;
-    font-size: 2rem;
   }
 
   .show-btn {
@@ -239,7 +249,7 @@ buttonEvent={redirectURL}
   }
 
   .container {
-    margin-top: 220px;
+    margin-top: 250px;
   }
 
   .logo-title {
@@ -248,7 +258,6 @@ buttonEvent={redirectURL}
     font-size: 3em;
     /* margin-top: 70px;
     margin-bottom: -20px; */
-
   }
 
   .client-name {
