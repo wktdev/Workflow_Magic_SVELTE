@@ -6,6 +6,7 @@
   import { onMount } from "svelte";
 
   export let keyToRender;
+  export let secondKeyToRender; 
   export let arrayOfObjects = [];
   export let onSubmit;
   export let onDelete;
@@ -18,6 +19,8 @@
 
   $: arrayOfObjectsCopy = arrayOfObjects;
   $: nameOfKey = keyToRender;
+
+  $: secondKey = secondKeyToRender;
   let hoverID;
   let indexVal = -1;
   let downArrowPress = 40;
@@ -30,6 +33,10 @@
 
   onMount(function () {
     inputTextField.focus();
+
+
+
+
   });
 
   console.log(arrayOfObjectsCopy);
@@ -88,9 +95,13 @@
     }
   }
 
+
+
   function onClickHandler(i) {
     onSelectionEvent(arrayOfObjectsCopy[i]);
   }
+
+
 
   function handleSubmit(e) {
     const value = e.target.input.value;
@@ -105,14 +116,19 @@
     itemVal = "";
   }
 
+
   function resetClassOnMouseout() {
     onHoverClassChangeState = "";
   }
+
 
   function handleDelete(i) {
     // onDelete()
     onDelete(i);
   }
+
+
+  let erase = ["one","two","three"]
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -146,6 +162,8 @@
           <Button class="red white-text" on:click={() => handleDelete(i)}
             >DELETE</Button
           >
+
+     
           <li
             class={onHoverClassChangeState === item["id"]
               ? "selected"
@@ -156,11 +174,20 @@
             on:click={() => onClickHandler(i)}
           >
             {item[nameOfKey]}
+           
+            
+
+         
+           
           </li>
+
+          <li>{item[secondKey] || ""}</li>
+          
         {:else}
           <Button class="red white-text" on:click={() => handleDelete(i)}
             >DELETE</Button
           >
+          
           <li
             class={onHoverClassChangeState === item["id"]
               ? "selected"
@@ -171,7 +198,11 @@
             style=""
           >
             {item[nameOfKey]}
+            
+
+          
           </li>
+          <li>{item[secondKey] || ""}</li>
         {/if}
 
         <hr />

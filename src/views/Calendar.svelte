@@ -24,6 +24,7 @@
   let clientId;
   let clientName = "";
   let calendarEvents = [];
+  let listOfStrings = ["time-0","time-1","time-3"]
   let currentEventDate= {
     startDate:undefined,
     endDate:undefined
@@ -59,16 +60,6 @@
     try {
       /*_____________________________________________BEGIN change to calendar events for client*/
 
-      //   let currentEventDate = {
-      //   startDate:calendar.start_date,
-      //   endDate:calendar.last_date.
-      //   title:
-      //   location: undefined
-      //   isPrivate: false
-      //   isAllDay:  false
-      //   category:  undefined
-      //   clientId:
-      // };
 
       await createCalendarEvent(
         currentEventDate.startDate,
@@ -165,6 +156,7 @@
           placeholder="Type the name of an event date"
           arrayOfObjects={calendarEvents}
           keyToRender="title"
+          secondKeyToRender = "start"; 
           onSubmit={submitToDatabase}
           {onDelete}
           onSelectionEvent={goToRoute}
