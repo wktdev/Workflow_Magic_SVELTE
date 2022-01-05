@@ -52,6 +52,7 @@ export async function createCalendarEvent(
   clientId,
 ) {
   let result = await indexedDB.calendar_events.add({
+    clientId:clientId,
     start: startDate,
     end: endDate,
     title: title,
@@ -59,8 +60,8 @@ export async function createCalendarEvent(
     isPrivate: isPrivate,
     isAllDay: isAllDay,
     category: category,
-    calendarId: clientId,
-    // calendar_id: clientId,
+    calendarId: clientId,  // CalendarId is same as clientId. Needed for full calendar plug in
+
   })
   return result
 }

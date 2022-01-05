@@ -24,10 +24,9 @@
   let clientId;
   let clientName = "";
   let calendarEvents = [];
-  let listOfStrings = ["time-0","time-1","time-3"]
   let currentEventDate= {
-    startDate:undefined,
-    endDate:undefined
+    startDate:moment(Date.now()).add(0, "m").toDate(),
+    endDate:moment(Date.now()).add(60, "m").toDate(),
   };
 
   let selection;
@@ -36,7 +35,7 @@
 
 
   onMount(function () {
-    clientId = params.clientId;
+    clientId = parseInt(params.clientId);
     calendar = new DateTimePicker("select_datetime", {
     
       // l10n: it
@@ -60,15 +59,16 @@
     try {
       /*_____________________________________________BEGIN change to calendar events for client*/
 
-
-      await createCalendarEvent(
+  
+// '++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
+      await createCalendarEvent(   
         currentEventDate.startDate,
         currentEventDate.endDate,
         eventTitle,
         undefined,
         false,
         false,
-        undefined,
+        "time",
         clientId
       )
 
@@ -87,7 +87,7 @@
   function goToRoute(item) {
     console.log(item);
 
-    window.location.href = "#/client/" + item.id + "/dashboard";
+    window.location.href = "#/client/" + clientId + "/dashboard/calendar/" + item.id + "/edit";
   }
 
   async function onDelete(id) {
@@ -148,15 +148,18 @@
 
     <div id="select_datetime" on:click={dateSelect} />
 
+    <!-- Addendum array-->
+    <!-- addendum key-->
+
     <div class="row">
       <div class="col-0" />
       <div class="col-12">
         <SearchAndCreateField
           buttonText="Create Event"
-          placeholder="Type the name of an event date"
-          arrayOfObjects={calendarEvents}
+          placeholder="Select a date and type the name of the event"
+          arrayOfObjects={calendarEvents}                         
           keyToRender="title"
-          secondKeyToRender = "start"; 
+          secondKeyToRender="start"
           onSubmit={submitToDatabase}
           {onDelete}
           onSelectionEvent={goToRoute}

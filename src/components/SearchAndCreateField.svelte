@@ -181,7 +181,7 @@
            
           </li>
 
-          <li>{item[secondKey] || ""}</li>
+          <li class="item-addendum-text">{item[secondKey] || ""}</li>
           
         {:else}
           <Button class="red white-text" on:click={() => handleDelete(i)}
@@ -202,8 +202,8 @@
 
           
           </li>
-          <li>{item[secondKey] || ""}</li>
-        {/if}
+          <li class="item-addendum-text">{item[secondKey] || ""}</li>
+          {/if}
 
         <hr />
       {/each}
@@ -266,6 +266,10 @@ On hover, you need to select the index value of the thing you are hovering over
     padding: 1rem;
     line-height: 1;
     background-color: #8a0eff3b;
+  }
+
+  .item-addendum-text{
+    font-size:1em;
   }
 
   input {
