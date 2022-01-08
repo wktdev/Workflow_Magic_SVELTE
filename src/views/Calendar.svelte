@@ -87,7 +87,7 @@
   function goToRoute(item) {
     console.log(item);
 
-    window.location.href = "#/client/" + clientId + "/dashboard/calendar/" + item.id + "/edit";
+    window.location.href = "#/client/" + clientId + "/dashboard/calendar/event/" + item.id + "/edit";
   }
 
   async function onDelete(id) {

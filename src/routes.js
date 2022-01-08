@@ -14,6 +14,8 @@ import SaveAndLoadIndexedDB from './views/SaveAndLoadIndexedDB.svelte'
 import CalendarFull from './views/CalendarFull.svelte'
 import CalendarEvents from './views/CalendarEvents.svelte'
 import Calendar from './views/Calendar.svelte'
+import CalendarEdit from './views/CalendarEdit.svelte'
+import CalendarSingleEvent from './views/CalendarSingleEvent.svelte'
 import SpeechService from './views/SpeechService.svelte'
 import Apps from './views/Apps.svelte'
 import Sandbox from './views/Sandbox.svelte'
@@ -25,8 +27,9 @@ export default {
     '/client/:clientId/dashboard/workflows/:workflow-id/' : Workflow,
     '/client/:clientId/dashboard/workflows/:workflow-id/edit' : WorkflowEdit,
     '/client/:clientId/dashboard/calendar/' : Calendar,
-    // '/client/:clientId/dashboard/calendar/' : CalendarEvents,
-    '/calendar/': CalendarFull,
+    '/client/:clientId/dashboard/calendar/event/:eventId/edit' : CalendarEdit,
+    // '/client/:clientId/dashboard/calendar//' : CalendarEvents,
+    '/calendar/': CalendarSingleEvent,
     '/save-and-load/': SaveAndLoadIndexedDB,
     '/apps/' : Apps,
     '/speech/' : SpeechService, 

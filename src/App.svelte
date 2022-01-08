@@ -152,6 +152,8 @@
   <Router {routes} />
 </main>
 
+
+
 <style>
   nav {
     background-color: #682699e6 !important;

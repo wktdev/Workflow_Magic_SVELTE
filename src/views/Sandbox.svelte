@@ -1,107 +1,445 @@
 <script>
-  //createNewPleasureVoiceCalendarEvent
-  import { pleasureVoiceApp } from "../pleasure_voice_api/pleasurevoice";
-
-  import { createCalendarEvent } from "../storageAPI/indexedDB";
-
-  import { Button, Overlay, MaterialApp } from "svelte-materialify";
-  $: active = false;
-
   import { onMount } from "svelte";
-
+  import Dexie from "dexie";
   import moment from "moment";
+  import { ButtonGroup,
+        ButtonGroupItem,TextField, Divider, Select, Menu, Col, Row,Button, List, ListItem, MaterialApp } from 'svelte-materialify';
 
-  onMount(function () {});
+  import SearchAndCreateField from "../components/SearchAndCreateField.svelte";
 
-  $: questionPromptText = "";
-  // let text = "";
+  import {
+    getClientCalendarEvents,
+    getClientById,
+    createCalendarEvent,
+    deleteCalendarEvent,
+  } from "../storageAPI/indexedDB";
 
-  //______________________________________________________________
-  async function pleasureVoice(finalCB) {
-    let app = pleasureVoiceApp;
+  import { showNav } from "../store/nav_animation.js";
+  import { animateNav } from "../store/nav_animation.js";
+  import { fade, fly } from "svelte/transition";
+  import { spring } from "svelte/motion";
+  import BackButton from "../components/BackButton.svelte";
+  import "date-time-picker-component/dist/css/date-time-picker-component.min.css";
+  import { DateTimePicker } from "date-time-picker-component/dist/js/date-time-picker-component.min";
 
-    app.loadQuestions([
-      "What is the title of the event?",
-      "What is the date of the event",
-      "What time is the event",
-    ]); // []
+  export let params = {};
+  let clientId;
+  let clientName = "";
+  let calendarEvents = [];
+  let currentEventDate= {
+    startDate:moment(Date.now()).add(0, "m").toDate(),
+    endDate:moment(Date.now()).add(60, "m").toDate(),
+  };
 
-    app.loadParsers([
-      app.textToLowercaseParser,
-      app.voiceEventDateParser,
-      app.voiceToTimeParser,
-    ]); // []
+  let selection;
+  let calendar;
 
-    let data = await app.run(app.questions, app.parsers, async (data) => {
-      if (typeof data === "string") {
-        questionPromptText = data;
-      } else {
-        let title = data[0].title;
-        let year = data[1].year;
-        let monthName = data[1].monthName;
-        let monthNumber = data[1].monthNumber;
-        let day = data[1].day;
-        let time = data[2].time;
 
-        questionPromptText = `The following is a summary of the information you submitted. 
-        The title of the event is ${title}. The month and day is ${monthName} ${day}. 
-        The start time of the event is ${time}. If this is correct please say yes`;
 
-        let questionResult = await app.speechOutput(questionPromptText);
-        let result = await app.speechInput();
-
-        if (result === "yes" || result.includes("yes") || result.includes("Yes")) {
-          await app.speechOutput("Thank you your data is being submitted");
-
-          let hr = parseInt(time.split(":")[0]);
-          let min = parseInt(time.split(":")[1]);
-
-          let timeStart = new Date(year, monthNumber - 1, day, hr, min);
-          let timeEnd = new Date(year, monthNumber - 1, day, hr, min + 30);
-
-          await createCalendarEvent(
-            timeStart,
-            timeEnd,
-            title,
-            "",
-            true,
-            true,
-            "time",
-            1
-          ).then(() => {
-            active = false;
-            window.location.reload();
-          });
-        }
-      }
+  onMount(function () {
+    clientId = parseInt(params.clientId);
+    calendar = new DateTimePicker("select_datetime", {
+    
+      // l10n: it
     });
+
+    // getClientById(parseInt(params.clientId)).then((data) => {
+    //   clientName = data.name;
+    // });
+    // //________________________________________GET ALL CALENDAR EVENTS FOR CLIENT
+    // getClientCalendarEvents(clientId).then((result) => {
+    //   let list = result.reverse();
+    //   console.log(list);
+    //   calendarEvents = [...list];
+    // });
+    //_________________________________________END
+  });
+
+  async function submitToDatabase(eventTitle) {
+    console.log(eventTitle);
+
+    try {
+      /*_____________________________________________BEGIN change to calendar events for client*/
+
+  
+// '++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
+      await createCalendarEvent(   
+        currentEventDate.startDate,
+        currentEventDate.endDate,
+        eventTitle,
+        undefined,
+        false,
+        false,
+        "time",
+        clientId
+      )
+
+      await   getClientCalendarEvents(clientId).then((result) => {
+      let list = result.reverse();
+      console.log(list);
+      calendarEvents = [...list];
+    });
+
+      //_____________________________________________END
+    } catch (error) {
+      throw error;
+    }
   }
+
+  function goToRoute(item) {
+    console.log(item);
+
+    window.location.href = "#/client/" + clientId + "/dashboard/calendar/event/" + item.id + "/edit";
+  }
+
+  async function onDelete(id) {
+
+    console.log(id);
+
+    console.log(calendarEvents[id].id);
+    //________________________________________DELETE Calendar events
+    let calendarID = calendarEvents[id].id;
+    await deleteCalendarEvent(calendarID);
+    await getClientCalendarEvents(clientId).then((result) => {
+      let list = result.reverse();
+      calendarEvents = [...list];
+      console.log(calendarEvents);
+    });
+    //_________________________________________END
+  }
+
+  function dateSelect(e) {
+    let selection = document.querySelector( 'div#select_datetime input.date_output' ).value;
+   
+    let endDate = moment(selection).add(30, "m").toDate();
+    console.log(selection)
+    console.log(endDate)
+    currentEventDate.startDate = new Date(selection);
+    currentEventDate.endDate = new Date(endDate);
+    
+    
+
+    //  console.log(currentEventDate);
+
+  }
+
+  function redirectURL() {
+    window.location.assign("/#/client/" + clientId + "/dashboard");
+  }
+
+	let theme = 'light';
+	let objvalue={
+        main1:"1",
+		main2:"2"
+	};
+	let stvalue="";
+	function selectStatus(event) {
+    console.log('bind value', objvalue);
+	  console.log('selected value', event.detail[0]);
+  }
+	function selectStatus1(event) {
+    console.log('bind value', stvalue);
+	  console.log('selected value', event.detail[0]);
+  }
+	let statuses =[{id:1, name:'v1',value:'z1'},{id:2, name:'v2',value:'z2'}]
+
+
+
+	let questions = [
+		{ id: 1, text: `30 min` },
+		{ id: 2, text: `1 Hour` },
+		{ id: 3, text: `4 Hour` },
+		{ id: 3, text: `All Day` }
+	];
+
+	let selected;
+
+	let answer = '';
+
+	function handleSubmit() {
+		console.log("weeee")
+		alert(`answered question ${selected.id} (${selected.text}) with "${answer}"`);
+	}
+
+	   let group = 1;
+   
+
+    $: valuesChange = values;
+    const values = [0, [0]];
+
+    function chooseRepeatValue() {
+        console.log(valuesChange);
+    }
+
 </script>
 
-<MaterialApp>
-  <div class="text-center">
-    <Button
-      class=""
-      on:click={() => {
-        active = true;
-        pleasureVoice();
-      }}
-    >
-      Create Event Using Pleasure Voice Service
-    </Button>
-  </div>
+<div class="logo-form-container">
+  <div class="container">
+    <BackButton
+      top="-110px"
+      text="Client Calendar"
+      width="135px"
+      buttonEvent={redirectURL}
+    />
+    <div class="row">
+      <div class="col-0" />
+      <div class="col-12">
+        <h1 class="client-name">You are scheduling an event titled</h1>
+        <h1 class="client-name">Some Event</h1>
+		<div><p class = "with-item">with</p></div>
+        <h2 class="logo-title">Some Client</h2>
+		
+      </div>
+      <div class="col-0" />
+    </div>
 
-  <Overlay opacity={1} color="primary" class="white-text" style="font-size:1.5em"
-    {active}
-    on:click={() => {
-      active = false;
-    }}
-  >
-    {questionPromptText}
-  </Overlay>
-</MaterialApp>
+		<div><p  class="some-text">The event is scheduled for the following day and time</p></div>
+
+<div class="datetime-container">
+    <div id="select_datetime" on:click={dateSelect} />
+
+</div>
+
+	<div><p  class="some-text">The event is scheduled for the following duration</p></div>
+
+   
+
+<div class="length-form-container">
+<form on:submit={handleSubmit}>
+	<select bind:value={selected} on:change="{() => answer = ''}">
+		{#each questions as question}
+			<option value={question}>
+				{question.text}
+			</option>
+		{/each}
+	</select>
+</form>
+</div>
+<!-- <p>selected question {selected ? selected.id : '[waiting...]'}</p> -->
+<hr/>
+	<div><p  class="some-text">To Repeat the Event Make a Selection</p></div>
+
+
+                <MaterialApp>
+                    <div class="length-selection-container">
+                        <ButtonGroup
+                            class="purple darken-1 d-flex flex-column flex-sm-row justify-space-between"
+                            mandatory
+                            size="x-large"
+                            activeClass="orange white-text"
+                            bind:value={values[0]}
+                        >
+                            <ButtonGroupItem  on:click={chooseRepeatValue}
+                                >None</ButtonGroupItem
+                            >
+
+                            <ButtonGroupItem on:click={chooseRepeatValue}
+                                >Daily</ButtonGroupItem
+                            >
+                            <ButtonGroupItem on:click={chooseRepeatValue}
+                                >Weekly</ButtonGroupItem
+                            >
+                            <ButtonGroupItem on:click={chooseRepeatValue}
+                                >Monthly</ButtonGroupItem
+                            >
+                        </ButtonGroup>
+                        <br />
+                    </div>
+                </MaterialApp>
+
+
+    <div class="row">
+      <div class="col-0" />
+      <div class="col-12">
+        <section class="submit-button-container">
+          <button on:click={handleSubmit} class="submit-button btn btn-info btn-block my-4" type="submit">Submit Event</button>
+          
+        </section>
+      </div>
+      <div class="col-0" />
+    </div>
+  </div>
+</div>
+
+
 
 
 <style>
- 
+
+
+
+
+
+
+
+.submit-button{
+  margin:0 auto;
+}
+  .submit-button-container{
+
+
+
+  }
+
+.length-form-container{
+ margin-top:-30px;
+	/* background-color:orange; */
+}
+.length-form-container > form{
+
+
+	/* background-color:red; */
+	width:160px;
+	margin:0 auto;
+}
+select{
+	text-align:center;
+	font-size:2.1em;
+  padding-left:10px;
+  padding-right:10px;
+}
+
+.some-text{
+	font-size:2em;
+	margin:0 auto;
+	color:grey;
+	margin-bottom:30px;
+	text-align:center;
+}
+.with-item{
+	top-margin:200px;
+	top:21px;
+	font-size:30px;
+	margin: 0 auto;
+	position:relative;
+	display:block;
+	color: #be3ebc91;
+	width:60px;
+}
+  .datetime-container{
+	  margin-top:30px;
+  }
+
+  /* .button-container {
+    height: 10vh;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 100px;
+  } */
+
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0.6rem;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  /* .form {
+    height: 100%;
+    width: 100%;
+  } */
+
+  .show-btn {
+    width: 100%;
+    padding: 0.6rem 1.5rem;
+    background: transparent;
+    font-weight: 300;
+    font-size: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid #9c9a9a;
+    position: flex;
+    margin-bottom: 100px;
+  }
+  .footer {
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* button {
+    background-color: #8f4089 !important;
+    font-size: 1.5em;
+    color: white !important;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10%;
+    border-radius: 50px;
+  } */
+
+  button:hover {
+    outline-color: #666;
+    background-color: #0fb52beb !important;
+  }
+
+  .dashboard-text {
+    color: #96008fc9;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #787878db;
+    font-size: 1.2em;
+    position: relative;
+    top: 00px;
+    margin-bottom: 0px;
+    text-align: center;
+  }
+
+  .get-started-text {
+    text-align: center;
+    font-size: 1.1em;
+  }
+
+  .container {
+    margin-top: 250px;
+  }
+
+  .logo-title {
+    text-align: center;
+    color: #266d2591;
+    font-size: 3em;
+    margin-top: 10px;
+    margin-bottom: 10px; 
+  }
+
+  .client-name {
+    font-family: logoFont;
+    font-size: 1.8em;
+    color: #be3ebc91;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -50px;
+  }
+
+  .logo-form-container {
+    position: relative;
+    bottom: 120px;
+  }
+
+  button {
+    background-color: #8f4089 !important;
+    font-size: 1.5em;
+    color: white !important;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10%;
+    border-radius: 50px;
+  }
+
+  button:hover {
+    outline-color: #666;
+    background-color: #0fb52beb !important;
+  }
+
+  button.w-50 {
+   background-color:purple;
+}
+
 </style>
