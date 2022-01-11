@@ -20,10 +20,12 @@
     import SearchAndCreateField from "../components/SearchAndCreateField.svelte";
 
     import {
+        updateCalendarEvent,
         getClientCalendarEvents,
         getClientById,
         createCalendarEvent,
         deleteCalendarEvent,
+        getCalendarEventById,
     } from "../storageAPI/indexedDB";
 
     import { showNav } from "../store/nav_animation.js";
@@ -32,10 +34,23 @@
     import { spring } from "svelte/motion";
     import BackButton from "../components/BackButton.svelte";
     import "date-time-picker-component/dist/css/date-time-picker-component.min.css";
-    import { DateTimePicker } from "date-time-picker-component/dist/js/date-time-picker-component.min";
+    import { DateTimePicker,DateRangePicker,DatePicker} from "date-time-picker-component/dist/js/date-time-picker-component.min";
+
+    let selectedItemIndex = 0;
+
+    let items = [
+        { item: "NONE" },
+        { item: "DAILY" },
+        { item: "WEEKLY" },
+        { item: "MONTHLY" },
+    ];
+
+    let itemSelect = items[selectedItemIndex];
 
     export let params = {};
+
     let clientId;
+    let eventId;
     let clientName = "";
     let calendarEvents = [];
     let currentEventDate = {
@@ -45,12 +60,20 @@
 
     let selection;
     let calendar;
+    let calendarDateRangeSelector;
+
+
+    let calendarEventUpdate = {};
 
     onMount(function () {
         clientId = parseInt(params.clientId);
+        eventId = parseInt(params.eventId);
         calendar = new DateTimePicker("select_datetime", {
             // l10n: it
         });
+
+       calendarDateRangeSelector =   new DatePicker("end_date");
+
 
         getClientById(parseInt(params.clientId)).then((data) => {
             clientName = data.name;
@@ -61,9 +84,28 @@
             console.log(list);
             calendarEvents = [...list];
         });
+
+        getCalendarEventById(eventId).then((item)=>{
+            calendarEventUpdate = Object.assign({},item)
+        });
         //_________________________________________END
     });
 
+
+
+    async function updateCalendarEventFunc(){
+        calendarEventUpdate.start = currentEventDate.startDate
+        calendarEventUpdate.end = currentEventDate.endDate
+        let result = await updateCalendarEvent(eventId,calendarEventUpdate);
+        console.log(result);
+    }
+
+
+
+
+
+
+    console.log(calendarEventUpdate)
     async function submitToDatabase(eventTitle) {
         console.log(eventTitle);
 
@@ -131,7 +173,7 @@
         currentEventDate.startDate = new Date(selection);
         currentEventDate.endDate = new Date(endDate);
 
-        //  console.log(currentEventDate);
+          console.log(currentEventDate);
     }
 
     function redirectURL() {
@@ -176,7 +218,6 @@
     }
 
     let group = 1;
-
     $: valuesChange = values;
     const values = [0, [0]];
 
@@ -185,17 +226,19 @@
     }
 
     let lengthOfEvent = 30;
+    function lengthSelect(event) {
+        console.log(event);
+        console.log(selected);
+    }
 
-
-
-function lengthSelect(event){
-    console.log(event)
-    console.log(selected)
-}
+    
+  
 
 
 
 </script>
+
+
 
 <div class="logo-form-container">
     <div class="container">
@@ -217,9 +260,7 @@ function lengthSelect(event){
         </div>
 
         <div>
-            <p class="some-text">
-                The event is scheduled for the following day and time
-            </p>
+            <p class="some-text">Event is scheduled for this day and time</p>
         </div>
 
         <div class="datetime-container">
@@ -227,9 +268,7 @@ function lengthSelect(event){
         </div>
 
         <div>
-            <p class="some-text">
-                The event is scheduled for the following duration
-            </p>
+            <p class="some-text">Event has the following duration</p>
         </div>
 
         <div class="length-form-container">
@@ -245,41 +284,36 @@ function lengthSelect(event){
         </div>
         <!-- <p>selected question {selected ? selected.id : '[waiting...]'}</p> -->
         <hr />
-        <div><p class="some-text">To Repeat the Event Make a Selection</p></div>
+        <div><p class="some-text">Event repeat</p></div>
 
-        <MaterialApp>
-            <div class="length-selection-container">
-                <ButtonGroup
-                    class="purple darken-1 d-flex flex-column flex-sm-row justify-space-between"
-                    mandatory
-                    size="x-large"
-                    activeClass="orange white-text"
-                    bind:value={values[0]}
+        <div class="repeat-container">
+            {#each items as { item }, i}
+                <div
+                    class="length-choice"
+                    class:selectedLengthChoice={selectedItemIndex === i}
+                    on:click={(e) => {
+                        selectedItemIndex = i;
+                        console.log(items[selectedItemIndex]);
+                    }}
                 >
-                    <ButtonGroupItem on:click={chooseRepeatValue}
-                        >None</ButtonGroupItem
-                    >
+                    {item}
+                </div>
+            {/each}
+        </div>
 
-                    <ButtonGroupItem on:click={chooseRepeatValue}
-                        >Daily</ButtonGroupItem
-                    >
-                    <ButtonGroupItem on:click={chooseRepeatValue}
-                        >Weekly</ButtonGroupItem
-                    >
-                    <ButtonGroupItem on:click={chooseRepeatValue}
-                        >Monthly</ButtonGroupItem
-                    >
-                </ButtonGroup>
-                <br />
-            </div>
-        </MaterialApp>
+        <div><p class="some-text">Until</p></div>
+<div class="datetime-container">
+    <div id="end_date" on:click={dateSelect} />
+
+
+</div>
 
         <div class="row">
             <div class="col-0" />
             <div class="col-12">
                 <section class="submit-button-container">
                     <button
-                        on:click={handleSubmit}
+                        on:click={updateCalendarEventFunc}
                         class="submit-button btn btn-info btn-block my-4"
                         type="submit">Submit Event</button
                     >
@@ -454,5 +488,26 @@ function lengthSelect(event){
 
     button.w-50 {
         background-color: purple;
+    }
+
+    .repeat {
+        display: flex;
+    }
+
+    .repeat-container {
+        flex-direction: row;
+        background-color: #1b2e63;
+        text-align: center;
+        color: white;
+    }
+
+    .selectedLengthChoice {
+        background-color: #684361;
+    }
+
+    .length-choice {
+        font-size: 2em;
+        outline-style: solid;
+        outline-width: 1px;
     }
 </style>

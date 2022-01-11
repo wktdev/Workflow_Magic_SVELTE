@@ -13,6 +13,8 @@ indexedDB.version(1).stores({
   calendar_events:
     '++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
 
+    // length, repeat,repetitionGroup
+
   calendar_event_group_id: '++id, title, client_name, client_id',
   user: 'user_id',
 })

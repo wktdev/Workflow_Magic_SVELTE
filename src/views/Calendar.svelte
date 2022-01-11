@@ -44,6 +44,7 @@
     getClientById(parseInt(params.clientId)).then((data) => {
       clientName = data.name;
     });
+
     //________________________________________GET ALL CALENDAR EVENTS FOR CLIENT
     getClientCalendarEvents(clientId).then((result) => {
       let list = result.reverse();
@@ -72,7 +73,7 @@
         clientId
       )
 
-      await   getClientCalendarEvents(clientId).then((result) => {
+      await getClientCalendarEvents(clientId).then((result) => {
       let list = result.reverse();
       console.log(list);
       calendarEvents = [...list];
@@ -108,17 +109,12 @@
 
   function dateSelect(e) {
     let selection = document.querySelector( 'div#select_datetime input.date_output' ).value;
-   
     let endDate = moment(selection).add(30, "m").toDate();
     console.log(selection)
     console.log(endDate)
     currentEventDate.startDate = new Date(selection);
     currentEventDate.endDate = new Date(endDate);
-    
-    
-
     //  console.log(currentEventDate);
-
   }
 
   function redirectURL() {
