@@ -2,6 +2,14 @@
   import { onMount } from "svelte";
   import Dexie from "dexie";
   import moment from "moment";
+  //var crypto = require("crypto");
+  //var createHash = require('hash-generator');
+  import createHash from "hash-generator";
+
+  
+
+ 
+
 
   import SearchAndCreateField from "../components/SearchAndCreateField.svelte";
 
@@ -24,20 +32,17 @@
   let clientId;
   let clientName = "";
   let calendarEvents = [];
-  let currentEventDate= {
-    startDate:moment(Date.now()).add(0, "m").toDate(),
-    endDate:moment(Date.now()).add(60, "m").toDate(),
+  let currentEventDate = {
+    startDate: moment(Date.now()).add(0, "m").toDate(),
+    endDate: moment(Date.now()).add(60, "m").toDate(),
   };
 
   let selection;
   let calendar;
 
-
-
   onMount(function () {
     clientId = parseInt(params.clientId);
     calendar = new DateTimePicker("select_datetime", {
-    
       // l10n: it
     });
 
@@ -56,13 +61,12 @@
 
   async function submitToDatabase(eventTitle) {
     console.log(eventTitle);
+    let groupId = createHash(30);
 
     try {
       /*_____________________________________________BEGIN change to calendar events for client*/
-
-  
-// '++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
-      await createCalendarEvent(   
+      // '++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
+      await createCalendarEvent(
         currentEventDate.startDate,
         currentEventDate.endDate,
         eventTitle,
@@ -70,14 +74,17 @@
         false,
         false,
         "time",
-        clientId
-      )
+        clientId,
+        false,
+        groupId,
+        undefined
+      );
 
       await getClientCalendarEvents(clientId).then((result) => {
-      let list = result.reverse();
-      console.log(list);
-      calendarEvents = [...list];
-    });
+        let list = result.reverse();
+        console.log(list);
+        calendarEvents = [...list];
+      });
 
       //_____________________________________________END
     } catch (error) {
@@ -88,11 +95,11 @@
   function goToRoute(item) {
     console.log(item);
 
-    window.location.href = "#/client/" + clientId + "/dashboard/calendar/event/" + item.id + "/edit";
+    window.location.href =
+      "#/client/" + clientId + "/dashboard/calendar/event/" + item.id + "/edit";
   }
 
   async function onDelete(id) {
-
     console.log(id);
 
     console.log(calendarEvents[id].id);
@@ -108,10 +115,12 @@
   }
 
   function dateSelect(e) {
-    let selection = document.querySelector( 'div#select_datetime input.date_output' ).value;
+    let selection = document.querySelector(
+      "div#select_datetime input.date_output"
+    ).value;
     let endDate = moment(selection).add(30, "m").toDate();
-    console.log(selection)
-    console.log(endDate)
+    console.log(selection);
+    console.log(endDate);
     currentEventDate.startDate = new Date(selection);
     currentEventDate.endDate = new Date(endDate);
     //  console.log(currentEventDate);
@@ -120,9 +129,6 @@
   function redirectURL() {
     window.location.assign("/#/client/" + clientId + "/dashboard");
   }
-
-
-
 </script>
 
 <div class="logo-form-container">
@@ -153,7 +159,7 @@
         <SearchAndCreateField
           buttonText="Create Event"
           placeholder="Select a date and type the name of the event"
-          arrayOfObjects={calendarEvents}                         
+          arrayOfObjects={calendarEvents}
           keyToRender="title"
           secondKeyToRender="start"
           onSubmit={submitToDatabase}
