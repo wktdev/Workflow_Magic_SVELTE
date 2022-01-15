@@ -70,7 +70,7 @@
   let terminationDateObj;
 
   let startEventDate;
-  let terminationEventDate;
+  let terminationDate;
 
   let eventTitle = ""; // is set during onMount
   let eventDateLength = { minutes: 30, text: "30 min" };
@@ -174,16 +174,16 @@
   //___________________________________________________________BEGIN set terminationDate
 
   function isStartAfterTerminationDate(event) {  // @ Checks is start date is after termination
-    let startEventFormOutput = document.querySelector(
-      "div#select_datetime input.date_output"
-    ).value;
+    // let startEventFormOutput = document.querySelector(
+    //   "div#select_datetime input.date_output"
+    // ).value;
 
-    let terminationDate = document.querySelector(
-      "div#end_date input.date_output"
-    ).value;
+    // terminationDate = document.querySelector(
+    //   "div#end_date input.date_output"
+    // ).value;
 
     let startIsAfterTerminationDate =
-      moment(startEventFormOutput).isAfter(terminationDate);
+      moment(startEventDate).isAfter(terminationDate);
 
     if (startIsAfterTerminationDate) {
       console.log(
@@ -205,7 +205,11 @@
   //______________________________________________________________END set terminationDate
 
 function setTerminationDate(){
-    console.log(isStartAfterTerminationDate());
+    terminationDate = document.querySelector(
+      "div#end_date input.date_output"
+    ).value;
+
+    console.log(terminationDate);
 }
 
   //________________________________________________BEGIN submit event
@@ -226,7 +230,7 @@ function setTerminationDate(){
         document.getElementById("end_date").innerHTML = "";
 
         terminationDateObj = new DatePicker("end_date", {
-      start_date: startEventObj.start_date,
+      start_date: startEventDate,
       date_output: "full_ISO",
     });
 
