@@ -188,6 +188,9 @@
       .add(lengthOfEvent.minutes, "m")
       .toDate();
 
+
+      updateCalendarEventObj.end = endDate;   // @
+      console.log(updateCalendarEventObj);
   }
 
   //:::::::::::::::::::::::::::::::::::::::END SET Length of Event_______________
@@ -275,8 +278,10 @@
     startEventDate = document.querySelector(
       "div#select_datetime input.date_output"
     ).value;
-
-
+    
+    let terminationEventDate = moment(terminationDate).toDate();
+    updateCalendarEventObj.terminationDate = terminationEventDate;
+     console.log(updateCalendarEventObj);
     resetTerminationDate();
   }
 
@@ -295,8 +300,12 @@
   async function submitEvent(e) {
     e.preventDefault();
     let event = await getCalendarEventById(eventId);
-    event.start = currentEventDate.startDate;
-    event.end = currentEventDate.endDate;
+    event.start = updateCalendarEventObj.start;
+    event.end = updateCalendarEventObj.end;
+    event.terminationDate = updateCalendarEventObj.terminationDate;
+    let result = await updateCalendarEvent(eventId,event)
+
+
   }
 
   //::::::::::::::::::::::::::::::::::::::::::::::::::::::::END submit event
