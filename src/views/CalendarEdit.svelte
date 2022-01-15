@@ -69,14 +69,44 @@
   let startEventObj;
   let terminationDateObj;
 
+  let eventDateLength = { minutes: 30, text: "30 min" };
+
   let startEventDate;
+  let endEventTime = eventDateLength.minutes;
   let terminationDate;
 
   let eventTitle = ""; // is set during onMount
-  let eventDateLength = { minutes: 30, text: "30 min" };
   let eventRepeatValue = {
     value: "NONE",
   };
+
+  let lengthOfEvent;
+
+
+
+
+  //::::::::::::::::::::::::::::::::::::::::: NEW DATE OBJECT CONSTRUCTION
+  //:::::::::::::::::::::::::::::::::::::::::FOR ALL UI INPUTS A NEW EVENT OBJECT
+  //:::::::::::::::::::::::::::::::::::::::::IS CONTRUCTED HERE_________________
+
+  let updateCalendarEventObj = {};
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //::::::::::::::::::::::::::::::::::::::::::END NEW DATE OBJECT_______________
+
+
+
 
   onMount(async function () {
     //_________________________________________________________________________BEGIN async DB setup
@@ -94,6 +124,8 @@
 
     await getCalendarEventById(eventId).then((item) => {
       startEventObj = Object.assign({}, item);
+      updateCalendarEventObj = Object.assign({}, item);
+
       eventTitle = startEventObj.title;
     });
 
@@ -114,6 +146,8 @@
     });
 
     //_________________________________________________________________________END SET UI date to event
+
+
   });
 
   function goToRoute(item) {
@@ -125,7 +159,7 @@
     window.location.assign("/#/client/" + clientId + "/dashboard");
   }
 
-  //__________________________________BEGIN Length of Event
+  //:::::::::::::::::::::::::::::::::::::::BEGIN SET Length of Event____________
 
   let eventLengthChoices = [
     {
@@ -138,28 +172,61 @@
     },
     {
       minutes: 240,
-      text: `4 Hour`,
+      text: `4 Hours`,
     },
     {
       minutes: 480,
-      text: `All Day`,
+      text: `8 Hours`,
     },
   ];
 
-  let selected;
 
-  //_______________________________________BEGIN length select 30 min, hour etc
 
   function lengthSelect(event) {
-    eventDateLength = selected;
-    console.log(eventDateLength);
+    updateCalendarEventObj;
+    let endDate = moment(updateCalendarEventObj.start)
+      .add(lengthOfEvent.minutes, "m")
+      .toDate();
+
   }
 
-  //_________________________________________END of length of event
+  //:::::::::::::::::::::::::::::::::::::::END SET Length of Event_______________
 
-  //___________________________________________________BEGIN event date select
+
+
+
+  //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::BEGIN EVENT DATE SELECT
 
   function eventDateSelect(e) {
+    startEventDate = document.querySelector(
+      "div#select_datetime input.date_output"
+    ).value;
+
+    let endDate = moment(startEventDate).add(lengthOfEvent.minutes, "m").toDate();
+    let start = moment(startEventDate).toDate()
+    //_____________________Construct new object
+
+    updateCalendarEventObj.end = endDate;
+    updateCalendarEventObj.start =  start;
+   
+    console.log(updateCalendarEventObj);
+
+    //___________________________________________
+    resetTerminationDate();
+  }
+
+  //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::END EVENT DATE SELECT
+
+
+
+
+
+
+//::::::::::::::::::::::::::::::::::::::::::BIG GROSS FUNCTION
+//::::::::::::::::::::::::::::::::::::::::::Checks if Start Date is BEFORE TERMINATION DATE
+//::::::::::::::::::::::::::::::::::::::::::IF FALSE RESETS TERMINATION DATE TO START DATE
+
+  function resetTerminationDate() {
     terminationDate = document.querySelector(
       "div#end_date input.date_output"
     ).value;
@@ -168,65 +235,30 @@
       "div#select_datetime input.date_output"
     ).value;
 
-    console.log(startEventDate);
-    let eventDate = moment(startEventDate);
-    console.log(eventDate);
+    function isStartAfterTerminationDate(event) {
+      let startIsAfterTerminationDate =
+        moment(startEventDate).isAfter(terminationDate);
 
-    resetTerminationDate()
-  }
-
-  //_______________________________________________________END
-
-  //___________________________________________________________BEGIN set terminationDate
-
-  function isStartAfterTerminationDate(event) {
-    // @ Checks is start date is after termination
-    // let startEventFormOutput = document.querySelector(
-    //   "div#select_datetime input.date_output"
-    // ).value;
-
-    // terminationDate = document.querySelector(
-    //   "div#end_date input.date_output"
-    // ).value;
-
-    let startIsAfterTerminationDate =
-      moment(startEventDate).isAfter(terminationDate);
-
-    if (startIsAfterTerminationDate) {
-      console.log(
-        startIsAfterTerminationDate,
-        "Start is after termination date"
-      );
-
-      return true;
-    } else {
-      console.log(
-        startIsAfterTerminationDate,
-        "Start is after termination date"
-      );
-
-      return false;
+      if (startIsAfterTerminationDate) {
+   
+        return true;
+      } else {
+  
+        return false;
+      }
     }
-  }
-
-  //______________________________________________________________END set terminationDate
-
-
-
-  function resetTerminationDate(){
 
     if (isStartAfterTerminationDate()) {
       document.getElementById("end_date").innerHTML = "";
-
       terminationDateObj = new DatePicker("end_date", {
         start_date: startEventDate,
         date_output: "full_ISO",
       });
     }
-
   }
 
 
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::END BIG GROSS FUNCTION
 
 
 
@@ -234,14 +266,7 @@
 
 
 
-
-
-
-
-
-
-
-
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::::SET TERMINATION DATE
   function setTerminationDate() {
     terminationDate = document.querySelector(
       "div#end_date input.date_output"
@@ -251,17 +276,21 @@
       "div#select_datetime input.date_output"
     ).value;
 
-    console.log(terminationDate);
-    resetTerminationDate()
+
+    resetTerminationDate();
   }
 
-  //________________________________________________BEGIN submit event
+  //:::::::::::::::::::::::::::::::::::::::::::::::::::::::END TERMINATION DATE
 
 
 
 
 
-  //
+
+
+
+  //:::::::::::::::::::::::::::::::::::::::::::::::::::::::BEGIN submit event
+
 
   async function submitEvent(e) {
     e.preventDefault();
@@ -270,19 +299,26 @@
     event.end = currentEventDate.endDate;
   }
 
-  //____________________________________________________END submit event
+  //::::::::::::::::::::::::::::::::::::::::::::::::::::::::END submit event
+
+
+
+
 </script>
+
+
+
+
+
+
+
+
+
+
 
 <div
   on:click={function () {
-    if (isStartAfterTerminationDate()) {
-      document.getElementById("end_date").innerHTML = "";
-
-      terminationDateObj = new DatePicker("end_date", {
-        start_date: startEventDate,
-        date_output: "full_ISO",
-      });
-    }
+    // test space
   }}
 >
   TEST
@@ -327,7 +363,7 @@
 
     <div class="length-form-container">
       <form>
-        <select bind:value={selected} on:change={lengthSelect}>
+        <select bind:value={lengthOfEvent} on:change={lengthSelect}>
           {#each eventLengthChoices as eventLength}
             <option value={eventLength}>
               {eventLength.text}
@@ -352,7 +388,7 @@
             selectedItemIndex = i;
             eventRepeatValue = repeatEventValue[selectedItemIndex];
 
-            console.log(eventRepeatValue);
+     
           }}
         >
           {value}
