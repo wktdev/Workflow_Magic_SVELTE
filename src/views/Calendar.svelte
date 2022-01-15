@@ -35,9 +35,9 @@
 
 
   let eventLength = 30;
-
+  // let startdate = moment(Date.now()).add(1, "days").format("DD-MM-YYYY");
   let currentEventDate = {
-    startDate: moment(Date.now()).add(0, "m").toDate(),
+    startDate: moment(Date.now()).add(1, "days").toDate(),
     endDate: moment(Date.now()).add(eventLength , "m").toDate(),
   };
 
@@ -47,11 +47,18 @@
 
   onMount(function () {
     clientId = parseInt(params.clientId);
+  
     calendar = new DateTimePicker("select_datetime", {
-      start_date: Date.now(),
+
       date_output: "full_ISO",
       // l10n: it
     });
+
+
+    //   
+
+
+    console.log(calendar);
 
     getClientById(parseInt(params.clientId)).then((data) => {
       clientName = data.name;
