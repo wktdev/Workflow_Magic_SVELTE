@@ -160,6 +160,10 @@
   //___________________________________________________BEGIN event date select
 
   function eventDateSelect(e) {
+    terminationDate = document.querySelector(
+      "div#end_date input.date_output"
+    ).value;
+
     startEventDate = document.querySelector(
       "div#select_datetime input.date_output"
     ).value;
@@ -167,13 +171,16 @@
     console.log(startEventDate);
     let eventDate = moment(startEventDate);
     console.log(eventDate);
+
+    resetTerminationDate()
   }
 
   //_______________________________________________________END
 
   //___________________________________________________________BEGIN set terminationDate
 
-  function isStartAfterTerminationDate(event) {  // @ Checks is start date is after termination
+  function isStartAfterTerminationDate(event) {
+    // @ Checks is start date is after termination
     // let startEventFormOutput = document.querySelector(
     //   "div#select_datetime input.date_output"
     // ).value;
@@ -204,15 +211,57 @@
 
   //______________________________________________________________END set terminationDate
 
-function setTerminationDate(){
+
+
+  function resetTerminationDate(){
+
+    if (isStartAfterTerminationDate()) {
+      document.getElementById("end_date").innerHTML = "";
+
+      terminationDateObj = new DatePicker("end_date", {
+        start_date: startEventDate,
+        date_output: "full_ISO",
+      });
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  function setTerminationDate() {
     terminationDate = document.querySelector(
       "div#end_date input.date_output"
     ).value;
 
+    startEventDate = document.querySelector(
+      "div#select_datetime input.date_output"
+    ).value;
+
     console.log(terminationDate);
-}
+    resetTerminationDate()
+  }
 
   //________________________________________________BEGIN submit event
+
+
+
+
+
+  //
 
   async function submitEvent(e) {
     e.preventDefault();
@@ -224,20 +273,18 @@ function setTerminationDate(){
   //____________________________________________________END submit event
 </script>
 
-<div on:click={function(){
+<div
+  on:click={function () {
+    if (isStartAfterTerminationDate()) {
+      document.getElementById("end_date").innerHTML = "";
 
-    if(isStartAfterTerminationDate()){
-        document.getElementById("end_date").innerHTML = "";
-
-        terminationDateObj = new DatePicker("end_date", {
-      start_date: startEventDate,
-      date_output: "full_ISO",
-    });
-
+      terminationDateObj = new DatePicker("end_date", {
+        start_date: startEventDate,
+        date_output: "full_ISO",
+      });
     }
-
-    
-}}>
+  }}
+>
   TEST
 </div>
 
