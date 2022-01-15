@@ -13,7 +13,7 @@
       return item.trim().indexOf("workflow-magic=") == 0;
     });
 
-    console.log(firstUseCookieBool);
+
 
     getAllClients().then((result) => {
       let clients = [...result];

@@ -17,7 +17,7 @@
     MaterialApp,
   } from "svelte-materialify";
 
-//   import SearchAndCreateField from "../components/SearchAndCreateField.svelte";
+  //   import SearchAndCreateField from "../components/SearchAndCreateField.svelte";
 
   import {
     updateCalendarEvent,
@@ -29,7 +29,6 @@
   } from "../storageAPI/indexedDB";
 
   import { createRepeatDatesDaily } from "../helper_functions";
-
   import { showNav } from "../store/nav_animation.js";
   import { animateNav } from "../store/nav_animation.js";
   import { fade, fly } from "svelte/transition";
@@ -46,7 +45,7 @@
 
   let selectedItemIndex = 0;
 
-  let items = [
+  let repeatEventValue = [
     {
       value: "NONE",
     },
@@ -61,210 +60,182 @@
     },
   ];
 
-  let itemSelect = items[selectedItemIndex];
-
   let clientId;
   let eventId;
   let clientName = "";
   let calendarEvents = [];
-  let currentEventDate = {
-    startDate: moment(Date.now()).add(0, "m").toDate(),
-    endDate: moment(Date.now()).add(60, "m").toDate(),
-  };
 
   let selection;
-  let calendar;
-  let calendarDateRangeSelector;
-  let calendarEventUpdate = {};
+  let startEventObj;
+  let terminationDateObj;
+
+  let startEventDate;
+  let terminationEventDate;
+
+  let eventTitle = ""; // is set during onMount
+  let eventDateLength = { minutes: 30, text: "30 min" };
+  let eventRepeatValue = {
+    value: "NONE",
+  };
 
   onMount(async function () {
+    //_________________________________________________________________________BEGIN async DB setup
     clientId = parseInt(params.clientId);
     eventId = parseInt(params.eventId);
-
 
     await getClientById(parseInt(params.clientId)).then((data) => {
       clientName = data.name;
     });
 
-    //________________________________________GET ALL CALENDAR EVENTS FOR CLIENT
     await getClientCalendarEvents(clientId).then((result) => {
       let list = result.reverse();
       calendarEvents = [...list];
     });
 
     await getCalendarEventById(eventId).then((item) => {
-      calendarEventUpdate = Object.assign({}, item);
-      console.log(calendarEventUpdate.title);
+      startEventObj = Object.assign({}, item);
+      eventTitle = startEventObj.title;
     });
 
-    calendar = new DateTimePicker("select_datetime", {
-      first_date: moment(Date.now()),
-      start_date: calendarEventUpdate.start,
-      // last_date: new Date(2030, 0, 29),
-      // first_day_no: 1,
-      date_output: "timestamp",
+    //__________________________________________________________________________END async DB setup
+
+    //__________________________________________________________________________BEGIN SET UI date to event
+
+    // https://www.marcellosurdi.name/demo/date-time-picker-compoment_new/
+
+    startEventObj = new DateTimePicker("select_datetime", {
+      start_date: startEventObj.start,
+      date_output: "full_ISO",
     });
 
-
-    calendarDateRangeSelector = new DatePicker("end_date",{
-        start_date: calendar.start_date
-
+    terminationDateObj = new DatePicker("end_date", {
+      start_date: startEventObj.start_date,
+      date_output: "full_ISO",
     });
 
-
-    console.log(calendar.start_date);
-    console.log(calendarEventUpdate, "CHECK");
-
-    currentEventDate = {
-      startDate: calendar.start_date,
-      endDate: moment(calendar.start_date).add(60, "m").toDate(),
-    };
-
-    //_________________________________________END
+    //_________________________________________________________________________END SET UI date to event
   });
-
 
   function goToRoute(item) {
     window.location.href =
       "#/client/" + clientId + "/dashboard/calendar/event/" + item.id + "/edit";
   }
 
-  async function onDelete(id) {
-    //________________________________________DELETE Calendar events
-    let calendarID = calendarEvents[id].id;
-    await deleteCalendarEvent(calendarID);
-    await getClientCalendarEvents(clientId).then((result) => {
-      let list = result.reverse();
-      calendarEvents = [...list];
-    });
-    //_________________________________________END
-  }
-
-
-
-
-  //___________________________________________________________BEGIN FIRST DATE SELECT
-
-  function dateSelect(e) {
-    let selection = document.querySelector(
-      "div#select_datetime input.date_output"
-    ).value;
-
-    let endDate = moment(selection).add(30, "m").toDate();
-    currentEventDate.startDate = new Date(selection);
-    currentEventDate.endDate = new Date(endDate);
-  }
-
   function redirectURL() {
     window.location.assign("/#/client/" + clientId + "/dashboard");
-
-
   }
-
-  //_____________________________________________________________END First Date Select
-
-
-
-
-
-
-
-
-
 
   //__________________________________BEGIN Length of Event
 
-  let questions = [
+  let eventLengthChoices = [
     {
-      id: 1,
+      minutes: 30,
       text: `30 min`,
     },
     {
-      id: 2,
+      minutes: 60,
       text: `1 Hour`,
     },
     {
-      id: 3,
+      minutes: 240,
       text: `4 Hour`,
     },
     {
-      id: 3,
+      minutes: 480,
       text: `All Day`,
     },
   ];
 
   let selected;
 
-
-
-
-
   //_______________________________________BEGIN length select 30 min, hour etc
 
   function lengthSelect(event) {
-    console.log(selected);
+    eventDateLength = selected;
+    console.log(eventDateLength);
   }
 
+  //_________________________________________END of length of event
 
- //_________________________________________END of length of event
+  //___________________________________________________BEGIN event date select
 
+  function eventDateSelect(e) {
+    startEventDate = document.querySelector(
+      "div#select_datetime input.date_output"
+    ).value;
 
+    console.log(startEventDate);
+    let eventDate = moment(startEventDate);
+    console.log(eventDate);
+  }
 
+  //_______________________________________________________END
 
+  //___________________________________________________________BEGIN set terminationDate
 
+  function isStartAfterTerminationDate(event) {  // @ Checks is start date is after termination
+    let startEventFormOutput = document.querySelector(
+      "div#select_datetime input.date_output"
+    ).value;
 
-
-
- //___________________________________________________________BEGIN set terminationDate
-  let repeatTerminationDate;
-
-  function selectedTerminationDate(event) {
-    let terminationDatePre = document.querySelector(
+    let terminationDate = document.querySelector(
       "div#end_date input.date_output"
     ).value;
 
+    let startIsAfterTerminationDate =
+      moment(startEventFormOutput).isAfter(terminationDate);
 
-    console.log(terminationDatePre);
+    if (startIsAfterTerminationDate) {
+      console.log(
+        startIsAfterTerminationDate,
+        "Start is after termination date"
+      );
 
-    let eventStart  = moment(Date(calendar.start_date))
-    let terminationDate = moment(Date(terminationDatePre))
+      return true;
+    } else {
+      console.log(
+        startIsAfterTerminationDate,
+        "Start is after termination date"
+      );
 
-    console.log(eventStart);
-
-    console.log(terminationDate);
-
-    let isTerminationBeforeStartDate = moment(eventStart.toString()).isAfter(terminationDate.toString());
-
-    console.log(isTerminationBeforeStartDate);
- 
+      return false;
+    }
   }
 
-//______________________________________________________________END set terminationDate
+  //______________________________________________________________END set terminationDate
 
-
-
-
-
-
-
-  
+function setTerminationDate(){
+    console.log(isStartAfterTerminationDate());
+}
 
   //________________________________________________BEGIN submit event
-
-
 
   async function submitEvent(e) {
     e.preventDefault();
     let event = await getCalendarEventById(eventId);
     event.start = currentEventDate.startDate;
     event.end = currentEventDate.endDate;
- 
   }
 
   //____________________________________________________END submit event
-
-
 </script>
+
+<div on:click={function(){
+
+    if(isStartAfterTerminationDate()){
+        document.getElementById("end_date").innerHTML = "";
+
+        terminationDateObj = new DatePicker("end_date", {
+      start_date: startEventObj.start_date,
+      date_output: "full_ISO",
+    });
+
+    }
+
+    
+}}>
+  TEST
+</div>
 
 <div class="logo-form-container">
   <div class="container">
@@ -278,7 +249,7 @@
       <div class="col-0" />
       <div class="col-12">
         <h1 class="client-name">You are scheduling an event titled</h1>
-        <h1 class="client-name">{calendarEventUpdate.title}</h1>
+        <h1 class="client-name">{eventTitle}</h1>
         <!-- <div><p class = "with-item">with</p></div> -->
         <h2 class="logo-title">{clientName}</h2>
       </div>
@@ -292,7 +263,7 @@
     </div>
 
     <div class="datetime-container">
-      <div id="select_datetime" on:click={dateSelect} />
+      <div id="select_datetime" on:click={eventDateSelect} />
     </div>
 
     <!--___________________END  event start_________________________________________-->
@@ -306,9 +277,9 @@
     <div class="length-form-container">
       <form>
         <select bind:value={selected} on:change={lengthSelect}>
-          {#each questions as question}
-            <option value={question}>
-              {question.text}
+          {#each eventLengthChoices as eventLength}
+            <option value={eventLength}>
+              {eventLength.text}
             </option>
           {/each}
         </select>
@@ -322,25 +293,15 @@
     <div><p class="some-text">Event repeat</p></div>
 
     <div class="repeat-container">
-      {#each items as { value }, i}
+      {#each repeatEventValue as { value }, i}
         <div
           class="length-choice"
           class:selectedLengthChoice={selectedItemIndex === i}
           on:click={(e) => {
             selectedItemIndex = i;
-            repeatDataValue = items[selectedItemIndex];
+            eventRepeatValue = repeatEventValue[selectedItemIndex];
 
-            //checkTerminationDateOrder();
-            /*
-                    if termination is less than start THEN set termination to start
-
-                    let isTerminationBeforeStartDate = moment(start).isAfter(terminationDate); //true
-
-                    if(isTerminationBeforeStartDate){
-                    terminationDate = startDate
-                    }
-
-                    */
+            console.log(eventRepeatValue);
           }}
         >
           {value}
@@ -350,30 +311,15 @@
 
     <!--____________________END duration of event_________________________________-->
 
-
-
-
-
-
-
     <!-- BEGIN ___________________termination end date for repeated events-->
 
     <div><p class="some-text">Until</p></div>
 
     <div class="datetime-container">
-      <div id="end_date" on:click={selectedTerminationDate}/>
+      <div id="end_date" on:click={setTerminationDate} />
     </div>
 
     <!-- END ___________________termination end date for repeated events-->
-
-
-
-
-
-
-
-
-
 
     <!-- BEGIN__________________submit event____________________________-->
 
