@@ -48,6 +48,8 @@
   onMount(function () {
     clientId = parseInt(params.clientId);
     calendar = new DateTimePicker("select_datetime", {
+      start_date: Date.now(),
+      date_output: "full_ISO",
       // l10n: it
     });
 

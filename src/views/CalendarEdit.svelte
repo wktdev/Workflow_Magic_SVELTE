@@ -69,10 +69,8 @@
   let startEventObj;
   let terminationDateObj;
 
-  let eventDateLength = { minutes: 30, text: "30 min" };
 
   let startEventDate;
-  let endEventTime = eventDateLength.minutes;
   let terminationDate;
 
   let eventTitle = ""; // is set during onMount
@@ -111,8 +109,6 @@
   let initialLengthIndex;
   let initialLengthText = eventLengthChoices[initialLengthIndex]
   
-
-   
   function getIndex(arr,key,value){
      let answer;
      arr.forEach((val,index,arr)=>{
@@ -126,12 +122,6 @@
   
 
   
-
-
-
-
-
-
   //::::::::::::::::::::::::::::::::::::::::: NEW DATE OBJECT CONSTRUCTION
   //:::::::::::::::::::::::::::::::::::::::::FOR ALL UI INPUTS A NEW EVENT OBJECT
   //:::::::::::::::::::::::::::::::::::::::::IS CONTRUCTED HERE_________________
@@ -173,14 +163,8 @@
       startEventObj = Object.assign({}, item);
       updateCalendarEventObj = Object.assign({}, item);
 
-      console.log(updateCalendarEventObj);
-     
-
-      console.log(updateCalendarEventObj.lengthOfEvent, "Length of event");
-
       initialLengthIndex = getIndex(eventLengthChoices,"minutes",updateCalendarEventObj.lengthOfEvent);
 
-      console.log( initialLengthIndex);
 
       console.log(eventLengthChoices[initialLengthIndex].text );
       lengthOfEvent = eventLengthChoices[initialLengthIndex]
@@ -236,10 +220,6 @@
 
 
   function lengthSelect(event) {
-      console.log(lengthOfEvent)
-    //   console.log(event,"Length event obj")
-    //   let lengthValue = document.getElementById("length-menu").value;
-    //   console.log(lengthValue.text);
       updateCalendarEventObj;
       let endDate = moment(updateCalendarEventObj.start)
       .add(lengthOfEvent.minutes, "m")
@@ -248,7 +228,6 @@
       updateCalendarEventObj.end = endDate;  
       updateCalendarEventObj.lengthOfEvent = lengthOfEvent.minutes;
 
-      console.log(updateCalendarEventObj);
 
   }
 
@@ -266,15 +245,11 @@
 
     let endDate = moment(startEventDate).add(lengthOfEvent.minutes, "m").toDate();
     let start = moment(startEventDate).toDate()
-    //_____________________Construct new object
-
     updateCalendarEventObj.end = endDate;
     updateCalendarEventObj.start =  start;
-   
-    console.log(updateCalendarEventObj);
 
-    //___________________________________________
     resetTerminationDate();
+    
   }
 
   //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::END EVENT DATE SELECT
@@ -385,13 +360,7 @@
 
 
 
-<div
-  on:click={function () {
-    // test space
-  }}
->
-  TEST
-</div>
+
 
 <div class="logo-form-container">
   <div class="container">
@@ -406,7 +375,6 @@
       <div class="col-12">
         <h1 class="client-name">You are scheduling an event titled</h1>
         <h1 class="client-name">{eventTitle}</h1>
-        <!-- <div><p class = "with-item">with</p></div> -->
         <h2 class="logo-title">{clientName}</h2>
       </div>
       <div class="col-0" />
@@ -456,7 +424,9 @@
           on:click={(e) => {
             selectedItemIndex = i;
             eventRepeatValue = repeatEventValue[selectedItemIndex];
-
+            
+            console.log(eventRepeatValue);
+            
      
           }}
         >
