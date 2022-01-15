@@ -32,13 +32,18 @@
   let clientId;
   let clientName = "";
   let calendarEvents = [];
+
+
+  let eventLength = 30;
+
   let currentEventDate = {
     startDate: moment(Date.now()).add(0, "m").toDate(),
-    endDate: moment(Date.now()).add(60, "m").toDate(),
+    endDate: moment(Date.now()).add(eventLength , "m").toDate(),
   };
 
   let selection;
   let calendar;
+
 
   onMount(function () {
     clientId = parseInt(params.clientId);
@@ -77,7 +82,8 @@
         clientId,
         false,
         groupId,
-        undefined
+        undefined,
+        eventLength
       );
 
       await getClientCalendarEvents(clientId).then((result) => {
@@ -129,6 +135,9 @@
   function redirectURL() {
     window.location.assign("/#/client/" + clientId + "/dashboard");
   }
+
+
+  
 </script>
 
 <div class="logo-form-container">

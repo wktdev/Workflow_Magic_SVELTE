@@ -76,11 +76,58 @@
   let terminationDate;
 
   let eventTitle = ""; // is set during onMount
+
+
+
   let eventRepeatValue = {
     value: "NONE",
   };
 
+
+
+
   let lengthOfEvent;
+
+  let eventLengthChoices = [
+    {
+      minutes: 30,
+      text: `30 min`,
+    },
+    {
+      minutes: 60,
+      text: `1 Hour`,
+    },
+    {
+      minutes: 240,
+      text: `4 Hours`,
+    },
+    {
+      minutes: 480,
+      text: `8 Hours`,
+    },
+  ];
+
+
+  let initialLengthIndex;
+  let initialLengthText = eventLengthChoices[initialLengthIndex]
+  
+
+   
+  function getIndex(arr,key,value){
+     let answer;
+     arr.forEach((val,index,arr)=>{
+           if(val[key] === value){
+              answer = index
+           }
+     })
+     
+     return answer
+  }
+  
+
+  
+
+
 
 
 
@@ -126,7 +173,19 @@
       startEventObj = Object.assign({}, item);
       updateCalendarEventObj = Object.assign({}, item);
 
+      console.log(updateCalendarEventObj);
+     
+
+      console.log(updateCalendarEventObj.lengthOfEvent, "Length of event");
+
+      initialLengthIndex = getIndex(eventLengthChoices,"minutes",updateCalendarEventObj.lengthOfEvent);
+
+      console.log( initialLengthIndex);
+
+      console.log(eventLengthChoices[initialLengthIndex].text );
+      lengthOfEvent = eventLengthChoices[initialLengthIndex]
       eventTitle = startEventObj.title;
+
     });
 
     //__________________________________________________________________________END async DB setup
@@ -148,6 +207,19 @@
     //_________________________________________________________________________END SET UI date to event
 
 
+
+
+
+   
+
+
+
+
+
+
+
+
+
   });
 
   function goToRoute(item) {
@@ -156,41 +228,28 @@
   }
 
   function redirectURL() {
-    window.location.assign("/#/client/" + clientId + "/dashboard");
+    window.location.assign("/#/client/" + clientId + "/dashboard/calendar");
   }
 
   //:::::::::::::::::::::::::::::::::::::::BEGIN SET Length of Event____________
 
-  let eventLengthChoices = [
-    {
-      minutes: 30,
-      text: `30 min`,
-    },
-    {
-      minutes: 60,
-      text: `1 Hour`,
-    },
-    {
-      minutes: 240,
-      text: `4 Hours`,
-    },
-    {
-      minutes: 480,
-      text: `8 Hours`,
-    },
-  ];
-
 
 
   function lengthSelect(event) {
-    updateCalendarEventObj;
-    let endDate = moment(updateCalendarEventObj.start)
+      console.log(lengthOfEvent)
+    //   console.log(event,"Length event obj")
+    //   let lengthValue = document.getElementById("length-menu").value;
+    //   console.log(lengthValue.text);
+      updateCalendarEventObj;
+      let endDate = moment(updateCalendarEventObj.start)
       .add(lengthOfEvent.minutes, "m")
       .toDate();
 
+      updateCalendarEventObj.end = endDate;  
+      updateCalendarEventObj.lengthOfEvent = lengthOfEvent.minutes;
 
-      updateCalendarEventObj.end = endDate;   // @
       console.log(updateCalendarEventObj);
+
   }
 
   //:::::::::::::::::::::::::::::::::::::::END SET Length of Event_______________
@@ -303,8 +362,9 @@
     event.start = updateCalendarEventObj.start;
     event.end = updateCalendarEventObj.end;
     event.terminationDate = updateCalendarEventObj.terminationDate;
+    event.lengthOfEvent = updateCalendarEventObj.lengthOfEvent
     let result = await updateCalendarEvent(eventId,event)
-
+    redirectURL()
 
   }
 
@@ -374,7 +434,7 @@
       <form>
         <select bind:value={lengthOfEvent} on:change={lengthSelect}>
           {#each eventLengthChoices as eventLength}
-            <option value={eventLength}>
+            <option id="length-menu" value={eventLength}>
               {eventLength.text}
             </option>
           {/each}
