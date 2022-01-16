@@ -160,7 +160,7 @@
     });
 
     await getCalendarEventById(eventId).then((item) => {
-      startEventObj = Object.assign({}, item);
+     let startEventObj = Object.assign({}, item);
       updateCalendarEventObj = Object.assign({}, item);
 
       initialLengthIndex = getIndex(eventLengthChoices,"minutes",updateCalendarEventObj.lengthOfEvent);
@@ -169,6 +169,8 @@
       console.log(eventLengthChoices[initialLengthIndex].text );
       lengthOfEvent = eventLengthChoices[initialLengthIndex]
       eventTitle = startEventObj.title;
+
+      console.log( updateCalendarEventObj);
 
     });
 
@@ -179,12 +181,12 @@
     // https://www.marcellosurdi.name/demo/date-time-picker-compoment_new/
 
     startEventObj = new DateTimePicker("select_datetime", {
-      start_date: startEventObj.start,
+      start_date:  updateCalendarEventObj.start,
       date_output: "full_ISO",
     });
 
     terminationDateObj = new DatePicker("end_date", {
-      start_date: startEventObj.start_date,
+      start_date: updateCalendarEventObj.terminationDate,
       date_output: "full_ISO",
     });
 
@@ -312,10 +314,13 @@
     startEventDate = document.querySelector(
       "div#select_datetime input.date_output"
     ).value;
+
+    console.log( terminationDate);
     
     let terminationEventDate = moment(terminationDate).toDate();
     updateCalendarEventObj.terminationDate = terminationEventDate;
-     console.log(updateCalendarEventObj);
+    updateCalendarEventObj.start = moment(startEventDate).toDate()
+    console.log(updateCalendarEventObj);
     resetTerminationDate();
   }
 
@@ -337,6 +342,7 @@
     event.start = updateCalendarEventObj.start;
     event.end = updateCalendarEventObj.end;
     event.terminationDate = updateCalendarEventObj.terminationDate;
+
     event.lengthOfEvent = updateCalendarEventObj.lengthOfEvent
     let result = await updateCalendarEvent(eventId,event)
     redirectURL()

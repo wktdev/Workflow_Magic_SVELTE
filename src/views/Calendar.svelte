@@ -38,7 +38,7 @@
   // let startdate = moment(Date.now()).add(1, "days").format("DD-MM-YYYY");
   let currentEventDate = {
     startDate: moment(Date.now()).add(1, "days").toDate(),
-    endDate: moment(Date.now()).add(eventLength , "m").toDate(),
+    endDate: moment(Date.now()).add(1, "days").add(eventLength , "m").toDate(),
   };
 
   let selection;
