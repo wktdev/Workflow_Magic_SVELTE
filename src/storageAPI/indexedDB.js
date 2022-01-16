@@ -11,7 +11,7 @@ indexedDB.version(1).stores({
     '++id,client_id,full_name,first_name,last_name,email,phone_number,additional_information',
 
   calendar_events:
-    '++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId,repeat,groupRepeatId,terminationDate,lengthOfEvent',
+    '++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId,repeat,groupRepeatId,terminationDate,lengthOfEvent,repeatValue',
 
     /*  repeat:repeat,
     terminationDate:terminationDate,
@@ -61,7 +61,8 @@ export async function createCalendarEvent(
   repeat,   // boolean//
   groupRepeatId,
   terminationDate,
-  lengthOfEvent
+  lengthOfEvent,
+  repeatValue
 ) {
   let result = await indexedDB.calendar_events.add({
     clientId:clientId,
@@ -76,7 +77,8 @@ export async function createCalendarEvent(
     repeat:repeat,
     groupRepeatId:groupRepeatId,
     terminationDate:terminationDate,
-    lengthOfEvent:lengthOfEvent
+    lengthOfEvent:lengthOfEvent,
+    repeatValue:repeatValue
 
   })
   return result

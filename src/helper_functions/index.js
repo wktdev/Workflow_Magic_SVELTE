@@ -38,8 +38,8 @@ export function createRepeatWeekDayDates(startDate, endDate) { // returns an arr
 export function createRepeatDatesDaily(startDate, endDate) { // returns an array
   let dates = [];
 
-  let currDate = moment(startDate).startOf('day');
-  let lastDate = moment(endDate).startOf('day');
+  let currDate = moment(startDate);
+  let lastDate = moment(endDate);
    dates.push(currDate.clone().toDate())
 
   while(currDate.add(1, 'days').diff(lastDate) < 0) {
@@ -52,6 +52,21 @@ console.log(dates)
 }
 
 
+// export function createRepeatDatesDaily(startDate, endDate) { // returns an array
+//   let dates = [];
+
+//   let currDate = moment(startDate).startOf('day');
+//   let lastDate = moment(endDate).startOf('day');
+//    dates.push(currDate.clone().toDate())
+
+//   while(currDate.add(1, 'days').diff(lastDate) < 0) {
+//       console.log(currDate.toDate());
+//       dates.push(currDate.clone().toDate());
+//   }
+// console.log(dates)
+//   return dates;
+
+// }
 
 
 // ?? not  sure if this works

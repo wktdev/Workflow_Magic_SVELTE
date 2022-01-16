@@ -29,6 +29,7 @@
   } from "../storageAPI/indexedDB";
 
   import { createRepeatDatesDaily } from "../helper_functions";
+  import { createRepeatWeekDayDates } from "../helper_functions";
   import { showNav } from "../store/nav_animation.js";
   import { animateNav } from "../store/nav_animation.js";
   import { fade, fly } from "svelte/transition";
@@ -69,20 +70,14 @@
   let startEventObj;
   let terminationDateObj;
 
-
   let startEventDate;
   let terminationDate;
 
   let eventTitle = ""; // is set during onMount
 
-
-
   let eventRepeatValue = {
     value: "NONE",
   };
-
-
-
 
   let lengthOfEvent;
 
@@ -105,45 +100,27 @@
     },
   ];
 
-
   let initialLengthIndex;
-  let initialLengthText = eventLengthChoices[initialLengthIndex]
-  
-  function getIndex(arr,key,value){
-     let answer;
-     arr.forEach((val,index,arr)=>{
-           if(val[key] === value){
-              answer = index
-           }
-     })
-     
-     return answer
-  }
-  
+  let initialLengthText = eventLengthChoices[initialLengthIndex];
 
-  
+  function getIndex(arr, key, value) {
+    let answer;
+    arr.forEach((val, index, arr) => {
+      if (val[key] === value) {
+        answer = index;
+      }
+    });
+
+    return answer;
+  }
+
   //::::::::::::::::::::::::::::::::::::::::: NEW DATE OBJECT CONSTRUCTION
   //:::::::::::::::::::::::::::::::::::::::::FOR ALL UI INPUTS A NEW EVENT OBJECT
   //:::::::::::::::::::::::::::::::::::::::::IS CONTRUCTED HERE_________________
 
   let updateCalendarEventObj = {};
 
-
-
-
-
-
-
-
-
-
-
-
-
   //::::::::::::::::::::::::::::::::::::::::::END NEW DATE OBJECT_______________
-
-
-
 
   onMount(async function () {
     //_________________________________________________________________________BEGIN async DB setup
@@ -160,18 +137,20 @@
     });
 
     await getCalendarEventById(eventId).then((item) => {
-     let startEventObj = Object.assign({}, item);
+      let startEventObj = Object.assign({}, item);
       updateCalendarEventObj = Object.assign({}, item);
 
-      initialLengthIndex = getIndex(eventLengthChoices,"minutes",updateCalendarEventObj.lengthOfEvent);
+      initialLengthIndex = getIndex(
+        eventLengthChoices,
+        "minutes",
+        updateCalendarEventObj.lengthOfEvent
+      );
 
-
-      console.log(eventLengthChoices[initialLengthIndex].text );
-      lengthOfEvent = eventLengthChoices[initialLengthIndex]
+      console.log(eventLengthChoices[initialLengthIndex].text);
+      lengthOfEvent = eventLengthChoices[initialLengthIndex];
       eventTitle = startEventObj.title;
 
-      console.log( updateCalendarEventObj);
-
+      console.log(updateCalendarEventObj);
     });
 
     //__________________________________________________________________________END async DB setup
@@ -181,7 +160,7 @@
     // https://www.marcellosurdi.name/demo/date-time-picker-compoment_new/
 
     startEventObj = new DateTimePicker("select_datetime", {
-      start_date:  updateCalendarEventObj.start,
+      start_date: updateCalendarEventObj.start,
       date_output: "full_ISO",
     });
 
@@ -191,21 +170,6 @@
     });
 
     //_________________________________________________________________________END SET UI date to event
-
-
-
-
-
-   
-
-
-
-
-
-
-
-
-
   });
 
   function goToRoute(item) {
@@ -219,24 +183,17 @@
 
   //:::::::::::::::::::::::::::::::::::::::BEGIN SET Length of Event____________
 
-
-
   function lengthSelect(event) {
-      updateCalendarEventObj;
-      let endDate = moment(updateCalendarEventObj.start)
+    updateCalendarEventObj;
+    let endDate = moment(updateCalendarEventObj.start)
       .add(lengthOfEvent.minutes, "m")
       .toDate();
 
-      updateCalendarEventObj.end = endDate;  
-      updateCalendarEventObj.lengthOfEvent = lengthOfEvent.minutes;
-
-
+    updateCalendarEventObj.end = endDate;
+    updateCalendarEventObj.lengthOfEvent = lengthOfEvent.minutes;
   }
 
   //:::::::::::::::::::::::::::::::::::::::END SET Length of Event_______________
-
-
-
 
   //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::BEGIN EVENT DATE SELECT
 
@@ -245,25 +202,21 @@
       "div#select_datetime input.date_output"
     ).value;
 
-    let endDate = moment(startEventDate).add(lengthOfEvent.minutes, "m").toDate();
-    let start = moment(startEventDate).toDate()
+    let endDate = moment(startEventDate)
+      .add(lengthOfEvent.minutes, "m")
+      .toDate();
+    let start = moment(startEventDate).toDate();
     updateCalendarEventObj.end = endDate;
-    updateCalendarEventObj.start =  start;
+    updateCalendarEventObj.start = start;
 
     resetTerminationDate();
-    
   }
 
   //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::END EVENT DATE SELECT
 
-
-
-
-
-
-//::::::::::::::::::::::::::::::::::::::::::BIG GROSS FUNCTION
-//::::::::::::::::::::::::::::::::::::::::::Checks if Start Date is BEFORE TERMINATION DATE
-//::::::::::::::::::::::::::::::::::::::::::IF FALSE RESETS TERMINATION DATE TO START DATE
+  //::::::::::::::::::::::::::::::::::::::::::BIG GROSS FUNCTION
+  //::::::::::::::::::::::::::::::::::::::::::Checks if Start Date is BEFORE TERMINATION DATE
+  //::::::::::::::::::::::::::::::::::::::::::IF FALSE RESETS TERMINATION DATE TO START DATE
 
   function resetTerminationDate() {
     terminationDate = document.querySelector(
@@ -279,10 +232,8 @@
         moment(startEventDate).isAfter(terminationDate);
 
       if (startIsAfterTerminationDate) {
-   
         return true;
       } else {
-  
         return false;
       }
     }
@@ -296,16 +247,9 @@
     }
   }
 
+  //:::::::::::::::::::::::::::::::::::::::::::::::::::::END BIG GROSS FUNCTION
 
-//:::::::::::::::::::::::::::::::::::::::::::::::::::::END BIG GROSS FUNCTION
-
-
-
-
-
-
-
-//:::::::::::::::::::::::::::::::::::::::::::::::::::::::SET TERMINATION DATE
+  //:::::::::::::::::::::::::::::::::::::::::::::::::::::::SET TERMINATION DATE
   function setTerminationDate() {
     terminationDate = document.querySelector(
       "div#end_date input.date_output"
@@ -315,58 +259,90 @@
       "div#select_datetime input.date_output"
     ).value;
 
-    console.log( terminationDate);
-    
+    console.log(terminationDate);
+
     let terminationEventDate = moment(terminationDate).toDate();
     updateCalendarEventObj.terminationDate = terminationEventDate;
-    updateCalendarEventObj.start = moment(startEventDate).toDate()
+    updateCalendarEventObj.start = moment(startEventDate).toDate();
     console.log(updateCalendarEventObj);
     resetTerminationDate();
   }
 
   //:::::::::::::::::::::::::::::::::::::::::::::::::::::::END TERMINATION DATE
 
+  //::::::::::::::::::::::::::::::::::::::::::::::::: BEGIN REPEAT DATES SANDBOX
 
-
-
-
-
-
+  //:::::::::::::::::::::::::::::::::::::::::::::::::::: END REPEAT DATES SANDBOX
 
   //:::::::::::::::::::::::::::::::::::::::::::::::::::::::BEGIN submit event
 
-
   async function submitEvent(e) {
     e.preventDefault();
+
     let event = await getCalendarEventById(eventId);
     event.start = updateCalendarEventObj.start;
     event.end = updateCalendarEventObj.end;
     event.terminationDate = updateCalendarEventObj.terminationDate;
+    event.repeatValue = eventRepeatValue.value;
+    event.lengthOfEvent = updateCalendarEventObj.lengthOfEvent;
 
-    event.lengthOfEvent = updateCalendarEventObj.lengthOfEvent
-    let result = await updateCalendarEvent(eventId,event)
-    redirectURL()
 
+    let result = await updateCalendarEvent(eventId, event);
+
+    //_____________________________________________________________
+
+    // if (event.repeatValue === "DAILY") {
+    //   console.log(event.repeatValue, "Repeat value");
+    //   let arr = createRepeatDatesDaily(event.start, event.terminationDate);
+
+    //   console.log(event, "Initial Event");
+    //   console.log(arr, "List of events");
+
+    //   debugger;
+
+    
+    //   arr.forEach(async (val,index,arr)=>{
+    //     let repeatEvent = Object.assign({},event);
+    //     repeatEvent.start = moment(val).toDate();
+    //     repeatEvent.end = moment(val).add(event.lengthOfEvent, "m").toDate();
+    //     repeatEvent.repeat = true;
+    //     console.log(repeatEvent);
+
+
+    //     let result = await createCalendarEvent(
+    //         repeatEvent.start,
+    //         repeatEvent.end,
+    //         repeatEvent.title,
+    //         undefined,
+    //         false,
+    //         false,
+    //         "time",
+    //         repeatEvent.clientId,
+    //         true,
+    //         repeatEvent.groupRepeatId,
+    //         repeatEvent.terminationDate,  // termination date
+    //         repeatEvent.lengthOfEvent,
+    //         repeatEvent.repeatValue
+    //      );
+
+          
+    //   });
+
+    //   debugger;
+      
+
+    //   console.log(event,"original event update");
+    //   console.log(arr, "Repeat dates arr");
+
+    //   debugger;
+
+    // } 
+
+    redirectURL();
   }
 
   //::::::::::::::::::::::::::::::::::::::::::::::::::::::::END submit event
-
-
-
-
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <div class="logo-form-container">
   <div class="container">
@@ -430,10 +406,8 @@
           on:click={(e) => {
             selectedItemIndex = i;
             eventRepeatValue = repeatEventValue[selectedItemIndex];
-            
+
             console.log(eventRepeatValue);
-            
-     
           }}
         >
           {value}

@@ -32,40 +32,40 @@
   let clientId;
   let clientName = "";
   let calendarEvents = [];
-
+  let initialDateOnPageLoad;
 
   let eventLength = 30;
-  // let startdate = moment(Date.now()).add(1, "days").format("DD-MM-YYYY");
-  let currentEventDate = {
-    startDate: moment(Date.now()).add(1, "days").toDate(),
-    endDate: moment(Date.now()).add(1, "days").add(eventLength , "m").toDate(),
-  };
+  let currentEventDate = {};
 
   let selection;
   let calendar;
 
 
-  onMount(function () {
+  onMount( async function () {
     clientId = parseInt(params.clientId);
-  
     calendar = new DateTimePicker("select_datetime", {
-
+   
       date_output: "full_ISO",
       // l10n: it
     });
 
+    //__________________________________________________GET initial date on page load from UI 
+    initialDateOnPageLoad = document.querySelector(
+      "div#select_datetime input.date_output"
+    ).value;
 
-    //   
+    currentEventDate.startDate = moment(initialDateOnPageLoad).toDate();
+    currentEventDate.endDate =  moment(initialDateOnPageLoad).add(eventLength , "m").toDate()
 
+    //___________________________________________________^^ Store in higher scoped object
 
-    console.log(calendar);
-
-    getClientById(parseInt(params.clientId)).then((data) => {
-      clientName = data.name;
-    });
+   
+    await getClientById(parseInt(params.clientId)).then((data) => {
+        clientName = data.name;
+      });
 
     //________________________________________GET ALL CALENDAR EVENTS FOR CLIENT
-    getClientCalendarEvents(clientId).then((result) => {
+    await getClientCalendarEvents(clientId).then((result) => {
       let list = result.reverse();
       console.log(list);
       calendarEvents = [...list];
@@ -91,8 +91,9 @@
         clientId,
         false,
         groupId,
-        undefined,
-        eventLength
+        currentEventDate.startDate,  // termination date
+        eventLength,
+        "NONE"
       );
 
       await getClientCalendarEvents(clientId).then((result) => {
