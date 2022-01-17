@@ -20718,82 +20718,6 @@ input[type='checkbox'].tui-full-calendar-checkbox-round + span {
 }
 
 
-.instructions.svelte-njxwpa{
-  text-align:center
-}
-
-#cal-box.svelte-njxwpa{
-  top:100px;
-  position:relative
-}
-
-.container.svelte-njxwpa{
-  margin-top:120px
-}
-
-.logo-title.svelte-njxwpa{
-  text-align:center;
-  color:#266d2591;
-  font-size:3em
-}
-
-.client-name.svelte-njxwpa{
-  font-family:logoFont;
-  font-size:1.8em;
-  color:#be3ebc91;
-  font-weight:bold;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:-30px
-}
-
-.logo-form-container.svelte-njxwpa{
-  position:relative;
-  bottom:120px
-}
-.instructions.svelte-5hkgj9{
-  display:block;
-  text-align:center
-}
-
-#pleasure-voice.svelte-5hkgj9:hover{
-  display:block;
-  text-align:center;
-  color:orange;
-  cursor:pointer
-}
-
-#cal-box.svelte-5hkgj9{
-  top:100px;
-  position:relative
-}
-
-.container.svelte-5hkgj9{
-  margin-top:120px
-}
-
-.logo-title.svelte-5hkgj9{
-  text-align:center;
-  color:#266d2591;
-  font-size:3em
-}
-
-.client-name.svelte-5hkgj9{
-  font-family:logoFont;
-  font-size:1.8em;
-  color:#be3ebc91;
-  font-weight:bold;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:-30px
-}
-
-.logo-form-container.svelte-5hkgj9{
-  position:relative;
-  bottom:120px
-}
 div.datetime-container,div.datetime-container *{
   box-sizing:border-box;
   font-family:arial,sans-serif
@@ -20996,6 +20920,82 @@ div.picker button.confirm{
   outline:0;
   padding:10px;
   text-transform:uppercase
+}
+.instructions.svelte-njxwpa{
+  text-align:center
+}
+
+#cal-box.svelte-njxwpa{
+  top:100px;
+  position:relative
+}
+
+.container.svelte-njxwpa{
+  margin-top:120px
+}
+
+.logo-title.svelte-njxwpa{
+  text-align:center;
+  color:#266d2591;
+  font-size:3em
+}
+
+.client-name.svelte-njxwpa{
+  font-family:logoFont;
+  font-size:1.8em;
+  color:#be3ebc91;
+  font-weight:bold;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:-30px
+}
+
+.logo-form-container.svelte-njxwpa{
+  position:relative;
+  bottom:120px
+}
+.instructions.svelte-5hkgj9{
+  display:block;
+  text-align:center
+}
+
+#pleasure-voice.svelte-5hkgj9:hover{
+  display:block;
+  text-align:center;
+  color:orange;
+  cursor:pointer
+}
+
+#cal-box.svelte-5hkgj9{
+  top:100px;
+  position:relative
+}
+
+.container.svelte-5hkgj9{
+  margin-top:120px
+}
+
+.logo-title.svelte-5hkgj9{
+  text-align:center;
+  color:#266d2591;
+  font-size:3em
+}
+
+.client-name.svelte-5hkgj9{
+  font-family:logoFont;
+  font-size:1.8em;
+  color:#be3ebc91;
+  font-weight:bold;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:-30px
+}
+
+.logo-form-container.svelte-5hkgj9{
+  position:relative;
+  bottom:120px
 }
 .container.svelte-5s86y8{
   margin-top:250px

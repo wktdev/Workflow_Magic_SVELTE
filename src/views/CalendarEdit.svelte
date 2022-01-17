@@ -291,52 +291,62 @@
 
     //_____________________________________________________________
 
-    // if (event.repeatValue === "DAILY") {
-    //   console.log(event.repeatValue, "Repeat value");
-    //   let arr = createRepeatDatesDaily(event.start, event.terminationDate);
+    if (event.repeatValue === "DAILY") {
+      console.log(event.repeatValue, "Repeat value");
 
-    //   console.log(event, "Initial Event");
-    //   console.log(arr, "List of events");
-
-    //   debugger;
-
-    
-    //   arr.forEach(async (val,index,arr)=>{
-    //     let repeatEvent = Object.assign({},event);
-    //     repeatEvent.start = moment(val).toDate();
-    //     repeatEvent.end = moment(val).add(event.lengthOfEvent, "m").toDate();
-    //     repeatEvent.repeat = true;
-    //     console.log(repeatEvent);
-
-
-    //     let result = await createCalendarEvent(
-    //         repeatEvent.start,
-    //         repeatEvent.end,
-    //         repeatEvent.title,
-    //         undefined,
-    //         false,
-    //         false,
-    //         "time",
-    //         repeatEvent.clientId,
-    //         true,
-    //         repeatEvent.groupRepeatId,
-    //         repeatEvent.terminationDate,  // termination date
-    //         repeatEvent.lengthOfEvent,
-    //         repeatEvent.repeatValue
-    //      );
-
-          
-    //   });
-
-    //   debugger;
       
 
-    //   console.log(event,"original event update");
-    //   console.log(arr, "Repeat dates arr");
+      let arr = createRepeatDatesDaily(event.start, event.terminationDate);
 
-    //   debugger;
+      console.log(event, "Initial Event");
+      console.log(arr, "List of events");
 
-    // } 
+      debugger;
+
+    
+      arr.forEach(async (val,index,arr)=>{
+        let repeatEvent = Object.assign({},event);
+        repeatEvent.start = moment(val).toDate();
+        repeatEvent.end = moment(val).add(event.lengthOfEvent, "m").toDate();
+        repeatEvent.repeat = true;
+        console.log(repeatEvent);
+
+
+        let result = await createCalendarEvent(
+            repeatEvent.start,
+            repeatEvent.end,
+            repeatEvent.title,
+            undefined,
+            false,
+            false,
+            "time",
+            repeatEvent.clientId,
+            true,
+            repeatEvent.groupRepeatId,
+            repeatEvent.terminationDate,  // termination date
+            repeatEvent.lengthOfEvent,
+            repeatEvent.repeatValue
+         );
+
+          
+      });
+
+      
+      if (event.repeatValue === "WEEKLY") {
+
+
+
+      }
+
+      debugger;
+      
+
+      console.log(event,"original event update");
+      console.log(arr, "Repeat dates arr");
+
+      debugger;
+
+    } 
 
     redirectURL();
   }
