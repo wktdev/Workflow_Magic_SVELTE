@@ -318,7 +318,7 @@
         <h2 class="logo-title">All Clients</h2>
         <p class="instructions">Select a date to add an event</p>
         <p>
-        <Sandbox></Sandbox>
+ 
         </p>
 
      

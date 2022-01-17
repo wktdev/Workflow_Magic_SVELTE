@@ -29,7 +29,7 @@ export default {
     '/client/:clientId/dashboard/calendar/' : Calendar,
     '/client/:clientId/dashboard/calendar/event/:eventId/edit' : CalendarEdit,
     // '/client/:clientId/dashboard/calendar//' : CalendarEvents,
-    '/calendar/': CalendarSingleEvent,
+    '/calendar/': CalendarFull,
     '/save-and-load/': SaveAndLoadIndexedDB,
     '/apps/' : Apps,
     '/speech/' : SpeechService, 
