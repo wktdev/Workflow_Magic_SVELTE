@@ -13,11 +13,11 @@ export let stringToColour = function (str) {
   return colour
 }
 
-export function createRepeatWeekDayDates(startDate, endDate) {
+export  function createRepeatWeekDayDates(startDate, endDate) {
   // returns an array
-
+  let endDatePlusOne = moment(endDate).add(1, "d").toDate();
   let start = moment(startDate),
-    end = moment(endDate),
+    end = moment(endDatePlusOne),
     day = start.day()
 
   let result = []
@@ -25,10 +25,13 @@ export function createRepeatWeekDayDates(startDate, endDate) {
   result.push(start)
 
   while (current.day(7 + day).isBefore(end)) {
-    result.push(current.clone())
+    result.push(current.clone());
   }
 
-  let final = result.map((m) => new Date(m))
+  let correctedDateList = result.slice(1); // removes first item
+
+
+  let final = correctedDateList.map((m) => new Date(m));
 
   return final
 }
@@ -52,6 +55,30 @@ export function createRepeatDatesDaily(startDate, endDate) {
 
   return correctedDateList
 }
+
+
+
+// export function createRepeatWeekDayDates(startDate, endDate) {
+//   // returns an array
+
+//   let start = moment(startDate),
+//     end = moment(endDate),
+//     day = start.day()
+
+//   let result = []
+//   let current = start.clone()
+//   result.push(start)
+
+//   while (current.day(7 + day).isBefore(end)) {
+//     result.push(current.clone())
+//   }
+
+//   let final = result.map((m) => new Date(m))
+
+//   return final
+// }
+
+
 
 // export function createRepeatDatesDaily(startDate, endDate) { // returns an array
 //   let dates = [];
