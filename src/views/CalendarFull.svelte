@@ -91,6 +91,7 @@
     //_________________________________________________________END get calendar events from IndexDB
 
     calendar.on({
+      
       //___________________________________________________On EVENTS CLICKS !IMPORTANT
       //_______________________________ CLICK LISTED EVENT
       clickSchedule: function (e) {
