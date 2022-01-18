@@ -12,7 +12,7 @@
   import { deleteCalendarEvent } from "../storageAPI/indexedDB";
   import { getAllClients } from "../storageAPI/indexedDB";
   import Sandbox from "./Sandbox.svelte";
-  import { pleasureVoiceApp } from "../pleasure_voice_api/pleasurevoice";
+  // import { pleasureVoiceApp } from "../pleasure_voice_api/pleasurevoice";
   import moment from 'moment';
 
   import BackButton from "../components/BackButton.svelte";
@@ -187,6 +187,7 @@
   });
 
   function nextMonth() {
+    console.log(calendar);
     calendar.next();
   }
 
