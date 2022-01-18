@@ -10,10 +10,12 @@
 
 
 <div class="circle-container" style="--top:{top}">
-  <div class="res-circle" on:click={buttonEvent} style="--width:{width}">    
-    <div class="circle-txt"><slot>{text}</slot></div>
+  <!-- <div class="res-circle" on:click={buttonEvent} style="--width:{width}">  -->
+    <img on:click={buttonEvent}  class="res-circle"src="images/backicon.png" alt="back-image" />
+   
+    <!-- <div class="circle-txt"><slot>{text}</slot></div> -->
   </div>
-</div>
+
 
 
 
@@ -32,6 +34,10 @@
     width:150px;
     left:20px;
   } */
+
+  img{
+    opacity:0.8
+  }
   .circle-container {
     z-index: +5;
     top: var(--top);
@@ -49,7 +55,7 @@
     border-radius: 50%;
 
     /* (B) BACKGROUND COLOR */
-    background: #d4ff35;
+    background: #54b35b7a;
 
     /* (C) NECESSARY TO POSITION TEXT BLOCK */
     line-height: 0;
@@ -58,7 +64,7 @@
   }
 
   .res-circle:hover{
-    background:#ffac0da8;
+    background:#8f4089;
   }
 
   /* (D) MATCH HEIGHT */
@@ -80,4 +86,6 @@
     font-family: arial, sans-serif;
     font-weight: bold;
   }
+
+  
 </style>

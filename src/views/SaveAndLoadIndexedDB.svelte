@@ -65,7 +65,7 @@ window.location.href = "/#/";
   <div class="container">
     <div class="row">
       <div class="col-0">
-        <BackButton top="-80px" text="Go to Client List" width="160px" buttonEvent = {redirectURL}></BackButton>
+        <BackButton top="-85px" text="Go to Client List" width="160px" buttonEvent = {redirectURL}></BackButton>
       </div>
       <div class="col-12" id="box">
         <h2 class="logo-title">Workflow Magic</h2>

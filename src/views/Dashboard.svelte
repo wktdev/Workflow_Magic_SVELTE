@@ -63,7 +63,7 @@
     <BackButton top="-100px" text="Go to Client List" width="160px" buttonEvent = {redirectURL}></BackButton>
     <div class="row">
       <div class="col-0" />
-      <div class="col-12">
+      <div class="col-12" id="ele-container">
       
 
         <h1 class="client-name">Dashboard</h1>
@@ -72,7 +72,7 @@
           Below is a list of useful tools to make working with the client easier.<br />
           Each item has a description below it. <br />
           To start organizing your project, make a selection.<br />
-          If at any time you feel lost, click the big yellow circle to go back a step.
+          If at any time you feel lost, click the big green arrow to go back a step.
         </p>
         <hr />
       </div>
@@ -126,6 +126,14 @@
  -->
 
 <style>
+
+  #ele-container{
+    top: -60px;
+    position: relative;
+
+  }
+
+  
   .dashboard-text {
     color: #96008fc9;
     text-align: center;

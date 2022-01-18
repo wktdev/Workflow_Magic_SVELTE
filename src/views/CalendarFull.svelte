@@ -429,7 +429,7 @@
     width: 100%; */
 
   #cal-box {
-    top: 100px;
+    top: 60px;
     position: relative;
   }
   .header {
