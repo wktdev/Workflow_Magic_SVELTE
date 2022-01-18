@@ -163,11 +163,24 @@
     startEventObj = new DateTimePicker("select_datetime", {
       start_date: updateCalendarEventObj.start,
       date_output: "full_ISO",
+      styles: {
+        active_background: '#e34c26',
+        active_color: '#fff',
+        inactive_background: '#0366d9',
+        inactive_color: '#fff'
+      }
     });
 
     terminationDateObj = new DatePicker("end_date", {
       start_date: updateCalendarEventObj.terminationDate,
       date_output: "full_ISO",
+
+      styles: {
+        active_background: '#e34c26',
+        active_color: '#fff',
+        inactive_background: '#0366d9',
+        inactive_color: '#fff'
+      },
     });
 
     //_________________________________________________________________________END SET UI date to event
@@ -656,13 +669,13 @@
 
   .repeat-container {
     flex-direction: row;
-    background-color: #1b2e63;
+    background-color: #ff7b00;
     text-align: center;
     color: white;
   }
 
   .selectedLengthChoice {
-    background-color: #684361;
+    background-color: #b11313;
   }
 
   .length-choice {
