@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
-  import marked from "marked";
+  import { marked } from 'marked';
+
   import { updateWorkflow } from "../storageAPI/indexedDB";
   import { getWorkflowById } from "../storageAPI/indexedDB";
   import { getClientById } from "../storageAPI/indexedDB";
@@ -39,10 +40,7 @@
 
   function togglePreview() {
     preview = !preview;
-
     previewText = preview ? "Edit" : "Preview";
-
-    
   }
 
   async function saveWorkflow() {

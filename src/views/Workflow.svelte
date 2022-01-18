@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
-  import marked from "marked";
+  import { marked } from 'marked';
+
   import BackButton from "../components/BackButton.svelte";
 
   import {updateWorkflow} from "../storageAPI/indexedDB";
