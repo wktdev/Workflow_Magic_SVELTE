@@ -12,7 +12,9 @@
   import { fade, fly } from "svelte/transition";
   import { spring } from "svelte/motion";
   import BackButton from "../components/BackButton.svelte";
+  import { writable } from 'svelte/store';
 
+  const loading = writable(true);
   //  import downloadjs from "downloadjs";
 
   let clients = [];
@@ -26,7 +28,9 @@
     await getAllClients().then((result) => {
       let list = result.reverse();
       clients = [...list];
-    });
+    }).then(()=>{
+      loading.set(false)
+    })
   });
 
   async function submitToDatabase(item) {
@@ -67,6 +71,11 @@
     });
   }
 </script>
+
+{#if $loading}
+<div></div>
+
+{:else}
 
 {#if $showNav || $animateNav}
   <div class="logo-form-container">
@@ -159,6 +168,8 @@
       </div>
     </div>
   </div>
+{/if}
+
 {/if}
 
 <style>
