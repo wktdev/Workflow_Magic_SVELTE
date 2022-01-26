@@ -13,7 +13,7 @@
   import { getAllClients } from "../storageAPI/indexedDB";
   import Sandbox from "./Sandbox.svelte";
   // import { pleasureVoiceApp } from "../pleasure_voice_api/pleasurevoice";
-  import moment from 'moment';
+  import moment from "moment";
 
   import BackButton from "../components/BackButton.svelte";
   import { fade, fly } from "svelte/transition";
@@ -28,6 +28,24 @@
   let calendar;
   export let params = {};
   let calendarEvents = [];
+
+  let months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  let currentMonthName = "";
+
   onMount(async function () {
     // calendar = new TuiCalendar("#calendar", {
     //   defaultView: "month",
@@ -65,6 +83,10 @@
           useDetailPopup: true,
           calendars: [...tempCalendars],
         });
+
+        let monthListNumber = new Date(calendar.getDate()).getMonth();
+
+        currentMonthName = months[monthListNumber];
       });
 
     await getAllCalendarEvents().then((calendarEventList) => {
@@ -91,7 +113,6 @@
     //_________________________________________________________END get calendar events from IndexDB
 
     calendar.on({
-      
       //___________________________________________________On EVENTS CLICKS !IMPORTANT
       //_______________________________ CLICK LISTED EVENT
       clickSchedule: function (e) {
@@ -190,10 +211,16 @@
   function nextMonth() {
     console.log(calendar);
     calendar.next();
+    let monthListNumber = new Date(calendar.getDate()).getMonth();
+
+    currentMonthName = months[monthListNumber];
   }
 
   function prevMonth() {
     calendar.prev();
+    let monthListNumber = new Date(calendar.getDate()).getMonth();
+
+    currentMonthName = months[monthListNumber];
   }
 
   function redirectURL() {
@@ -232,13 +259,11 @@
 
   //     await app.summary(() => {
   //       console.log("submitted to database", app.parsedData);
-          
 
   //     });
   //   }
 
   //   test();
-
 
   //   //'++id,calendarId,start,end,title,location,isPrivate,isAllDay,category,clientId',
   //   //time: '12:45
@@ -295,10 +320,7 @@
   //   // });
   // }
 
-  function pleasureVoiceInvoke(){
-
-  }
-
+  function pleasureVoiceInvoke() {}
 </script>
 
 <div class="logo-form-container">
@@ -319,19 +341,17 @@
         <h1 class="client-name">Meetings & Events</h1>
         <h2 class="logo-title">All Clients</h2>
         <p class="instructions">Select a date to add an event</p>
-        <p>
- 
-        </p>
-
-     
+        <div id="month-name">
+          {currentMonthName}
+        </div>
 
         <div id="menu">
           <span id="menu-navi">
-            <button
+            <!-- <button
               type="button"
               class="btn btn-default btn-sm move-today"
               data-action="move-today">Today</button
-            >
+            > -->
             <button
               on:click={prevMonth}
               type="button"
@@ -349,13 +369,14 @@
               NEXT
             </button>
           </span>
+
           <span id="renderRange" class="render-range" />
         </div>
 
-        <div class="calendar-container">
-          <div id="calendar" />
-        </div>
+        <div id="calendar" />
+      </div>
 
+      <div class="calendar-container">
         <hr />
       </div>
       <div class="col-0" />
@@ -366,12 +387,19 @@
       <div class="col-0" />
     </div>
   </div>
-
-
 </div>
 
 <style>
+  #month-name {
+    margin: 0 auto;
+    font-size: 3em;
+  }
+
   .instructions {
+    text-align: center;
+  }
+
+  #month-name {
     text-align: center;
   }
 

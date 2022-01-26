@@ -68,7 +68,14 @@
     await getClientCalendarEvents(clientId).then((result) => {
       let list = result.reverse();
       console.log(list);
-      calendarEvents = [...list];
+
+      let sortedDates = list.sort(function(a,b){
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new  Date(a.start) - new Date(b.start)
+      });
+
+      calendarEvents = [...sortedDates];
     });
     //_________________________________________END
   });
@@ -99,14 +106,33 @@
       await getClientCalendarEvents(clientId).then((result) => {
         let list = result.reverse();
         console.log(list);
-        calendarEvents = [...list];
+
+        let sortedDates = list.sort(function(a,b){
+          // Turn your strings into dates, and then subtract them
+           // to get a value that is either negative, positive, or zero.
+           return new  Date(a.start) - new Date(b.start)
+        });
+
+
+
+        calendarEvents = [...sortedDates];
+
+
+        
+
+
       });
 
       //_____________________________________________END
     } catch (error) {
       throw error;
     }
+
+
   }
+
+
+
 
   function goToRoute(item) {
     console.log(item);
@@ -124,7 +150,17 @@
     await deleteCalendarEvent(calendarID);
     await getClientCalendarEvents(clientId).then((result) => {
       let list = result.reverse();
-      calendarEvents = [...list];
+
+      let sortedDates = list.sort(function(a,b){
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new  Date(a.start) - new Date(b.start)
+      });
+
+
+      calendarEvents = [...sortedDates];
+
+      
       console.log(calendarEvents);
     });
     //_________________________________________END

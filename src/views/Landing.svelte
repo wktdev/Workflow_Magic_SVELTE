@@ -18,12 +18,12 @@
   let clients = [];
   let firstUseCookieBool;
 
-  onMount(function () {
+  onMount(async function () {
     firstUseCookieBool = document.cookie.split(";").some(function (item) {
       return item.trim().indexOf("workflow-magic=") == 0;
     });
 
-    getAllClients().then((result) => {
+    await getAllClients().then((result) => {
       let list = result.reverse();
       clients = [...list];
     });
@@ -162,6 +162,10 @@
 {/if}
 
 <style>
+
+.navbar { position: absolute; width: 100%; }
+
+
   .get-started-text {
     text-align: center;
     display: flex;

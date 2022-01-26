@@ -200,11 +200,7 @@
   <p class="instructions"  id="pleasure-voice">Click here to use Pleasure Voice service</p>
         <div id="menu">
           <span id="menu-navi">
-            <button
-              type="button"
-              class="btn btn-default btn-sm move-today"
-              data-action="move-today">Today</button
-            >
+
             <button
               on:click={prevMonth}
               type="button"

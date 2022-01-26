@@ -1,5 +1,6 @@
 <script>
   import Router from "svelte-spa-router";
+  import { writable } from "svelte/store";
   import routes from "./routes";
   import { showNav } from "./store/nav_animation.js";
   import { animateNav } from "./store/nav_animation.js";
@@ -8,14 +9,14 @@
   import { exportIndexedDB } from "./storageAPI/indexedDB.js";
   import { fade, fly } from "svelte/transition";
 
-  onMount(function () {
+  const loading = writable(true);
+
+  onMount(async function () {
     let firstUseCookieBool = document.cookie.split(";").some(function (item) {
       return item.trim().indexOf("workflow-magic=") == 0;
     });
 
-
-
-    getAllClients().then((result) => {
+    await getAllClients().then((result) => {
       let clients = [...result];
 
       if (result.length > 1 || firstUseCookieBool) {
@@ -29,11 +30,17 @@
     });
   });
 
+  
+
   async function downloadIndexDBUserData() {
     await exportIndexedDB().then((blob) => {
       console.log(blob);
     });
   }
+
+
+
+
 </script>
 
 <main>
@@ -61,22 +68,14 @@
         </div>
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            
-
             <a class="nav-link " href="/#/apps">
-              Apps<span class="sr-only">(current)</span></a>
-
-
-
+              Apps<span class="sr-only">(current)</span></a
+            >
           </li>
           <li class="nav-item active">
-            
-
             <a class="nav-link " href="/#/save-and-load">
               Load or Save Data<span class="sr-only">(current)</span></a
             >
-
-
           </li>
           <li class="nav-item active">
             <a class="nav-link" href="/#/calendar"
@@ -118,20 +117,14 @@
           </div>
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-            
               <a class="nav-link " href="/#/apps">
-                Apps<span class="sr-only">(current)</span></a>
-  
-
+                Apps<span class="sr-only">(current)</span></a
+              >
             </li>
             <li class="nav-item active">
-            
-
               <a class="nav-link " href="/#/save-and-load">
                 Load or Save Data<span class="sr-only">(current)</span></a
               >
-  
-  
             </li>
             <li class="nav-item active">
               <a class="nav-link " href="/#/calendar"
@@ -152,8 +145,6 @@
   <Router {routes} />
 </main>
 
-
-
 <style>
   nav {
     background-color: #682699e6 !important;
@@ -161,8 +152,8 @@
   }
 
   nav a {
-    outline-color:#9c27b0;
-    outline-style:solid;
+    outline-color: #9c27b0;
+    outline-style: solid;
     color: white !important;
     margin-left: 20px;
     background-color: #9191a58a;
@@ -173,7 +164,6 @@
     margin-left: 20px;
     background-color: #8d77e6f7;
   }
-
 
   .nav-item {
   }
