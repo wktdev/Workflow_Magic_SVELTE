@@ -630,14 +630,24 @@
 
   .client-name {
     font-family: logoFont;
-    font-size: 1.8em;
+    /* font-size: 1.8em;
     color: #be3ebc91;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: -50px; */
+    color: #be3ebc91;
+    font-size: 2em;
+    margin: 0 auto;
+    /* color: grey; */
     margin-bottom: -50px;
+    text-align: center;
+    font-weight: bold;
+
   }
+
+  
 
   .logo-form-container {
     position: relative;
